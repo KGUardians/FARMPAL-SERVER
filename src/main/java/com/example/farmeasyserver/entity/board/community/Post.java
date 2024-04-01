@@ -22,7 +22,7 @@ public class Post {
     private String title;
     @Lob
     private String content;
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Comment> commentList = new ArrayList<>();
     private Timestamp postedTime;
     private Timestamp updatedTime;

@@ -17,6 +17,6 @@ public class Crop {
 
     private String name;
 
-    @OneToMany(mappedBy = "crop", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "crop", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<CropPest> pests;
 }
