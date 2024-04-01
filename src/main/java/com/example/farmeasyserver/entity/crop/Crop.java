@@ -1,0 +1,22 @@
+package com.example.farmeasyserver.entity.crop;
+
+import ch.qos.logback.core.Layout;
+import jakarta.persistence.*;
+import lombok.Data;
+
+import java.util.List;
+
+@Entity
+@Data
+public class Crop {
+
+    @Id
+    @Column(name = "crop_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+
+    @OneToMany(mappedBy = "crop", fetch = FetchType.LAZY)
+    private List<CropPest> pests;
+}

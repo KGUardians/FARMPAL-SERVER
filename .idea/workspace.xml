@@ -4,7 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="de0cdbe6-1223-4966-a859-c0e420d285a9" name="변경" comment="" />
+    <list default="true" id="de0cdbe6-1223-4966-a859-c0e420d285a9" name="변경" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/community/BoardType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/community/Comment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/community/Post.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/crop/Crop.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/crop/CropPest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/user/Sex.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/user/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/user/User.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -78,6 +87,8 @@
       <workItem from="1710908368931" duration="7609000" />
       <workItem from="1710918915399" duration="6762000" />
       <workItem from="1711343851169" duration="83000" />
+      <workItem from="1711672027804" duration="930000" />
+      <workItem from="1711958868547" duration="2864000" />
     </task>
     <servers />
   </component>
