@@ -1,6 +1,5 @@
-package com.example.farmeasyserver.entity.crop;
+package com.example.farmeasyserver.entity.pestdetection;
 
-import ch.qos.logback.core.Layout;
 import jakarta.persistence.*;
 import lombok.Data;
 

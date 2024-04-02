@@ -1,16 +1,15 @@
-package com.example.farmeasyserver.entity.board.community;
+package com.example.farmeasyserver.entity.board;
 
 import com.example.farmeasyserver.entity.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Data
-public class Post {
+public abstract class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
@@ -22,13 +21,8 @@ public class Post {
     private String title;
     @Lob
     private String content;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Comment> commentList = new ArrayList<>();
     private Timestamp postedTime;
     private Timestamp updatedTime;
-    @Enumerated
-    @Column(name = "board_type")
-    private BoardType type;
 
     @PrePersist
     protected void onCreate(){
@@ -38,5 +32,10 @@ public class Post {
     protected void onUpdate(){
         updatedTime = new Timestamp(System.currentTimeMillis());
     }
+
+        public void setAuthor(User author){
+            this.author = author;
+            author.getPosts().add(this);
+        }
 
 }

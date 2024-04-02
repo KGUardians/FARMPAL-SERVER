@@ -1,7 +1,6 @@
 package com.example.farmeasyserver.entity.user;
 
-import com.example.farmeasyserver.entity.saleofitems.item.Item;
-import com.example.farmeasyserver.entity.saleofitems.order.Order;
+import com.example.farmeasyserver.entity.board.Post;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,15 +17,14 @@ public class User {
     private String username;
     private String password;
     private String name;
-    @Enumerated
-    private Sex sex;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
     private String phoneNumber;
+    private String email;
     @Enumerated(EnumType.STRING)
     private Role role;
     @Embedded
     private Address address;
-    @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY)
-    private List<Item> items = new ArrayList<>();
-    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
-    private List<Order> orders = new ArrayList<>();
+    @OneToMany(mappedBy = "", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<Post> posts = new ArrayList<>();
 }

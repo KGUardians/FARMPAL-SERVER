@@ -20,7 +20,7 @@ public class Comment {
     private User author;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
-    private Post post;
+    private CommunityPost post;
     private Timestamp postedTime;
     private Timestamp updatedTime;
 

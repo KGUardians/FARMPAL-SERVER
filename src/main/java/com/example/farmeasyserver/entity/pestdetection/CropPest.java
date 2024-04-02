@@ -1,4 +1,4 @@
-package com.example.farmeasyserver.entity.crop;
+package com.example.farmeasyserver.entity.pestdetection;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

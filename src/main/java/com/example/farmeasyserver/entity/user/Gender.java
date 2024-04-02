@@ -1,6 +1,6 @@
 package com.example.farmeasyserver.entity.user;
 
-public enum Sex {
-    MAN,
-    WOMAN
+public enum Gender {
+    MALE,
+    FEMALE
 }
