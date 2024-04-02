@@ -34,9 +34,9 @@ public abstract class Post {
         updatedTime = new Timestamp(System.currentTimeMillis());
     }
 
-        public void setAuthor(User author){
-            this.author = author;
-            author.getPosts().add(this);
-        }
+    public void setAuthor(User author){
+        this.author = author;
+        author.getPosts().add(this);
+    }
 
 }
