@@ -9,6 +9,6 @@ import lombok.Data;
 @DiscriminatorValue("MARKET")
 @Data
 public class MarketPost extends Post {
-    @OneToOne(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "marketPost", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Item item;
 }

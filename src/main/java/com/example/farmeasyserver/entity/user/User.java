@@ -25,6 +25,6 @@ public class User {
     private Role role;
     @Embedded
     private Address address;
-    @OneToMany(mappedBy = "", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Post> posts = new ArrayList<>();
 }
