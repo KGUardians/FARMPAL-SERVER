@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@DiscriminatorColumn(name = "MARKET")
+@DiscriminatorValue("MARKET")
 @Data
 public class MarketPost extends Post {
     @OneToOne(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@DiscriminatorColumn(name = "COMMUNITY")
+@DiscriminatorValue("COMMUNITY")
 @Data
 public class CommunityPost extends Post {
 

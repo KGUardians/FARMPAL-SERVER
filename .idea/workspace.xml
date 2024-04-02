@@ -5,22 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="de0cdbe6-1223-4966-a859-c0e420d285a9" name="변경" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/community/CommunityPost.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/market/MarketPost.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/market/marketplace/item/ItemCategory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/ruralexp/RuralExpPost.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/community/BoardType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/community/CommunityType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/community/Comment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/community/Comment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/community/Post.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/Post.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/crop/Crop.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/pestdetection/Crop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/crop/CropPest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/pestdetection/CropPest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/saleofitems/delivery/Delivery.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/saleofitems/delivery/DeliveryStatus.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/saleofitems/item/Item.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/market/marketplace/item/Item.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/saleofitems/order/Order.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/saleofitems/order/OrderStatus.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/user/Sex.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/user/Gender.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/user/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/user/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/Post.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/Post.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/community/CommunityPost.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/community/CommunityPost.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/market/MarketPost.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/market/MarketPost.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,8 +24,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Enum" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -102,7 +91,7 @@
       <workItem from="1711343851169" duration="83000" />
       <workItem from="1711672027804" duration="930000" />
       <workItem from="1711958868547" duration="3900000" />
-      <workItem from="1712036055961" duration="6138000" />
+      <workItem from="1712036055961" duration="6869000" />
     </task>
     <servers />
   </component>

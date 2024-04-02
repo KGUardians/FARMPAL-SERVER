@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "post_type")
 @Data
 public abstract class Post {
     @Id
