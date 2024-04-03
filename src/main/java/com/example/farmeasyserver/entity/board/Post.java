@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -22,16 +23,16 @@ public abstract class Post {
     private String title;
     @Lob
     private String content;
-    private Timestamp postedTime;
-    private Timestamp updatedTime;
+    private LocalDateTime postedTime;
+    private LocalDateTime updatedTime;
 
     @PrePersist
     protected void onCreate(){
-        postedTime = new Timestamp(System.currentTimeMillis());
+        postedTime = LocalDateTime.now();
     }
     @PreUpdate
     protected void onUpdate(){
-        updatedTime = new Timestamp(System.currentTimeMillis());
+        updatedTime = LocalDateTime.now();
     }
 
     public void setAuthor(User author){
