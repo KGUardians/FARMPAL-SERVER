@@ -5,9 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="de0cdbe6-1223-4966-a859-c0e420d285a9" name="변경" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/dto/CropPestDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/CropRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/PostRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/UserRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/jpa/CropJpaRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/jpa/PostJpaRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/jpa/UserJpaRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/service/CropService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/market/item/Item.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/market/item/Item.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/pestdetection/Crop.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/pestdetection/Crop.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/Post.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/Post.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/community/Comment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/community/Comment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/pestdetection/CropPest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/pestdetection/CropPest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -24,6 +32,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -91,7 +100,7 @@
       <workItem from="1711672027804" duration="930000" />
       <workItem from="1711958868547" duration="3900000" />
       <workItem from="1712036055961" duration="7182000" />
-      <workItem from="1712053728417" duration="1375000" />
+      <workItem from="1712053728417" duration="10957000" />
     </task>
     <servers />
   </component>
