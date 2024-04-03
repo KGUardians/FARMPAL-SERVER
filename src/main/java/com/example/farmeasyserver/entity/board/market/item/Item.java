@@ -21,4 +21,5 @@ public class Item {
     private double price;
     private String imagePath;
     private boolean isAvailable;
+
 }
