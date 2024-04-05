@@ -1,4 +1,4 @@
-package com.example.farmeasyserver.service;
+package com.example.farmeasyserver.service.crop;
 
 import com.example.farmeasyserver.dto.CropPestDto;
 import com.example.farmeasyserver.repository.CropRepository;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CropService {
+public class CropServiceImpl implements CropService {
 
     private final CropRepository cropRepository;
 
