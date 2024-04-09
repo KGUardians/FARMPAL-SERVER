@@ -18,7 +18,7 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private ItemCategory itemCategory;
     @Column(name = "itemPrice")
-    private double price;
+    private int price;
     private String imagePath;
     private boolean isAvailable;
 

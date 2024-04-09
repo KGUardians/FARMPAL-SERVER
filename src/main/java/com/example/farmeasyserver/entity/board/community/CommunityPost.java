@@ -13,7 +13,7 @@ import java.util.List;
 public class CommunityPost extends Post {
 
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Comment> commentList = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)

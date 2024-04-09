@@ -4,12 +4,13 @@ import com.example.farmeasyserver.entity.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "post_type")
+@DiscriminatorColumn(name = "dtype")
 @Data
 public abstract class Post {
     @Id
@@ -25,7 +26,10 @@ public abstract class Post {
     private String content;
     private LocalDateTime postedTime;
     private LocalDateTime updatedTime;
+    private int like;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> imageList = new ArrayList<>();
     @PrePersist
     protected void onCreate(){
         postedTime = LocalDateTime.now();
