@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@DiscriminatorValue("COMMUNITY")
 @Data
 public class CommunityPost extends Post {
 

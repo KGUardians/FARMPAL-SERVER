@@ -19,7 +19,7 @@ public class Item {
     private ItemCategory itemCategory;
     @Column(name = "itemPrice")
     private int price;
-    private String imagePath;
+    private int gram;
     private boolean isAvailable;
 
 }

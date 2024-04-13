@@ -1,11 +1,11 @@
 package com.example.farmeasyserver.service.post;
 
-import com.example.farmeasyserver.dto.mainpage.CommunityDto;
-import com.example.farmeasyserver.dto.mainpage.MarketDto;
-import com.example.farmeasyserver.dto.mainpage.RuralExpDto;
+import com.example.farmeasyserver.dto.mainpage.MainComPostDto;
+import com.example.farmeasyserver.dto.mainpage.MarAndRuralPostDto;
+import com.example.farmeasyserver.dto.post.CommunityPostDto;
+import com.example.farmeasyserver.dto.post.MarketPostDto;
+import com.example.farmeasyserver.dto.post.RuralExpPostDto;
 import com.example.farmeasyserver.entity.board.community.CommunityPost;
-import com.example.farmeasyserver.entity.board.market.MarketPost;
-import com.example.farmeasyserver.entity.board.ruralexp.RuralExpPost;
 import com.example.farmeasyserver.repository.PostRepository;
 import com.example.farmeasyserver.repository.jpa.PostJpaRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,13 +21,13 @@ public class PostServiceImpl implements PostService{
     private final PostJpaRepository postJpaRepository;
     private final PostRepository postRepository;
     @Override
-    public List<CommunityDto> getMainPageComPosts() {
-        List<CommunityDto> communityDtos = new ArrayList<>();
-        List<CommunityPost> communityPosts = postJpaRepository.findTop5ByOrderByPostedTimeDesc();
+    public List<MainComPostDto> getMainPageComPosts() {
+        List<MainComPostDto> communityDtos = new ArrayList<>();
+        List<CommunityPost> communityPosts = postJpaRepository.findTop5ByOrderByIdDesc();
 
         ModelMapper modelMapper = new ModelMapper();
         for(CommunityPost post : communityPosts){
-            CommunityDto dto = modelMapper.map(post, CommunityDto.class);
+            MainComPostDto dto = modelMapper.map(post, MainComPostDto.class);
             communityDtos.add(dto);
         }
 
@@ -35,30 +35,12 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<MarketDto> getMainPageMarketPosts() {
-        List<MarketDto> marketDtos = new ArrayList<>();
-        List<MarketPost> marketPosts = postRepository.findTopNOrderByPostedTime(4, MarketPost.class);
-
-        ModelMapper modelMapper = new ModelMapper();
-        for(MarketPost post : marketPosts){
-            MarketDto dto = modelMapper.map(post, MarketDto.class);
-            marketDtos.add(dto);
-        }
-
-        return marketDtos;
+    public List<MarAndRuralPostDto> getMainPageMarketPosts() {
+        return postRepository.getMainPageMarket();
     }
 
     @Override
-    public List<RuralExpDto> getMainPageRuralExpPosts() {
-        List<RuralExpDto> ruralExpDtos = new ArrayList<>();
-        List<RuralExpPost> ruralExpPosts = postRepository.findTopNOrderByPostedTime(4, RuralExpPost.class);
-
-        ModelMapper modelMapper = new ModelMapper();
-        for(RuralExpPost post : ruralExpPosts){
-            RuralExpDto dto = modelMapper.map(post, RuralExpDto.class);
-            ruralExpDtos.add(dto);
-        }
-
-        return ruralExpDtos;
+    public List<MarAndRuralPostDto> getMainPageRuralExpPosts() {
+        return postRepository.getMainPageRural();
     }
 }

@@ -1,6 +1,7 @@
 package com.example.farmeasyserver.entity.board;
 
 import com.example.farmeasyserver.entity.board.Post;
+import com.example.farmeasyserver.entity.board.community.CommunityPost;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,8 @@ import java.util.UUID;
 public class Image {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
+    private String originName;
     @Column(nullable = false)
     private String uniqueName;
 
@@ -43,5 +46,9 @@ public class Image {
         return Arrays.stream(supportedExtension).anyMatch(e -> e.equalsIgnoreCase(ext));
     }
 
+    public void setPost(CommunityPost post){
+        this.post = post;
+        post.getImageList().add(this);
+    }
 
 }

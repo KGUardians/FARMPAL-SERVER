@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface PostJpaRepository extends JpaRepository<Post,Long> {
-    List<CommunityPost> findTop5ByOrderByPostedTimeDesc();
+    List<CommunityPost> findTop5ByOrderByIdDesc();
 }
