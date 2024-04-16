@@ -1,12 +1,12 @@
 package com.example.farmeasyserver.entity.user;
 
-import com.example.farmeasyserver.entity.board.Post;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import com.example.farmeasyserver.entity.board.Post;
 import java.util.List;
 
 @Entity
@@ -30,5 +30,6 @@ public class User {
     @Embedded
     private Address address;
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    private List<Post> posts = new ArrayList<>();
+    private List<Post> Posts = new ArrayList<>();
+
 }

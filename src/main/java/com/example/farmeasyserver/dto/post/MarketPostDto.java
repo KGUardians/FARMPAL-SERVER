@@ -1,6 +1,6 @@
 package com.example.farmeasyserver.dto.post;
 
-import com.example.farmeasyserver.entity.board.market.item.Item;
+import com.example.farmeasyserver.entity.board.item.Item;
 import com.example.farmeasyserver.entity.user.Address;
 import lombok.Data;
 

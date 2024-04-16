@@ -1,4 +1,4 @@
-package com.example.farmeasyserver.entity.board.market.item;
+package com.example.farmeasyserver.entity.board.item;
 
 public enum ItemCategory {
     //농작물

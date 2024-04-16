@@ -1,9 +1,7 @@
 package com.example.farmeasyserver.repository;
 
 import com.example.farmeasyserver.dto.PostImageQueryDto;
-import com.example.farmeasyserver.dto.mainpage.MarAndRuralPostDto;
-import com.example.farmeasyserver.dto.post.MarketPostDto;
-import com.example.farmeasyserver.dto.post.RuralExpPostDto;
+import com.example.farmeasyserver.dto.mainpage.ImagePostDto;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -19,47 +17,32 @@ public class PostRepository {
 
     private final EntityManager em;
 
-    public List<MarAndRuralPostDto> findTopNAllByMarketPostDto(int limit){
-        return em.createQuery("select new com.example.farmeasyserver.dto.mainpage.MarAndRuralPostDto(mp.id,mp.title,a.name,mp.like,i.price,i.gram,a.address)"+
-                        " from MarketPost mp"+
-                        " join mp.author a"+
-                        " join mp.item i"+
-                        " order by mp.id desc")
-                .setMaxResults(limit)
-                .getResultList();
-    }
-
-    public List<MarAndRuralPostDto> findTopNAllByRuralExpPostDto(int limit){
-        return em.createQuery("select new com.example.farmeasyserver.dto.mainpage.MarAndRuralPostDto(rp.id,rp.title,a.name,rp.like,a.address)"+
-                        " from RuralExpPost rp"+
-                        " join rp.author a"+
-                        " order by rp.id desc")
+    public List<ImagePostDto> findTopNAllByPostDto(int limit, String postType){
+        return em.createQuery("select new com.example.farmeasyserver.dto.mainpage.ImagePostDto(p.id,p.title,a.name,p.like,i.price,i.gram,a.address)"+
+                        " from Post p"+
+                        " join p.author a"+
+                        " join p.item i"+
+                        " where p.postType = :postType"+
+                        " order by p.id desc")
+                .setParameter("postType",postType)
                 .setMaxResults(limit)
                 .getResultList();
     }
 
     //
-    public List<MarAndRuralPostDto> getMainPageMarket(){
-        List<MarAndRuralPostDto> results = findTopNAllByMarketPostDto(4);
-        Map<Long, PostImageQueryDto> marketDtoMap = getImageDtoMap(getPostIds(results));
-        results.forEach(p -> p.setImage(marketDtoMap.get(p.getPostId())));
+    public List<ImagePostDto> getMainPagePost(String postType){
+        List<ImagePostDto> results = findTopNAllByPostDto(4,postType);
+        Map<Long, PostImageQueryDto> postDtoMap = getImageDtoMap(getPostIds(results));
+        results.forEach(p -> p.setImage(postDtoMap.get(p.getPostId())));
 
         return results;
     }
 
-    public List<MarAndRuralPostDto> getMainPageRural(){
-        List<MarAndRuralPostDto> results = findTopNAllByRuralExpPostDto(4);
-        Map<Long, PostImageQueryDto> ruralExpDtoMap = getImageDtoMap(getPostIds(results));
-        results.forEach(p->p.setImage(ruralExpDtoMap.get(p.getPostId())));
-
-        return results;
-    }
-
-    public static List<Long> getPostIds(List<MarAndRuralPostDto> results){
-        List<Long> marketIds = results.stream()
-                .map(m -> m.getPostId())
+    public static List<Long> getPostIds(List<ImagePostDto> results){
+        List<Long> postIds = results.stream()
+                .map(ImagePostDto::getPostId)
                 .collect(Collectors.toList());
-        return marketIds;
+        return postIds;
     }
 
     //게시글에 있는 모든 이미지 매핑

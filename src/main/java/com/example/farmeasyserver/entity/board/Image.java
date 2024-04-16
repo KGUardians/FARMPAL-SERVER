@@ -1,7 +1,5 @@
 package com.example.farmeasyserver.entity.board;
 
-import com.example.farmeasyserver.entity.board.Post;
-import com.example.farmeasyserver.entity.board.community.CommunityPost;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -46,7 +44,7 @@ public class Image {
         return Arrays.stream(supportedExtension).anyMatch(e -> e.equalsIgnoreCase(ext));
     }
 
-    public void setPost(CommunityPost post){
+    public void setPost(Post post){
         this.post = post;
         post.getImageList().add(this);
     }

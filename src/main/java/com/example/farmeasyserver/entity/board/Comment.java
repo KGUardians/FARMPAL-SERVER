@@ -1,4 +1,4 @@
-package com.example.farmeasyserver.entity.board.community;
+package com.example.farmeasyserver.entity.board;
 
 import com.example.farmeasyserver.entity.user.User;
 import jakarta.persistence.*;
@@ -21,7 +21,7 @@ public class Comment {
     private User author;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
-    private CommunityPost post;
+    private Post post;
     private LocalDateTime postedTime;
     private LocalDateTime updatedTime;
 
@@ -34,7 +34,7 @@ public class Comment {
         updatedTime = LocalDateTime.now();
     }
 
-    public void setPost(CommunityPost post){
+    public void setPost(Post post){
         this.post = post;
         post.getCommentList().add(this);
     }

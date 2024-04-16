@@ -5,9 +5,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-@Component
+
 public interface UserService {
     void join (User user);
 
-    Optional<User> findUser(String username);
+    User findUser(String username);
+
+    Optional<User> getUser(Long id);
 }
