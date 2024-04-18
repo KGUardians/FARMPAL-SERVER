@@ -22,7 +22,7 @@ public class PostRepository {
                         " from Post p"+
                         " join p.author a"+
                         " join p.item i"+
-                        " where p.postType = :postType"+
+                        " where p.postType in :postType"+
                         " order by p.id desc")
                 .setParameter("postType",postType)
                 .setMaxResults(limit)
