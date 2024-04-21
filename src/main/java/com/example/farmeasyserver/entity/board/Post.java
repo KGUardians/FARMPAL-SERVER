@@ -26,6 +26,8 @@ public class Post {
     private String title;
     @Lob
     private String content;
+    @Embedded
+    private Recruitment recruitment;
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Comment> commentList = new ArrayList<>();
     @Enumerated(EnumType.STRING)
@@ -55,6 +57,15 @@ public class Post {
         this.postType = postType;
         this.content = content;
         this.item = item;
+        this.imageList = imageList;
+    }
+
+    public Post(User author, String title, PostType postType, String content, Recruitment recruitment, List<Image> imageList) {
+        this.author = author;
+        this.title = title;
+        this.postType = postType;
+        this.content = content;
+        this.recruitment = recruitment;
         this.imageList = imageList;
     }
 
