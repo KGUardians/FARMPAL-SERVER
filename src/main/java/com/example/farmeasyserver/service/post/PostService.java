@@ -2,12 +2,14 @@ package com.example.farmeasyserver.service.post;
 
 import com.example.farmeasyserver.dto.mainpage.MainComPostDto;
 import com.example.farmeasyserver.dto.mainpage.ImagePostDto;
+import com.example.farmeasyserver.dto.post.PostCreateResponse;
+import com.example.farmeasyserver.dto.post.community.CommunityPostDto;
+import com.example.farmeasyserver.dto.post.market.MarketPostDto;
+import com.example.farmeasyserver.dto.post.ruralexp.RuralExpPostDto;
 import com.example.farmeasyserver.dto.post.community.CommunityRequest;
-import com.example.farmeasyserver.dto.post.community.CommunityResponse;
 import com.example.farmeasyserver.dto.post.market.MarketRequest;
-import com.example.farmeasyserver.dto.post.market.MarketResponse;
 import com.example.farmeasyserver.dto.post.ruralexp.RuralExpRequest;
-import com.example.farmeasyserver.dto.post.ruralexp.RuralExpResponse;
+import org.springframework.data.crossstore.ChangeSetPersister;
 
 import java.util.List;
 
@@ -16,7 +18,11 @@ public interface PostService {
     List<ImagePostDto> getMainPageMarketPosts();
     List<ImagePostDto> getMainPageRuralExpPosts();
 
-    CommunityResponse createCommunityPost(CommunityRequest req);
-    MarketResponse createMarketPost(MarketRequest req);
-    RuralExpResponse createRuralExpPost(RuralExpRequest req);
+    PostCreateResponse createCommunityPost(CommunityRequest req) throws ChangeSetPersister.NotFoundException;
+    PostCreateResponse createMarketPost(MarketRequest req) throws ChangeSetPersister.NotFoundException;
+    PostCreateResponse createRuralExpPost(RuralExpRequest req) throws ChangeSetPersister.NotFoundException;
+
+    CommunityPostDto readCommunityPost(Long postId) throws ChangeSetPersister.NotFoundException;
+    MarketPostDto readMarketPost(Long postId) throws ChangeSetPersister.NotFoundException;
+    RuralExpPostDto readRuralExpPost(Long postId) throws ChangeSetPersister.NotFoundException;
 }
