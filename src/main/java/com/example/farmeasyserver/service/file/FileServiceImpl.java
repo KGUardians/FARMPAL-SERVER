@@ -12,11 +12,11 @@ import java.io.IOException;
 @Service
 public class FileServiceImpl implements FileService {
 
-    @Value("${post.image.path}")
+    @Value(value = "${post.image.path}")
     String location;
 
     @PostConstruct
-    void postConstruct() { // 2
+    void postConstruct() {
         File dir = new File(location);
         if (!dir.exists()) {
             dir.mkdir();

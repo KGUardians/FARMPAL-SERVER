@@ -41,28 +41,8 @@ public class CommunityRequest {
     @ApiModelProperty(value = "카테고리", notes = "카테고리를 입력해주세요", required = true, example = "COMMUNITY")
     @NotNull(message = "카테고리를 입력해주세요.")
     @PositiveOrZero(message = "올바른 카테고리를 입력해주세요.")
-    private String postType;
+    private PostType postType;
 
     @ApiModelProperty(value = "이미지", notes = "이미지를 첨부해주세요.")
     private List<MultipartFile> imageList = new ArrayList<>();
-
-    public static Post CommunityToEntity(CommunityRequest req, UserJpaRepository userJpaRepository) {
-        PostType type;
-        if(req.postType.equals("자유")){
-            type = PostType.FREE;
-        } else if (req.postType.equals("공지")) {
-            type = PostType.NOTICE;
-        } else if (req.postType.equals("질문")) {
-            type = PostType.QUESTION;
-        } else {
-            throw new EnumConstantNotPresentException(PostType.class,"올바른 카테고리가 아닙니다.");
-        }
-
-        return new Post(
-                userJpaRepository.findById(req.getUserId()).orElseThrow(()-> new NoSuchElementException("사용자를 찾을 수 없습니다.")),
-                req.title,
-                type,
-                req.imageList.stream().map(i -> new Image(i.getOriginalFilename())).collect(toList())
-        );
-    }
 }

@@ -1,11 +1,7 @@
 package com.example.farmeasyserver.dto.post.market;
 
-import com.example.farmeasyserver.entity.board.Image;
-import com.example.farmeasyserver.entity.board.Post;
 import com.example.farmeasyserver.entity.board.PostType;
-import com.example.farmeasyserver.entity.board.item.Item;
 import com.example.farmeasyserver.entity.board.item.ItemCategory;
-import com.example.farmeasyserver.repository.jpa.UserJpaRepository;
 import io.swagger.annotations.ApiModelProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -16,9 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
-
-import static java.util.stream.Collectors.toList;
 
 @Data
 public class MarketRequest {
@@ -60,22 +53,4 @@ public class MarketRequest {
 
     @ApiModelProperty(value = "이미지", notes = "이미지를 첨부해주세요.")
     private List<MultipartFile> imageList = new ArrayList<>();
-
-    public static Post MarketToEntity(MarketRequest req, UserJpaRepository userJpaRepository) {
-        Item item = new Item(
-                req.itemName,
-                req.itemCategory,
-                req.price,
-                req.gram
-        );
-
-        return new Post(
-                req.postType,
-                req.title,
-                req.content,
-                item,
-                userJpaRepository.findById(req.getUserId()).orElseThrow(()->new NoSuchElementException("사용자를 찾을 수 없습니다.")),
-                req.imageList.stream().map(i -> new Image(i.getOriginalFilename())).collect(toList())
-        );
-    }
 }

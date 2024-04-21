@@ -12,9 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
-
-import static java.util.stream.Collectors.toList;
 
 @Data
 public class RuralExpRequest {
@@ -35,14 +32,4 @@ public class RuralExpRequest {
 
     @ApiModelProperty(value = "이미지", notes = "이미지를 첨부해주세요.")
     private List<MultipartFile> imageList = new ArrayList<>();
-
-    public static Post RuralExpToEntity(RuralExpRequest req, UserJpaRepository userJpaRepository) {
-        return new Post(
-                req.postType,
-                req.title,
-                req.content,
-                userJpaRepository.findById(req.getUserId()).orElseThrow(()->new NoSuchElementException("사용자를 찾을 수 없습니다.")),
-                req.imageList.stream().map(i -> new Image(i.getOriginalFilename())).collect(toList())
-        );
-    }
 }

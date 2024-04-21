@@ -39,30 +39,22 @@ public class Post {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> imageList;
 
-    //CommunityPost Request
-    public Post(User author, String title, PostType postType, List<Image> imageList) {
+    //CommunityPost Request, RuralExpPost Request
+    public Post(User author, String title, PostType postType, String content, List<Image> imageList) {
         this.author = author;
         this.title = title;
         this.postType = postType;
+        this.content = content;
         this.imageList = imageList;
     }
 
     //MarketPost Request
-    public Post(PostType postType,String title,String content,Item item,User user,List<Image> imageList){
-        this.postType = postType;
+    public Post(User author,String title, PostType postType, String content, Item item,List<Image> imageList){
+        this.author = author;
         this.title = title;
+        this.postType = postType;
         this.content = content;
         this.item = item;
-        this.author = user;
-        this.imageList = imageList;
-    }
-
-    //RuralExpPost Request
-    public Post(PostType postType,String title,String content,User user,List<Image> imageList){
-        this.postType = postType;
-        this.title = title;
-        this.content = content;
-        this.author = user;
         this.imageList = imageList;
     }
 
