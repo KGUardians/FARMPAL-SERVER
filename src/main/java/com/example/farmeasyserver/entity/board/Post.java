@@ -41,7 +41,7 @@ public class Post {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> imageList;
 
-    //CommunityPost Request, RuralExpPost Request
+    //CommunityPost Request
     public Post(User author, String title, PostType postType, String content, List<Image> imageList) {
         this.author = author;
         this.title = title;
@@ -60,6 +60,7 @@ public class Post {
         this.imageList = imageList;
     }
 
+    //RuralExpPost Request
     public Post(User author, String title, PostType postType, String content, Recruitment recruitment, List<Image> imageList) {
         this.author = author;
         this.title = title;
