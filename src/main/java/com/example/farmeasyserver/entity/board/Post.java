@@ -19,8 +19,7 @@ public class Post {
     @Column(name = "post_id")
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    @Column(nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User author;
     @Column(name = "post_title",nullable = false)
     private String title;
@@ -35,10 +34,10 @@ public class Post {
     private PostType postType;
     private LocalDateTime postedTime;
     private LocalDateTime updatedTime;
-    private int like;
+    private int heart;
     @OneToOne(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Item item;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> imageList;
 
     //CommunityPost Request

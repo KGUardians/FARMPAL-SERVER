@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import com.example.farmeasyserver.entity.board.Post;
+import org.hibernate.annotations.DialectOverride;
+
 import java.util.List;
 
 @Entity
@@ -25,6 +27,8 @@ public class User {
     private Gender gender;
     private String phoneNumber;
     private String email;
+    @Embedded
+    private Day birthday;
     @Enumerated(EnumType.STRING)
     private Role role;
     @Embedded
@@ -32,4 +36,15 @@ public class User {
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Post> Posts = new ArrayList<>();
 
+    public User(String username, String password, String name, Gender gender, String phoneNumber, String email, Day birthday, Address address,Role role) {
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.gender = gender;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.birthday = birthday;
+        this.address = address;
+        this.role = role;
+    }
 }

@@ -11,6 +11,7 @@ import com.example.farmeasyserver.dto.post.market.MarketRequest;
 import com.example.farmeasyserver.dto.post.ruralexp.RuralExpRequest;
 import com.example.farmeasyserver.entity.board.Image;
 import com.example.farmeasyserver.entity.board.Post;
+import com.example.farmeasyserver.entity.board.PostType;
 import com.example.farmeasyserver.entity.board.Recruitment;
 import com.example.farmeasyserver.entity.board.item.Item;
 import com.example.farmeasyserver.entity.user.User;
@@ -71,7 +72,7 @@ public class PostServiceImpl implements PostService{
         User author = userJpaRepository.findById(req.getUserId()).orElseThrow(ChangeSetPersister.NotFoundException::new);
         List<Image> imageList = req.getImageList().stream().map(i -> new Image(i.getOriginalFilename())).collect(toList());
 
-        Post post = postJpaRepository.save(new Post(author,req.getTitle(),req.getPostType(), req.getContent(), imageList));
+        Post post = postJpaRepository.save(new Post(author,req.getTitle(), PostType.FREE, req.getContent(), imageList));
         uploadImages(post.getImageList(),req.getImageList());
         return new PostCreateResponse(post.getId(),post.getPostType());
     }

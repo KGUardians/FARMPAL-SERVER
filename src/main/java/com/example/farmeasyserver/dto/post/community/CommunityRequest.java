@@ -35,13 +35,7 @@ public class CommunityRequest {
     private String content;
 
     @ApiModelProperty(hidden = true)
-    @Null
     private Long userId;
-
-    @ApiModelProperty(value = "카테고리", notes = "카테고리를 입력해주세요", required = true, example = "COMMUNITY")
-    @NotNull(message = "카테고리를 입력해주세요.")
-    @PositiveOrZero(message = "올바른 카테고리를 입력해주세요.")
-    private PostType postType;
 
     @ApiModelProperty(value = "이미지", notes = "이미지를 첨부해주세요.")
     private List<MultipartFile> imageList = new ArrayList<>();

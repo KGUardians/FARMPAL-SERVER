@@ -15,7 +15,7 @@ public class Item {
     @Column(name = "item_id")
     private Long id;
     @OneToOne(fetch = FetchType.LAZY)
-    private Post Post;
+    private Post post;
     private String itemName;
     @Enumerated(EnumType.STRING)
     private ItemCategory itemCategory;
