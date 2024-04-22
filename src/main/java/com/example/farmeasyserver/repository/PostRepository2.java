@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
-public class PostRepository {
+public class PostRepository2 {
 
-    private final EntityManager em;
+   /* private final EntityManager em;
 
     public List<ImagePostDto> findTopNAllByPostDto(int limit, String postType){
         return em.createQuery("select new com.example.farmeasyserver.dto.mainpage.ImagePostDto(p.id,p.title,a.name,p.like,i.price,i.gram,a.address)"+
@@ -30,7 +30,7 @@ public class PostRepository {
     }
 
     //
-    public List<ImagePostDto> getMainPagePost(String postType){
+    public List<ImagePostDto> getMainPagePost(String postWType){
         List<ImagePostDto> results = findTopNAllByPostDto(4,postType);
         Map<Long, PostImageQueryDto> postDtoMap = getImageDtoMap(getPostIds(results));
         results.forEach(p -> p.setImage(postDtoMap.get(p.getPostId())));
@@ -75,5 +75,5 @@ public class PostRepository {
                 .collect(Collectors.toMap(PostImageQueryDto::getPostId, Function.identity(), (existing, replacement) -> existing));
 
         return marketDtoMap;
-    }
+    }*/
 }

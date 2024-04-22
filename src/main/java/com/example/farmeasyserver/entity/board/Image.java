@@ -1,5 +1,8 @@
 package com.example.farmeasyserver.entity.board;
 
+import com.example.farmeasyserver.entity.board.community.CommunityPost;
+import com.example.farmeasyserver.entity.board.exprience.ExperiencePost;
+import com.example.farmeasyserver.entity.board.market.MarketPost;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,8 +22,14 @@ public class Image {
     private String uniqueName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
-    private Post post;
+    private MarketPost m_post;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private CommunityPost c_post;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private ExperiencePost e_post;
+
 
     private final static String supportedExtension[] = {"jpg","jpeg","gif","bmp","png"};
 
@@ -42,11 +51,6 @@ public class Image {
 
     private boolean isSupportedFormat(String ext){
         return Arrays.stream(supportedExtension).anyMatch(e -> e.equalsIgnoreCase(ext));
-    }
-
-    public void setPost(Post post){
-        this.post = post;
-        post.getImageList().add(this);
     }
 
 }

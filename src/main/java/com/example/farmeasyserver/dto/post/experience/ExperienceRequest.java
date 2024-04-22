@@ -1,6 +1,6 @@
-package com.example.farmeasyserver.dto.post.ruralexp;
+package com.example.farmeasyserver.dto.post.experience;
 
-import com.example.farmeasyserver.entity.board.PostType;
+import com.example.farmeasyserver.entity.board.community.CommunityType;
 import io.swagger.annotations.ApiModelProperty;
 import jakarta.persistence.Lob;
 import jakarta.validation.constraints.NotBlank;
@@ -13,9 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class RuralExpRequest {
+public class ExperienceRequest {
 
-    private PostType postType = PostType.RURAL_EXP;
+    private CommunityType communityType = CommunityType.RURAL_EXP;
 
     @ApiModelProperty(value = "게시글 제목", notes = "게시글 제목을 입력해주세요", required = true, example = "my title")
     @NotBlank(message = "게시글 제목을 입력해주세요.")

@@ -1,8 +1,8 @@
-package com.example.farmeasyserver.entity.board.item;
+package com.example.farmeasyserver.entity.board.market;
 
-import com.example.farmeasyserver.entity.board.Post;
+import com.example.farmeasyserver.entity.board.ItemCategory;
+import com.example.farmeasyserver.entity.board.market.MarketPost;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +15,7 @@ public class Item {
     @Column(name = "item_id")
     private Long id;
     @OneToOne(fetch = FetchType.LAZY)
-    private Post post;
+    private MarketPost post;
     private String itemName;
     @Enumerated(EnumType.STRING)
     private ItemCategory itemCategory;

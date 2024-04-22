@@ -1,6 +1,6 @@
-package com.example.farmeasyserver.entity.board;
+package com.example.farmeasyserver.entity.board.community;
 
-public enum PostType {
+public enum CommunityType {
     //질문
     QUESTION,
     //자유

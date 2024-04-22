@@ -1,7 +1,7 @@
 package com.example.farmeasyserver.dto.mainpage;
 
-public class MainComPostDto {
+public class MainCommunityDto {
     private Long postId;
     private String title;
-    private int like;
+    private int postLike;
 }

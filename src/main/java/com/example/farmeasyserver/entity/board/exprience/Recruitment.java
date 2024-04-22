@@ -1,4 +1,4 @@
-package com.example.farmeasyserver.entity.board;
+package com.example.farmeasyserver.entity.board.exprience;
 
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Lob;

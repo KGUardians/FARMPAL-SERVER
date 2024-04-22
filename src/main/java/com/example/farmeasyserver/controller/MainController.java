@@ -14,9 +14,9 @@ public class MainController {
     @GetMapping("/")
     public MainPageDto mainPage(){
         MainPageDto mainPageDto = new MainPageDto(
-                postService.getMainPageComPosts(),
-                postService.getMainPageMarketPosts(),
-                postService.getMainPageRuralExpPosts());
+                postService.getMainCommunityPosts(),
+                postService.getMainMarketPosts(),
+                postService.getMainExperiencePosts());
 
         return mainPageDto;
     }

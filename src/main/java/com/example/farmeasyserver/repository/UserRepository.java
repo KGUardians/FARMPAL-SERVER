@@ -1,10 +1,10 @@
 package com.example.farmeasyserver.repository;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import com.example.farmeasyserver.entity.user.User;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Repository
-@RequiredArgsConstructor
-public class UserRepository {
+
+public interface UserRepository extends JpaRepository<User,Long> {
+    User findByUsername(String userName);
 
 }

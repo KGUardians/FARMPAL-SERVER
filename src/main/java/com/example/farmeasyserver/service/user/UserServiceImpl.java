@@ -6,7 +6,6 @@ import com.example.farmeasyserver.entity.user.Address;
 import com.example.farmeasyserver.entity.user.Day;
 import com.example.farmeasyserver.entity.user.Role;
 import com.example.farmeasyserver.repository.UserRepository;
-import com.example.farmeasyserver.repository.jpa.UserJpaRepository;
 import com.example.farmeasyserver.entity.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserJpaRepository userJpaRepository;
     private final UserRepository userRepository;
 
     @Override
@@ -38,17 +36,17 @@ public class UserServiceImpl implements UserService {
                 address,
                 Role.USER
         );
-        userJpaRepository.save(user);
+        userRepository.save(user);
         return new UserDto(user.getId(), user.getName(), user.getAddress(),user.getBirthday());
     }
 
     @Override
     public User findUser(String userName) {
-        return userJpaRepository.findByUsername(userName);
+        return userRepository.findByUsername(userName);
     }
 
     @Override
     public Optional<User> getUser(Long id) {
-        return userJpaRepository.findById(id);
+        return userRepository.findById(id);
     }
 }
