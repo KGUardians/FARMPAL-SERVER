@@ -1,6 +1,7 @@
 package com.example.farmeasyserver.entity.board.market;
 
 import com.example.farmeasyserver.entity.board.Image;
+import com.example.farmeasyserver.entity.board.Post;
 import com.example.farmeasyserver.entity.board.community.CommunityType;
 import com.example.farmeasyserver.entity.user.User;
 import jakarta.persistence.*;
@@ -12,7 +13,7 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
-public class MarketPost {
+public class MarketPost extends Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,7 +26,6 @@ public class MarketPost {
     private String content;
     @OneToOne(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Item item;
-    private int postLike;
     @OneToMany(mappedBy = "m_post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> imageList;
 
@@ -35,5 +35,12 @@ public class MarketPost {
         this.content = content;
         this.item = item;
         this.imageList = imageList;
+    }
+
+    private void addImages(List<Image> added) {
+        added.stream().forEach(i -> {
+            imageList.add(i);
+            i.setPost(this);
+        });
     }
 }

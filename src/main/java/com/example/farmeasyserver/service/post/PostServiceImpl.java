@@ -78,8 +78,9 @@ public class PostServiceImpl implements PostService{
 
         CommunityPost post = communityRepository.save(
                 new CommunityPost(author,req.getTitle(), req.getType(), req.getContent(), imageList));
+
         uploadImages(post.getImageList(),req.getImageList());
-        return new PostCreateResponse(post.getId(),post.getCommunityType());
+        return new PostCreateResponse(post.getId(),post.getCommunityType(),post.getImageList());
     }
 
     @Override
@@ -95,7 +96,7 @@ public class PostServiceImpl implements PostService{
         );
 
         uploadImages(post.getImageList(),req.getImageList());
-        return new PostCreateResponse(post.getId(),post.getItem());
+        return new PostCreateResponse(post.getId(),post.getItem(),post.getImageList());
     }
 
     @Override
@@ -117,7 +118,7 @@ public class PostServiceImpl implements PostService{
         );
 
         uploadImages(post.getImageList(),req.getImageList());
-        return new PostCreateResponse(post.getId(),post.getFarmName());
+        return new PostCreateResponse(post.getId(),post.getFarmName(),post.getImageList());
     }
 
     @Override

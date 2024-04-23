@@ -2,6 +2,7 @@ package com.example.farmeasyserver.entity.board.community;
 
 import com.example.farmeasyserver.entity.board.Comment;
 import com.example.farmeasyserver.entity.board.Image;
+import com.example.farmeasyserver.entity.board.Post;
 import com.example.farmeasyserver.entity.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -14,12 +15,13 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
-public class CommunityPost {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class CommunityPost extends Post {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-
     private User author;
     @Column(name = "post_title",nullable = false)
     private String title;
@@ -30,9 +32,7 @@ public class CommunityPost {
     private String content;
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Comment> commentList = new ArrayList<>();
-    private LocalDateTime postedTime;
-    private LocalDateTime updatedTime;
-    private int postLike;
+
     @OneToMany(mappedBy = "c_post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> imageList;
 
@@ -44,12 +44,16 @@ public class CommunityPost {
         this.imageList = imageList;
     }
 
-    @PrePersist
-    protected void onCreate(){
-        postedTime = LocalDateTime.now();
+    private void addImages(List<Image> added) { // 5
+        added.stream().forEach(i -> {
+            imageList.add(i);
+            i.setPost(this);
+        });
     }
-    @PreUpdate
-    protected void onUpdate(){
-        updatedTime = LocalDateTime.now();
+
+    private void addComment(Comment comment){
+        commentList.add(comment);
+        comment.setPost(this);
     }
+
 }

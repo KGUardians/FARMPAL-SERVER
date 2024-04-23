@@ -35,8 +35,7 @@ public class Comment {
         updatedTime = LocalDateTime.now();
     }
 
-    /*public void setPost(Post post){
+    public void setPost(CommunityPost post){
         this.post = post;
-        post.getCommentList().add(this);
-    }*/
+    }
 }

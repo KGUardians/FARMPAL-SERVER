@@ -34,7 +34,26 @@ public class Image {
     private final static String supportedExtension[] = {"jpg","jpeg","gif","bmp","png"};
 
     public Image(String imageName){
+        this.originName = imageName;
         this.uniqueName = generatedUniqueName(extractExtension(imageName));
+    }
+
+    public void setPost(CommunityPost post) {
+        if(this.c_post == null) {
+            this.c_post = post;
+        }
+    }
+
+    public void setPost(MarketPost post) {
+        if(this.m_post == null) {
+            this.m_post = post;
+        }
+    }
+
+    public void setPost(ExperiencePost post) {
+        if(this.e_post == null) {
+            this.e_post = post;
+        }
     }
 
     private String generatedUniqueName(String extension){
