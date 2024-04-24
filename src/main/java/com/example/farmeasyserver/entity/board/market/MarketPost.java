@@ -24,23 +24,26 @@ public class MarketPost extends Post {
     private String title;
     @Lob
     private String content;
-    @OneToOne(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Embedded
     private Item item;
     @OneToMany(mappedBy = "m_post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> imageList;
 
-    public MarketPost(User author, String title, String content, Item item, List<Image> imageList) {
-        this.author = author;
+    public MarketPost(String title, String content, Item item) {
         this.title = title;
         this.content = content;
         this.item = item;
-        this.imageList = imageList;
     }
 
-    private void addImages(List<Image> added) {
+     public void addImages(List<Image> added) {
         added.stream().forEach(i -> {
             imageList.add(i);
             i.setPost(this);
         });
+    }
+
+    public void setAuthor(User author){
+        this.author = author;
+        author.getMarketPosts().add(this);
     }
 }

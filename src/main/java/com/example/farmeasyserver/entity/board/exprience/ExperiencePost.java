@@ -30,17 +30,20 @@ public class ExperiencePost extends Post {
     @OneToMany(mappedBy = "e_post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> imageList;
 
-    public ExperiencePost(User author, String title, Recruitment recruitment, List<Image> imageList) {
-        this.author = author;
+    public ExperiencePost(String title, Recruitment recruitment) {
         this.title = title;
         this.recruitment = recruitment;
-        this.imageList = imageList;
     }
 
-    private void addImages(List<Image> added) {
+    public void addImages(List<Image> added) {
         added.stream().forEach(i -> {
             imageList.add(i);
             i.setPost(this);
         });
+    }
+
+    public void setAuthor(User author){
+        this.author = author;
+        author.getExperiencePosts().add(this);
     }
 }

@@ -15,11 +15,6 @@ import java.util.List;
 
 @Data
 public class MarketRequest {
-    @ApiModelProperty(value = "카테고리", notes = "카테고리를 입력해주세요", required = true, example = "MARKET")
-    @NotNull(message = "카테고리 아이디를 입력해주세요.")
-    @PositiveOrZero(message = "올바른 카테고리 아이디를 입력해주세요.")
-    private CommunityType communityType = CommunityType.MARKET;
-
     @ApiModelProperty(value = "게시글 제목", notes = "게시글 제목을 입력해주세요", required = true, example = "my title")
     @NotBlank(message = "게시글 제목을 입력해주세요.")
     private String title;

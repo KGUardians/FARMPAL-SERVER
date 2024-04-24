@@ -34,26 +34,29 @@ public class CommunityPost extends Post {
     private List<Comment> commentList = new ArrayList<>();
 
     @OneToMany(mappedBy = "c_post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Image> imageList;
+    private List<Image> imageList = new ArrayList<>();
 
-    public CommunityPost(User author, String title, CommunityType type, String content, List<Image> imageList) {
-        this.author = author;
+    public CommunityPost(String title, CommunityType type, String content) {
         this.title = title;
         this.communityType = type;
         this.content = content;
-        this.imageList = imageList;
     }
 
-    private void addImages(List<Image> added) { // 5
+    public void addImages(List<Image> added) { // 5
         added.stream().forEach(i -> {
             imageList.add(i);
             i.setPost(this);
         });
     }
 
-    private void addComment(Comment comment){
+    public void addComment(Comment comment){
         commentList.add(comment);
         comment.setPost(this);
+    }
+
+    public void setAuthor(User author){
+        this.author = author;
+        author.getCommunityPosts().add(this);
     }
 
 }

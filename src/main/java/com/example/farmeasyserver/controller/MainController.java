@@ -1,6 +1,7 @@
 package com.example.farmeasyserver.controller;
 
 import com.example.farmeasyserver.dto.mainpage.MainPageDto;
+import com.example.farmeasyserver.dto.response.Response;
 import com.example.farmeasyserver.service.post.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,12 +13,12 @@ public class MainController {
 
     private final PostService postService;
     @GetMapping("/")
-    public MainPageDto mainPage(){
+    public Response mainPage(){
         MainPageDto mainPageDto = new MainPageDto(
                 postService.getMainCommunityPosts(),
                 postService.getMainMarketPosts(),
                 postService.getMainExperiencePosts());
 
-        return mainPageDto;
+        return Response.success(mainPageDto);
     }
 }

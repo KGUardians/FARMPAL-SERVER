@@ -6,16 +6,11 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
+
 @Data
+@Embeddable
 @NoArgsConstructor
 public class Item {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "item_id")
-    private Long id;
-    @OneToOne(fetch = FetchType.LAZY)
-    private MarketPost post;
     private String itemName;
     @Enumerated(EnumType.STRING)
     private ItemCategory itemCategory;

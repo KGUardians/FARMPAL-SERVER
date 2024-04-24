@@ -75,12 +75,14 @@ public class PostServiceImpl implements PostService{
         User author = userRepository.findById(req.getUserId())
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
         List<Image> imageList = req.getImageList().stream().map(i -> new Image(i.getOriginalFilename())).collect(toList());
+        CommunityPost communityPost = new CommunityPost(req.getTitle(), req.getType(), req.getContent());
 
-        CommunityPost post = communityRepository.save(
-                new CommunityPost(author,req.getTitle(), req.getType(), req.getContent(), imageList));
+        communityPost.setAuthor(author);
+        communityPost.addImages(imageList);
+        communityRepository.save(communityPost);
 
-        uploadImages(post.getImageList(),req.getImageList());
-        return new PostCreateResponse(post.getId(),post.getCommunityType(),post.getImageList());
+        uploadImages(communityPost.getImageList(),req.getImageList());
+        return new PostCreateResponse(communityPost.getId(),"community");
     }
 
     @Override
@@ -88,15 +90,16 @@ public class PostServiceImpl implements PostService{
     public PostCreateResponse createMarketPost(MarketRequest req) throws ChangeSetPersister.NotFoundException {
         User author = userRepository.findById(req.getUserId()).orElseThrow(ChangeSetPersister.NotFoundException::new);
         List<Image> imageList = req.getImageList().stream().map(i -> new Image(i.getOriginalFilename())).collect(toList());
+        Item item = new Item(req.getItemName(),req.getItemCategory(), req.getPrice(), req.getGram());
+        MarketPost post = new MarketPost(req.getTitle(),req.getContent(),item);
 
-        MarketPost post = marketRepository.save(
-                new MarketPost(author,req.getTitle(),req.getContent(),
-                        new Item(req.getItemName(),req.getItemCategory(), req.getPrice(), req.getGram()),
-                        imageList)
-        );
+        post.setAuthor(author);
+        post.addImages(imageList);
+
+        marketRepository.save(post);
 
         uploadImages(post.getImageList(),req.getImageList());
-        return new PostCreateResponse(post.getId(),post.getItem(),post.getImageList());
+        return new PostCreateResponse(post.getId(),"market");
     }
 
     @Override
@@ -113,18 +116,19 @@ public class PostServiceImpl implements PostService{
                 req.getDetailedRecruitmentCondition()
         );
 
-        ExperiencePost post = experienceRepository.save(
-                new ExperiencePost(author,req.getTitle(), recruitment, imageList)
-        );
+        ExperiencePost post = new ExperiencePost(req.getTitle(), recruitment);
+        post.addImages(imageList);
+        post.setAuthor(author);
+        experienceRepository.save(post);
 
         uploadImages(post.getImageList(),req.getImageList());
-        return new PostCreateResponse(post.getId(),post.getFarmName(),post.getImageList());
+        return new PostCreateResponse(post.getId(),"experience");
     }
 
     @Override
     public CommunityPostDto readCommunityPost(Long postId) throws ChangeSetPersister.NotFoundException {
-        return CommunityPostDto.toDto(communityRepository.findById(postId)
-                        .orElseThrow(ChangeSetPersister.NotFoundException::new));
+        CommunityPost communityPost = communityRepository.findByIdWithUser(postId).orElseThrow(ChangeSetPersister.NotFoundException::new);
+        return CommunityPostDto.toDto(communityPost);
     }
 
     @Override
@@ -135,7 +139,7 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public ExperiencePostDto readExperiencePost(Long postId) throws ChangeSetPersister.NotFoundException {
-        return ExperiencePostDto.toDto(experienceRepository.findById(postId)
+        return ExperiencePostDto.toDto(experienceRepository.findByIdWithUser(postId)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new));
     }
 

@@ -1,15 +1,7 @@
 package com.example.farmeasyserver.repository;
 
-import com.example.farmeasyserver.dto.PostImageQueryDto;
-import com.example.farmeasyserver.dto.mainpage.ImagePostDto;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -32,7 +24,7 @@ public class PostRepository2 {
     //
     public List<ImagePostDto> getMainPagePost(String postWType){
         List<ImagePostDto> results = findTopNAllByPostDto(4,postType);
-        Map<Long, PostImageQueryDto> postDtoMap = getImageDtoMap(getPostIds(results));
+        Map<Long, ImageDto> postDtoMap = getImageDtoMap(getPostIds(results));
         results.forEach(p -> p.setImage(postDtoMap.get(p.getPostId())));
 
         return results;
@@ -46,33 +38,33 @@ public class PostRepository2 {
     }
 
     //게시글에 있는 모든 이미지 매핑
-    public Map<Long,List<PostImageQueryDto>> getImageDtosMap(List<Long> postIds){
-        List<PostImageQueryDto> postImages = em.createQuery(
-                "select new com.example.farmeasyserver.dto.PostImageQueryDto(p.id,i.originName,i.uniqueName)"+
+    public Map<Long,List<ImageDto>> getImageDtosMap(List<Long> postIds){
+        List<ImageDto> postImages = em.createQuery(
+                "select new com.example.farmeasyserver.dto.ImageDto(p.id,i.originName,i.uniqueName)"+
                         " from Image i"+
                         " join i.post p"+
-                        " where i.post.id in :postIds",PostImageQueryDto.class)
+                        " where i.post.id in :postIds",ImageDto.class)
                 .setParameter("postIds",postIds)
                 .getResultList();
 
-        Map<Long, List<PostImageQueryDto>> marketDtoMap = postImages.stream()
-                .collect(Collectors.groupingBy(PostImageQueryDto::getPostId));
+        Map<Long, List<ImageDto>> marketDtoMap = postImages.stream()
+                .collect(Collectors.groupingBy(ImageDto::getPostId));
 
         return marketDtoMap;
     }
 
     //게시글에 있는 첫번째 이미지만 매핑
-    public Map<Long, PostImageQueryDto> getImageDtoMap(List<Long> postIds){
-        List<PostImageQueryDto> postImages = em.createQuery(
-                        "select new com.example.farmeasyserver.dto.PostImageQueryDto(p.id,i.originName,i.uniqueName)"+
+    public Map<Long, ImageDto> getImageDtoMap(List<Long> postIds){
+        List<ImageDto> postImages = em.createQuery(
+                        "select new com.example.farmeasyserver.dto.ImageDto(p.id,i.originName,i.uniqueName)"+
                                 " from Image i"+
                                 " join i.post p"+
-                                " where i.post.id in :postIds",PostImageQueryDto.class)
+                                " where i.post.id in :postIds",ImageDto.class)
                 .setParameter("postIds",postIds)
                 .getResultList();
 
-        Map<Long, PostImageQueryDto> marketDtoMap = postImages.stream()
-                .collect(Collectors.toMap(PostImageQueryDto::getPostId, Function.identity(), (existing, replacement) -> existing));
+        Map<Long, ImageDto> marketDtoMap = postImages.stream()
+                .collect(Collectors.toMap(ImageDto::getPostId, Function.identity(), (existing, replacement) -> existing));
 
         return marketDtoMap;
     }*/

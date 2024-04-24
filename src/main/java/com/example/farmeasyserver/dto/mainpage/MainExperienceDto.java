@@ -1,6 +1,6 @@
 package com.example.farmeasyserver.dto.mainpage;
 
-import com.example.farmeasyserver.dto.PostImageQueryDto;
+import com.example.farmeasyserver.dto.ImageDto;
 
 
 public class MainExperienceDto {
@@ -9,5 +9,5 @@ public class MainExperienceDto {
     private String crop;
     private String farmName;
     private int postLike;
-    private PostImageQueryDto image;
+    private ImageDto image;
 }
