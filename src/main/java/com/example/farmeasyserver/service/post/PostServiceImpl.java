@@ -47,25 +47,36 @@ public class PostServiceImpl implements PostService{
     @Override
     public List<MainCommunityDto> getMainCommunityPosts() {
 
-        List<MainCommunityDto> communityPostsDto = new ArrayList<>();
+        List<MainCommunityDto> mainCommunityPosts = new ArrayList<>();
         List<CommunityPost> communityPosts = communityRepository.findTop5OrderByIdDesc();
 
-        ModelMapper modelMapper = new ModelMapper();
         for(CommunityPost post : communityPosts){
-            MainCommunityDto dto = modelMapper.map(post, MainCommunityDto.class);
-            communityPostsDto.add(dto);
+            mainCommunityPosts.add(MainCommunityDto.toDto(post));
         }
-        return communityPostsDto;
+        return mainCommunityPosts;
     }
 
     @Override
     public List<MainMarketDto> getMainMarketPosts() {
-        return null;
+        List<MainMarketDto> mainMarketPosts = new ArrayList<>();
+        List<MarketPost> marketPosts = marketRepository.findTop5OrderByIdDesc();
+
+        for(MarketPost post : marketPosts){
+            mainMarketPosts.add(MainMarketDto.toDto(post));
+        }
+        return mainMarketPosts;
     }
 
     @Override
     public List<MainExperienceDto> getMainExperiencePosts() {
-        return null;
+
+        List<MainExperienceDto> mainExperiencePosts = new ArrayList<>();
+        List<ExperiencePost> experiencePosts = experienceRepository.findTop5OrderByIdDesc();
+
+        for(ExperiencePost post : experiencePosts){
+            mainExperiencePosts.add(MainExperienceDto.toDto(post));
+        }
+        return mainExperiencePosts;
     }
 
 
@@ -133,7 +144,7 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public MarketPostDto readMarketPost(Long postId) throws ChangeSetPersister.NotFoundException {
-        return MarketPostDto.toDto(marketRepository.findById(postId)
+        return MarketPostDto.toDto(marketRepository.findByIdWithUser(postId)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new));
     }
 
