@@ -18,6 +18,14 @@ public class MainExperienceDto {
     private int postLike;
     private ImageDto image;
 
+    public MainExperienceDto(Long postId,String sigungu, ItemCategory crop,String farmName,int postLike){
+        this.postId = postId;
+        this.sigungu =sigungu;
+        this.crop = crop;
+        this.farmName = farmName;
+        this.postLike = postLike;
+    }
+
 
     public static MainExperienceDto toDto(ExperiencePost post){
         return new MainExperienceDto(
@@ -25,8 +33,7 @@ public class MainExperienceDto {
                 post.getAuthor().getAddress().getSigungu(),
                 post.getCrop(),
                 post.getFarmName(),
-                post.getPostLike(),
-                post.getImageList().stream().map(i->ImageDto.toDto(i)).findFirst().orElse(null)
+                post.getPostLike()
         );
     }
 }

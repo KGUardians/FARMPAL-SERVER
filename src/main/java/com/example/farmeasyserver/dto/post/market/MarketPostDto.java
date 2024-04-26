@@ -26,7 +26,7 @@ public class MarketPostDto extends PostDto {
                 post.getTitle(),
                 MarketAuthorDto.toDto(post.getAuthor()),
                 post.getPostLike(),
-                post.getImageList().stream().map(i->ImageDto.toDto(i)).collect(Collectors.toList()),
+                post.getImageList().stream().map(i->ImageDto.toDto(i,i.getId())).collect(Collectors.toList()),
                 post.getItem()
         );
     }

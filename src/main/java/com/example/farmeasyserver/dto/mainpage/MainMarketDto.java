@@ -17,6 +17,15 @@ public class MainMarketDto {
     private int postLike;
     private ImageDto image;
 
+    public MainMarketDto(Long postId, String sigungu,String crop,int price,int gram,int postLike){
+        this.postId = postId;
+        this.sigungu = sigungu;
+        this.crop = crop;
+        this.price = price;
+        this.postLike = postLike;
+
+    }
+
     public static MainMarketDto toDto(MarketPost post){
         return new MainMarketDto(
                 post.getId(),
@@ -24,8 +33,7 @@ public class MainMarketDto {
                 post.getItem().getItemName(),
                 post.getItem().getPrice(),
                 post.getItem().getGram(),
-                post.getPostLike(),
-                post.getImageList().stream().map(i->ImageDto.toDto(i)).findFirst().orElse(null)
+                post.getPostLike()
         );
     }
 }

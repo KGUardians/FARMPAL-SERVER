@@ -29,7 +29,7 @@ public class CommunityPostDto extends PostDto {
                 post.getPostLike(),
                 post.getCommunityType(),
                 post.getContent(),
-                post.getImageList().stream().map(i->ImageDto.toDto(i)).collect(Collectors.toList())
+                post.getImageList().stream().map(i->ImageDto.toDto(i, i.getId())).collect(Collectors.toList())
         );
     }
 }

@@ -1,5 +1,6 @@
 package com.example.farmeasyserver.service.post;
 
+import com.example.farmeasyserver.dto.ImageDto;
 import com.example.farmeasyserver.dto.mainpage.MainCommunityDto;
 import com.example.farmeasyserver.dto.mainpage.MainExperienceDto;
 import com.example.farmeasyserver.dto.mainpage.MainMarketDto;
@@ -24,7 +25,6 @@ import com.example.farmeasyserver.repository.post.MarketRepository;
 import com.example.farmeasyserver.service.file.FileService;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +32,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
@@ -49,10 +51,19 @@ public class PostServiceImpl implements PostService{
 
         List<MainCommunityDto> mainCommunityPosts = new ArrayList<>();
         List<CommunityPost> communityPosts = communityRepository.findTop5OrderByIdDesc();
+        List<Long> postIdList = communityRepository.findIdOrderByIdDesc();
+        List<ImageDto> postImages = communityRepository.findTop5ImagesDto(postIdList);
+        Map<Long,List<ImageDto>> postDtoMap = postImages.stream().collect(Collectors.groupingBy(ImageDto::getPostId));
 
         for(CommunityPost post : communityPosts){
             mainCommunityPosts.add(MainCommunityDto.toDto(post));
         }
+
+        mainCommunityPosts.forEach(p -> {
+            List<ImageDto> imageDtos = postDtoMap.get(p.getPostId());
+            if (imageDtos != null && !imageDtos.isEmpty())
+                p.setImageDto(imageDtos.get(0));
+        });
         return mainCommunityPosts;
     }
 
@@ -72,7 +83,6 @@ public class PostServiceImpl implements PostService{
 
         List<MainExperienceDto> mainExperiencePosts = new ArrayList<>();
         List<ExperiencePost> experiencePosts = experienceRepository.findTop5OrderByIdDesc();
-
         for(ExperiencePost post : experiencePosts){
             mainExperiencePosts.add(MainExperienceDto.toDto(post));
         }
@@ -138,8 +148,8 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public CommunityPostDto readCommunityPost(Long postId) throws ChangeSetPersister.NotFoundException {
-        CommunityPost communityPost = communityRepository.findByIdWithUser(postId).orElseThrow(ChangeSetPersister.NotFoundException::new);
-        return CommunityPostDto.toDto(communityPost);
+        return CommunityPostDto.toDto(communityRepository.findByIdWithUser(postId)
+                .orElseThrow(ChangeSetPersister.NotFoundException::new));
     }
 
     @Override

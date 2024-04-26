@@ -26,7 +26,7 @@ public class ExperiencePostDto {
                 post.getTitle(),
                 post.getPostLike(),
                 ExperienceAuthorDto.toDto(post.getAuthor()),
-                post.getImageList().stream().map(i->ImageDto.toDto(i)).collect(Collectors.toList()),
+                post.getImageList().stream().map(i->ImageDto.toDto(i, i.getId())).collect(Collectors.toList()),
                 post.getRecruitment()
         );
     }
