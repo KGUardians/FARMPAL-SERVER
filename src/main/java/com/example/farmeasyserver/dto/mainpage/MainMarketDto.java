@@ -3,10 +3,10 @@ package com.example.farmeasyserver.dto.mainpage;
 import com.example.farmeasyserver.dto.ImageDto;
 import com.example.farmeasyserver.entity.board.market.MarketPost;
 import lombok.AllArgsConstructor;
-
-import java.util.stream.Collectors;
+import lombok.Data;
 
 @AllArgsConstructor
+@Data
 public class MainMarketDto {
     private Long postId;
     private String sigungu;

@@ -14,15 +14,11 @@
       <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/dto/ImageDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/dto/ImageDto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/dto/mainpage/MainCommunityDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/dto/mainpage/MainCommunityDto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/dto/mainpage/MainExperienceDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/dto/mainpage/MainExperienceDto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/dto/mainpage/MainMarketDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/dto/mainpage/MainMarketDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/dto/post/community/CommunityPostDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/dto/post/community/CommunityPostDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/dto/post/experience/ExperiencePostDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/dto/post/experience/ExperiencePostDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/dto/post/market/MarketPostDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/dto/post/market/MarketPostDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/post/CommunityRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/post/CommunityRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/service/file/FileService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/service/file/FileService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/post/ExperienceRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/post/ExperienceRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/post/MarketRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/post/MarketRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/service/post/PostServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/service/post/PostServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -146,7 +142,7 @@
       <workItem from="1713719033389" duration="16749000" />
       <workItem from="1713776660449" duration="1292000" />
       <workItem from="1713782218136" duration="28000" />
-      <workItem from="1713802280630" duration="53440000" />
+      <workItem from="1713802280630" duration="56511000" />
     </task>
     <task id="LOCAL-00001" summary="CropService Implements 생성">
       <option name="closed" value="true" />

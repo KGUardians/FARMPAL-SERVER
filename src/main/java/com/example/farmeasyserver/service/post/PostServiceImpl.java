@@ -46,46 +46,57 @@ public class PostServiceImpl implements PostService{
     private final MarketRepository marketRepository;
     private final ExperienceRepository experienceRepository;
     private final FileService fileService;
+
+    private Map<Long, List<ImageDto>> groupImagesByPostId(List<ImageDto> postImages) {
+        return postImages.stream()
+                .collect(Collectors.groupingBy(ImageDto::getPostId));
+    }
     @Override
     public List<MainCommunityDto> getMainCommunityPosts() {
-
-        List<MainCommunityDto> mainCommunityPosts = new ArrayList<>();
         List<CommunityPost> communityPosts = communityRepository.findTop5OrderByIdDesc();
-        List<Long> postIdList = communityRepository.findIdOrderByIdDesc();
-        List<ImageDto> postImages = communityRepository.findTop5ImagesDto(postIdList);
-        Map<Long,List<ImageDto>> postDtoMap = postImages.stream().collect(Collectors.groupingBy(ImageDto::getPostId));
+        List<MainCommunityDto> mainCommunityPosts = communityPosts.stream()
+                .map(MainCommunityDto::toDto)
+                .collect(toList());
 
-        for(CommunityPost post : communityPosts){
-            mainCommunityPosts.add(MainCommunityDto.toDto(post));
-        }
-
-        mainCommunityPosts.forEach(p -> {
-            List<ImageDto> imageDtos = postDtoMap.get(p.getPostId());
-            if (imageDtos != null && !imageDtos.isEmpty())
-                p.setImageDto(imageDtos.get(0));
-        });
         return mainCommunityPosts;
     }
 
     @Override
     public List<MainMarketDto> getMainMarketPosts() {
-        List<MainMarketDto> mainMarketPosts = new ArrayList<>();
-        List<MarketPost> marketPosts = marketRepository.findTop5OrderByIdDesc();
 
-        for(MarketPost post : marketPosts){
-            mainMarketPosts.add(MainMarketDto.toDto(post));
-        }
+        List<MarketPost> marketPosts = marketRepository.findTop4OrderByIdDesc();
+        List<Long> postIdList = marketRepository.findTop4IdOrderByIdDesc();
+        List<ImageDto> postImages = marketRepository.findImagesDtoByPostIds(postIdList);
+
+        List<MainMarketDto> mainMarketPosts = marketPosts.stream()
+                .map(MainMarketDto::toDto)
+                .collect(toList());
+
+        mainMarketPosts.forEach(p -> {
+            List<ImageDto> imageDtos = groupImagesByPostId(postImages).get(p.getPostId());
+            if (imageDtos != null && !imageDtos.isEmpty())
+                p.setImage(imageDtos.get(0));
+        });
         return mainMarketPosts;
     }
 
     @Override
     public List<MainExperienceDto> getMainExperiencePosts() {
 
-        List<MainExperienceDto> mainExperiencePosts = new ArrayList<>();
-        List<ExperiencePost> experiencePosts = experienceRepository.findTop5OrderByIdDesc();
-        for(ExperiencePost post : experiencePosts){
-            mainExperiencePosts.add(MainExperienceDto.toDto(post));
-        }
+        List<ExperiencePost> experiencePosts = experienceRepository.findTop4OrderByIdDesc();
+        List<Long> postIdList = experienceRepository.findTop4IdOrderByIdDesc();
+        List<ImageDto> postImages = experienceRepository.findImagesDtoByPostIds(postIdList);
+
+        List<MainExperienceDto> mainExperiencePosts = experiencePosts.stream()
+                .map(MainExperienceDto::toDto)
+                .collect(toList());
+
+        mainExperiencePosts.forEach(p -> {
+            List<ImageDto> imageDtos = groupImagesByPostId(postImages).get(p.getPostId());
+            if (imageDtos != null && !imageDtos.isEmpty())
+                p.setImage(imageDtos.get(0));
+        });
+
         return mainExperiencePosts;
     }
 

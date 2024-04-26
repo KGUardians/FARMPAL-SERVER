@@ -3,7 +3,6 @@ package com.example.farmeasyserver.dto.mainpage;
 import com.example.farmeasyserver.dto.ImageDto;
 import com.example.farmeasyserver.entity.board.ItemCategory;
 import com.example.farmeasyserver.entity.board.exprience.ExperiencePost;
-import com.example.farmeasyserver.entity.board.market.MarketPost;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
