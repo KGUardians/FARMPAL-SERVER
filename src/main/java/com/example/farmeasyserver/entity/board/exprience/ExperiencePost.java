@@ -1,7 +1,7 @@
 package com.example.farmeasyserver.entity.board.exprience;
 
+import com.example.farmeasyserver.entity.board.CropCategory;
 import com.example.farmeasyserver.entity.board.Image;
-import com.example.farmeasyserver.entity.board.ItemCategory;
 import com.example.farmeasyserver.entity.board.Post;
 import com.example.farmeasyserver.entity.user.User;
 import jakarta.persistence.*;
@@ -25,7 +25,7 @@ public class ExperiencePost extends Post {
     @Embedded
     private Recruitment recruitment;
     @Enumerated
-    private ItemCategory crop;
+    private CropCategory cropCategory;
     private String farmName;
     @OneToMany(mappedBy = "e_post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> imageList;

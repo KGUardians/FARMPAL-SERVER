@@ -1,5 +1,6 @@
 package com.example.farmeasyserver.dto.post.community;
 
+import com.example.farmeasyserver.entity.board.CropCategory;
 import com.example.farmeasyserver.entity.board.community.CommunityType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -26,6 +27,7 @@ public class CommunityRequest {
     private String content;
 
     private CommunityType type;
+    private CropCategory cropCategory;
 
     @ApiModelProperty(hidden = true)
     private Long userId;

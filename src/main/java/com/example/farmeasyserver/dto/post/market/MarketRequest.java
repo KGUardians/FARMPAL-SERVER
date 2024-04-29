@@ -1,7 +1,6 @@
 package com.example.farmeasyserver.dto.post.market;
 
-import com.example.farmeasyserver.entity.board.community.CommunityType;
-import com.example.farmeasyserver.entity.board.ItemCategory;
+import com.example.farmeasyserver.entity.board.CropCategory;
 import io.swagger.annotations.ApiModelProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -40,7 +39,7 @@ public class MarketRequest {
     @ApiModelProperty(value = "카테고리", notes = "카테고리를 입력해주세요", required = true, example = "MARKET")
     @NotNull(message = "카테고리 아이디를 입력해주세요.")
     @PositiveOrZero(message = "올바른 카테고리 아이디를 입력해주세요.")
-    private ItemCategory itemCategory;
+    private CropCategory cropCategory;
 
     @ApiModelProperty(hidden = true)
     @Null

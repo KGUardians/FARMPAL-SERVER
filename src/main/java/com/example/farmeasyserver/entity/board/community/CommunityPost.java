@@ -1,6 +1,7 @@
 package com.example.farmeasyserver.entity.board.community;
 
 import com.example.farmeasyserver.entity.board.Comment;
+import com.example.farmeasyserver.entity.board.CropCategory;
 import com.example.farmeasyserver.entity.board.Image;
 import com.example.farmeasyserver.entity.board.Post;
 import com.example.farmeasyserver.entity.user.User;
@@ -28,6 +29,8 @@ public class CommunityPost extends Post {
     @Enumerated(EnumType.STRING)
     @Column(name = "community_type")
     private CommunityType communityType;
+    @Enumerated(EnumType.STRING)
+    private CropCategory cropCategory;
     @Lob
     private String content;
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

@@ -121,7 +121,7 @@ public class PostServiceImpl implements PostService{
     public PostCreateResponse createMarketPost(MarketRequest req) throws ChangeSetPersister.NotFoundException {
         User author = userRepository.findById(req.getUserId()).orElseThrow(ChangeSetPersister.NotFoundException::new);
         List<Image> imageList = req.getImageList().stream().map(i -> new Image(i.getOriginalFilename())).collect(toList());
-        Item item = new Item(req.getItemName(),req.getItemCategory(), req.getPrice(), req.getGram());
+        Item item = new Item(req.getItemName(),req.getCropCategory(), req.getPrice(), req.getGram());
         MarketPost post = new MarketPost(req.getTitle(),req.getContent(),item);
 
         post.setAuthor(author);
