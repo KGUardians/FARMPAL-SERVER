@@ -19,7 +19,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommunityRequest extends PostCreateRequest {
-
     @ApiModelProperty(value = "게시글 본문", required = true, example = "my content")
     @NotBlank(message = "게시글 본문을 입력해주세요.")
     private String content;
@@ -29,6 +28,4 @@ public class CommunityRequest extends PostCreateRequest {
     @ApiModelProperty(value = "작물 종류", required = true, example = "STRAWBERRY")
     @NotBlank(message = "작물 종류 선택")
     private CropCategory cropCategory;
-    @ApiModelProperty(value = "이미지", notes = "이미지를 첨부해주세요.")
-    private List<MultipartFile> imageList = new ArrayList<>();
 }

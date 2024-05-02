@@ -27,13 +27,13 @@ public class CommunityPost extends Post {
     private User author;
     @Column(name = "post_title",nullable = false)
     private String title;
+    @Lob
+    private String content;
     @Enumerated(EnumType.STRING)
     @Column(name = "community_type")
     private CommunityType communityType;
     @Enumerated(EnumType.STRING)
     private CropCategory cropCategory;
-    @Lob
-    private String content;
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Comment> commentList = new ArrayList<>();
 
