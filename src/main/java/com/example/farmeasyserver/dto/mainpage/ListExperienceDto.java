@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class MainExperienceDto {
+public class ListExperienceDto {
     private Long postId;
     private String sigungu;
     private CropCategory cropCategory;
@@ -17,7 +17,7 @@ public class MainExperienceDto {
     private int postLike;
     private ImageDto image;
 
-    public MainExperienceDto(Long postId,String sigungu, CropCategory cropCategory,String farmName,int postLike){
+    public ListExperienceDto(Long postId, String sigungu, CropCategory cropCategory, String farmName, int postLike){
         this.postId = postId;
         this.sigungu =sigungu;
         this.cropCategory = cropCategory;
@@ -26,8 +26,8 @@ public class MainExperienceDto {
     }
 
 
-    public static MainExperienceDto toDto(ExperiencePost post){
-        return new MainExperienceDto(
+    public static ListExperienceDto toDto(ExperiencePost post){
+        return new ListExperienceDto(
                 post.getId(),
                 post.getAuthor().getAddress().getSigungu(),
                 post.getCropCategory(),

@@ -21,11 +21,9 @@ public class CommunityPost extends Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY)
+    /*@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User author;
-    @Column(name = "post_title",nullable = false)
-    private String title;
+    private User author;*/
     @Enumerated(EnumType.STRING)
     @Column(name = "community_type")
     private CommunityType communityType;
@@ -35,9 +33,11 @@ public class CommunityPost extends Post {
     private String content;
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Comment> commentList = new ArrayList<>();
+/*
 
     @OneToMany(mappedBy = "c_post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> imageList = new ArrayList<>();
+*/
 
     public CommunityPost(String title, CommunityType type, String content) {
         this.title = title;

@@ -1,8 +1,8 @@
 package com.example.farmeasyserver.service.post;
 
-import com.example.farmeasyserver.dto.mainpage.MainCommunityDto;
-import com.example.farmeasyserver.dto.mainpage.MainExperienceDto;
-import com.example.farmeasyserver.dto.mainpage.MainMarketDto;
+import com.example.farmeasyserver.dto.mainpage.ListCommunityDto;
+import com.example.farmeasyserver.dto.mainpage.ListExperienceDto;
+import com.example.farmeasyserver.dto.mainpage.ListMarketDto;
 import com.example.farmeasyserver.dto.post.PostCreateResponse;
 import com.example.farmeasyserver.dto.post.community.CommunityPostDto;
 import com.example.farmeasyserver.dto.post.market.MarketPostDto;
@@ -15,9 +15,9 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import java.util.List;
 
 public interface PostService {
-    List<MainCommunityDto> getMainCommunityPosts();
-    List<MainMarketDto> getMainMarketPosts();
-    List<MainExperienceDto> getMainExperiencePosts();
+    List<ListCommunityDto> getMainCommunityPosts();
+    List<ListMarketDto> getMainMarketPosts();
+    List<ListExperienceDto> getMainExperiencePosts();
 
     PostCreateResponse createCommunityPost(CommunityRequest req) throws ChangeSetPersister.NotFoundException;
     PostCreateResponse createMarketPost(MarketRequest req) throws ChangeSetPersister.NotFoundException;
@@ -26,4 +26,7 @@ public interface PostService {
     CommunityPostDto readCommunityPost(Long postId) throws ChangeSetPersister.NotFoundException;
     MarketPostDto readMarketPost(Long postId) throws ChangeSetPersister.NotFoundException;
     ExperiencePostDto readExperiencePost(Long postId) throws ChangeSetPersister.NotFoundException;
+
+
+    List<ListCommunityDto> getCommunityPostList();
 }

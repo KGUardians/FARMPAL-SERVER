@@ -16,6 +16,14 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ExperienceController {
     private final PostService postService;
+
+    /*
+    @GetMapping("/")
+    public Response getPosts(){
+
+    }
+    */
+
     @PostMapping("/posts")
     public Response create(@Valid @ModelAttribute ExperienceRequest req) throws ChangeSetPersister.NotFoundException {
         return Response.success(postService.createExperiencePost(req));

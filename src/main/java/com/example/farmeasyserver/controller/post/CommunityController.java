@@ -18,6 +18,12 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CommunityController {
     private final PostService postService;
+    /*
+    @GetMapping("/")
+    public Response getPosts(){
+
+    }
+    */
 
     @PostMapping("/posts")
     public Response create(@Valid @ModelAttribute CommunityRequest req) throws ChangeSetPersister.NotFoundException {

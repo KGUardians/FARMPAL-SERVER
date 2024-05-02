@@ -8,8 +8,8 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 public class MainPageDto {
-    List<MainCommunityDto> mainCommunityDtoList;
-    List<MainMarketDto> mainMarketDtoList;
-    List<MainExperienceDto> mainExperienceDtoList;
+    List<ListCommunityDto> listCommunityDtoList;
+    List<ListMarketDto> listMarketDtoList;
+    List<ListExperienceDto> listExperienceDtoList;
 
 }

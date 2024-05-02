@@ -7,7 +7,7 @@ import lombok.Data;
 
 @AllArgsConstructor
 @Data
-public class MainMarketDto {
+public class ListMarketDto {
     private Long postId;
     private String sigungu;
     private String crop;
@@ -17,7 +17,7 @@ public class MainMarketDto {
     private int postLike;
     private ImageDto image;
 
-    public MainMarketDto(Long postId, String sigungu,String crop,int price,int gram,int postLike){
+    public ListMarketDto(Long postId, String sigungu, String crop, int price, int gram, int postLike){
         this.postId = postId;
         this.sigungu = sigungu;
         this.crop = crop;
@@ -26,8 +26,8 @@ public class MainMarketDto {
 
     }
 
-    public static MainMarketDto toDto(MarketPost post){
-        return new MainMarketDto(
+    public static ListMarketDto toDto(MarketPost post){
+        return new ListMarketDto(
                 post.getId(),
                 post.getAuthor().getAddress().getSigungu(),
                 post.getItem().getItemName(),

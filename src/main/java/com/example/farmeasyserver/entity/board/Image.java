@@ -22,13 +22,15 @@ public class Image {
     private String uniqueName;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    private Post post;
+    /*@ManyToOne(fetch = FetchType.LAZY)
     private MarketPost m_post;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private CommunityPost c_post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private ExperiencePost e_post;
+    private ExperiencePost e_post;*/
 
 
     private final static String supportedExtension[] = {"jpg","jpeg","gif","bmp","png"};

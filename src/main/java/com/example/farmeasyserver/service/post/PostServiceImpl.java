@@ -1,9 +1,10 @@
 package com.example.farmeasyserver.service.post;
 
 import com.example.farmeasyserver.dto.ImageDto;
-import com.example.farmeasyserver.dto.mainpage.MainCommunityDto;
-import com.example.farmeasyserver.dto.mainpage.MainExperienceDto;
-import com.example.farmeasyserver.dto.mainpage.MainMarketDto;
+import com.example.farmeasyserver.dto.mainpage.ListCommunityDto;
+import com.example.farmeasyserver.dto.mainpage.ListExperienceDto;
+import com.example.farmeasyserver.dto.mainpage.ListMarketDto;
+import com.example.farmeasyserver.dto.post.PostCreateRequest;
 import com.example.farmeasyserver.dto.post.PostCreateResponse;
 import com.example.farmeasyserver.dto.post.community.CommunityPostDto;
 import com.example.farmeasyserver.dto.post.market.MarketPostDto;
@@ -12,6 +13,7 @@ import com.example.farmeasyserver.dto.post.community.CommunityRequest;
 import com.example.farmeasyserver.dto.post.market.MarketRequest;
 import com.example.farmeasyserver.dto.post.experience.ExperienceRequest;
 import com.example.farmeasyserver.entity.board.Image;
+import com.example.farmeasyserver.entity.board.Post;
 import com.example.farmeasyserver.entity.board.community.CommunityPost;
 import com.example.farmeasyserver.entity.board.exprience.ExperiencePost;
 import com.example.farmeasyserver.entity.board.exprience.Recruitment;
@@ -32,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -51,24 +54,24 @@ public class PostServiceImpl implements PostService{
                 .collect(Collectors.groupingBy(ImageDto::getPostId));
     }
     @Override
-    public List<MainCommunityDto> getMainCommunityPosts() {
+    public List<ListCommunityDto> getMainCommunityPosts() {
         List<CommunityPost> communityPosts = communityRepository.findTop5OrderByIdDesc();
-        List<MainCommunityDto> mainCommunityPosts = communityPosts.stream()
-                .map(MainCommunityDto::toDto)
+        List<ListCommunityDto> mainCommunityPosts = communityPosts.stream()
+                .map(ListCommunityDto::toDto)
                 .collect(toList());
 
         return mainCommunityPosts;
     }
 
     @Override
-    public List<MainMarketDto> getMainMarketPosts() {
+    public List<ListMarketDto> getMainMarketPosts() {
 
         List<MarketPost> marketPosts = marketRepository.findTop4OrderByIdDesc();
         List<Long> postIdList = marketRepository.findTop4IdOrderByIdDesc();
         List<ImageDto> postImages = marketRepository.findImagesDtoByPostIds(postIdList);
 
-        List<MainMarketDto> mainMarketPosts = marketPosts.stream()
-                .map(MainMarketDto::toDto)
+        List<ListMarketDto> mainMarketPosts = marketPosts.stream()
+                .map(ListMarketDto::toDto)
                 .collect(toList());
 
         mainMarketPosts.forEach(p -> {
@@ -80,14 +83,14 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<MainExperienceDto> getMainExperiencePosts() {
+    public List<ListExperienceDto> getMainExperiencePosts() {
 
         List<ExperiencePost> experiencePosts = experienceRepository.findTop4OrderByIdDesc();
         List<Long> postIdList = experienceRepository.findTop4IdOrderByIdDesc();
         List<ImageDto> postImages = experienceRepository.findImagesDtoByPostIds(postIdList);
 
-        List<MainExperienceDto> mainExperiencePosts = experiencePosts.stream()
-                .map(MainExperienceDto::toDto)
+        List<ListExperienceDto> mainExperiencePosts = experiencePosts.stream()
+                .map(ListExperienceDto::toDto)
                 .collect(toList());
 
         mainExperiencePosts.forEach(p -> {
@@ -116,21 +119,22 @@ public class PostServiceImpl implements PostService{
         return new PostCreateResponse(communityPost.getId(),"community");
     }
 
+
     @Override
     @Transactional
     public PostCreateResponse createMarketPost(MarketRequest req) throws ChangeSetPersister.NotFoundException {
         User author = userRepository.findById(req.getUserId()).orElseThrow(ChangeSetPersister.NotFoundException::new);
         List<Image> imageList = req.getImageList().stream().map(i -> new Image(i.getOriginalFilename())).collect(toList());
         Item item = new Item(req.getItemName(),req.getCropCategory(), req.getPrice(), req.getGram());
-        MarketPost post = new MarketPost(req.getTitle(),req.getContent(),item);
+        MarketPost marketPost = new MarketPost(req.getTitle(),req.getContent(),item);
 
-        post.setAuthor(author);
-        post.addImages(imageList);
+        marketPost.setAuthor(author);
+        marketPost.addImages(imageList);
 
-        marketRepository.save(post);
+        marketRepository.save(marketPost);
 
-        uploadImages(post.getImageList(),req.getImageList());
-        return new PostCreateResponse(post.getId(),"market");
+        uploadImages(marketPost.getImageList(),req.getImageList());
+        return new PostCreateResponse(marketPost.getId(),"market");
     }
 
     @Override
@@ -172,6 +176,11 @@ public class PostServiceImpl implements PostService{
     public ExperiencePostDto readExperiencePost(Long postId) throws ChangeSetPersister.NotFoundException {
         return ExperiencePostDto.toDto(experienceRepository.findByIdWithUser(postId)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new));
+    }
+
+    @Override
+    public List<ListCommunityDto> getCommunityPostList() {
+        return null;
     }
 
     private void uploadImages(List<Image> images, List<MultipartFile> fileImages) {

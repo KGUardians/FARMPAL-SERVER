@@ -17,6 +17,13 @@ import org.springframework.web.bind.annotation.*;
 public class MarketController {
 
     private final PostService postService;
+    /*
+    @GetMapping("/")
+    public Response getPosts(){
+
+    }
+    */
+
 
     @PostMapping("/posts")
     public Response create(@Valid @ModelAttribute MarketRequest req) throws ChangeSetPersister.NotFoundException {

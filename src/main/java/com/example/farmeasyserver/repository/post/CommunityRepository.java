@@ -14,11 +14,14 @@ public interface CommunityRepository extends JpaRepository<CommunityPost,Long> {
 
     @Query("SELECT cp.id FROM CommunityPost cp ORDER BY cp.id DESC limit 5")
     List<Long> findIdOrderByIdDesc();
+
     @Query("select new com.example.farmeasyserver.dto.ImageDto(i.id,cp.id,i.originName,i.uniqueName)"+
             " from Image i"+
             " join i.c_post cp"+
             " where i.c_post.id in :postIds")
     List<ImageDto> findTop5ImagesDto(List<Long> postIds);
+
+    List<CommunityPost> findAllByOrderByIdDesc();
     /*{
         List<ImageDto> postImages = em.createQuery(
                         ,ImageDto.class)
