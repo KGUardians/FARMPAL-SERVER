@@ -4,7 +4,6 @@ import com.example.farmeasyserver.dto.ImageDto;
 import com.example.farmeasyserver.dto.mainpage.ListCommunityDto;
 import com.example.farmeasyserver.dto.mainpage.ListExperienceDto;
 import com.example.farmeasyserver.dto.mainpage.ListMarketDto;
-import com.example.farmeasyserver.dto.post.PostCreateRequest;
 import com.example.farmeasyserver.dto.post.PostCreateResponse;
 import com.example.farmeasyserver.dto.post.community.CommunityPostDto;
 import com.example.farmeasyserver.dto.post.market.MarketPostDto;
@@ -13,7 +12,6 @@ import com.example.farmeasyserver.dto.post.community.CommunityRequest;
 import com.example.farmeasyserver.dto.post.market.MarketRequest;
 import com.example.farmeasyserver.dto.post.experience.ExperienceRequest;
 import com.example.farmeasyserver.entity.board.Image;
-import com.example.farmeasyserver.entity.board.Post;
 import com.example.farmeasyserver.entity.board.community.CommunityPost;
 import com.example.farmeasyserver.entity.board.exprience.ExperiencePost;
 import com.example.farmeasyserver.entity.board.exprience.Recruitment;
@@ -34,7 +32,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 

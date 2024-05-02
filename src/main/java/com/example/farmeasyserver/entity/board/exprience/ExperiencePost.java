@@ -20,6 +20,8 @@ public class ExperiencePost extends Post {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User author;
+    @Column(name = "post_title",nullable = false)
+    private String title;
     @Embedded
     private Recruitment recruitment;
     @Enumerated
