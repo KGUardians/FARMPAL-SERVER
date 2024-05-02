@@ -12,16 +12,13 @@ public interface MarketRepository extends JpaRepository<MarketPost,Long> {
     @Query("SELECT mp FROM MarketPost mp join fetch mp.author ORDER BY mp.id DESC limit 4")
     List<MarketPost> findTop4OrderByIdDesc();
 
-    @Query("SELECT cp.id FROM MarketPost cp ORDER BY cp.id DESC limit 4")
-    List<Long> findTop4IdOrderByIdDesc();
-
     @Query("select mp from MarketPost mp join fetch mp.author where mp.id = :id")
     Optional<MarketPost> findByIdWithUser(Long id);
 
-    @Query("select new com.example.farmeasyserver.dto.ImageDto(i.id,ep.id,i.originName,i.uniqueName)"+
+    @Query("select new com.example.farmeasyserver.dto.ImageDto(i.id,mp.id,i.originName,i.uniqueName)"+
             " from Image i"+
-            " join i.e_post ep"+
-            " where i.e_post.id in :postIds")
+            " join i.m_post mp"+
+            " where i.m_post.id in :postIds")
     List<ImageDto> findImagesDtoByPostIds(List<Long> postIds);
 
 }

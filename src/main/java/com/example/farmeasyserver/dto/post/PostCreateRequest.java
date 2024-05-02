@@ -21,11 +21,12 @@ public abstract class PostCreateRequest {
     @ApiModelProperty(hidden = true)
     private Long userId;
 
-    @ApiModelProperty(value = "카테고리", notes = "카테고리를 입력해주세요", required = true, example = "MARKET")
-    @NotNull(message = "카테고리 아이디를 입력해주세요.")
-    @PositiveOrZero(message = "올바른 카테고리 아이디를 입력해주세요.")
+    @ApiModelProperty(value = "작물 종류", required = true, example = "STRAWBERRY")
+    @NotNull(message = "작물 종류 선택")
     private CropCategory cropCategory;
 
+    @ApiModelProperty(value = "게시글 본문", required = true, example = "my content")
+    @NotBlank(message = "게시글 본문을 입력해주세요.")
     @Lob
     private String content;
 

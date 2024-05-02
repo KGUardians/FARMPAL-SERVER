@@ -1,29 +1,25 @@
 package com.example.farmeasyserver.dto.mainpage;
 
 import com.example.farmeasyserver.dto.ImageDto;
+import com.example.farmeasyserver.dto.post.ListPostDto;
 import com.example.farmeasyserver.entity.board.market.MarketPost;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @AllArgsConstructor
 @Data
-public class ListMarketDto {
-    private Long postId;
+public class ListMarketDto extends ListPostDto {
     private String sigungu;
     private String crop;
     private int price;
     private int gram;
-    //private String farmName;
-    private int postLike;
     private ImageDto image;
 
-    public ListMarketDto(Long postId, String sigungu, String crop, int price, int gram, int postLike){
-        this.postId = postId;
+    public ListMarketDto(Long postId,String sigungu, String crop, int price, int gram, int postLike){
+        super(postId,postLike);
         this.sigungu = sigungu;
         this.crop = crop;
         this.price = price;
-        this.postLike = postLike;
-
     }
 
     public static ListMarketDto toDto(MarketPost post){

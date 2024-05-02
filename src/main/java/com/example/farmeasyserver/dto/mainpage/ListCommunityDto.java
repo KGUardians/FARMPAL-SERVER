@@ -1,7 +1,6 @@
 package com.example.farmeasyserver.dto.mainpage;
 
 import com.example.farmeasyserver.dto.post.ListPostDto;
-import com.example.farmeasyserver.entity.board.Post;
 import com.example.farmeasyserver.entity.board.community.CommunityPost;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,8 +9,11 @@ import lombok.Data;
 @Data
 public class ListCommunityDto extends ListPostDto {
 
+    private String title;
+
     public ListCommunityDto(Long id, String title, int postLike) {
-        super(id,title,postLike);
+        super(id,postLike);
+        this.title = title;
     }
 
     public static ListCommunityDto toDto(CommunityPost communityPost){
@@ -22,13 +24,4 @@ public class ListCommunityDto extends ListPostDto {
         );
     }
 
-    @Override
-    public ListCommunityDto toDto(Post post) {
-        CommunityPost communityPost = (CommunityPost) post;
-         return new ListCommunityDto(
-                 communityPost.getId(),
-                 communityPost.getTitle(),
-                 communityPost.getPostLike()
-         );
-    }
 }

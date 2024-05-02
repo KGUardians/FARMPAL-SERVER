@@ -25,7 +25,12 @@ import com.example.farmeasyserver.repository.post.MarketRepository;
 import com.example.farmeasyserver.service.file.FileService;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,11 +50,14 @@ public class PostServiceImpl implements PostService{
     private final MarketRepository marketRepository;
     private final ExperienceRepository experienceRepository;
     private final FileService fileService;
+    @Value("${page.limit}")
+    private int pageLimit;
 
     private Map<Long, List<ImageDto>> groupImagesByPostId(List<ImageDto> postImages) {
         return postImages.stream()
                 .collect(Collectors.groupingBy(ImageDto::getPostId));
     }
+
     @Override
     public List<ListCommunityDto> getMainCommunityPosts() {
         List<CommunityPost> communityPosts = communityRepository.findTop5OrderByIdDesc();
@@ -64,7 +72,9 @@ public class PostServiceImpl implements PostService{
     public List<ListMarketDto> getMainMarketPosts() {
 
         List<MarketPost> marketPosts = marketRepository.findTop4OrderByIdDesc();
-        List<Long> postIdList = marketRepository.findTop4IdOrderByIdDesc();
+        List<Long> postIdList = marketPosts.stream()
+                .map(MarketPost::getId)
+                .collect(toList());
         List<ImageDto> postImages = marketRepository.findImagesDtoByPostIds(postIdList);
 
         List<ListMarketDto> mainMarketPosts = marketPosts.stream()
@@ -83,7 +93,9 @@ public class PostServiceImpl implements PostService{
     public List<ListExperienceDto> getMainExperiencePosts() {
 
         List<ExperiencePost> experiencePosts = experienceRepository.findTop4OrderByIdDesc();
-        List<Long> postIdList = experienceRepository.findTop4IdOrderByIdDesc();
+        List<Long> postIdList = experiencePosts.stream()
+                .map(ExperiencePost::getId)
+                .collect(toList());
         List<ImageDto> postImages = experienceRepository.findImagesDtoByPostIds(postIdList);
 
         List<ListExperienceDto> mainExperiencePosts = experiencePosts.stream()
@@ -148,7 +160,7 @@ public class PostServiceImpl implements PostService{
                 req.getDetailedRecruitmentCondition()
         );
 
-        ExperiencePost post = new ExperiencePost(req.getTitle(), recruitment);
+        ExperiencePost post = new ExperiencePost(req.getTitle(), recruitment, req.getCropCategory());
         post.addImages(imageList);
         post.setAuthor(author);
         experienceRepository.save(post);
@@ -176,8 +188,38 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<ListCommunityDto> getCommunityPostList() {
-        return null;
+    public Page<ListCommunityDto> getCommunityPostList(Pageable pageable) {
+        int page = pageable.getPageNumber() - 1;// page 위치에 있는 값은 0부터 시작한다.
+        Page<CommunityPost> postsPages = communityRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+        Page<ListCommunityDto> postsResponseDtos = postsPages.map(postPage -> ListCommunityDto.toDto(postPage));
+        return postsResponseDtos;
+    }
+
+    @Override
+    public Page<ListMarketDto> getMarketPostList(Pageable pageable) {
+        int page = pageable.getPageNumber() - 1;// page 위치에 있는 값은 0부터 시작한다.
+        Page<MarketPost> postsPages = marketRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+        List<Long> postIdList = postsPages.getContent().stream()
+                .map(MarketPost::getId)
+                .collect(toList());
+        List<ImageDto> postImages= marketRepository.findImagesDtoByPostIds(postIdList);
+
+        Page<ListMarketDto> postsResponseDtoPage = postsPages.map(postPage -> ListMarketDto.toDto(postPage));
+        postsResponseDtoPage.forEach(p -> {
+            List<ImageDto> imageDtos = groupImagesByPostId(postImages).get(p.getPostId());
+            if(imageDtos != null && !imageDtos.isEmpty())
+                p.setImage(imageDtos.get(0));
+            }
+        );
+        return postsResponseDtoPage;
+    }
+
+    @Override
+    public Page<ListExperienceDto> getExperiencePostDto(Pageable pageable) {
+        int page = pageable.getPageNumber() - 1;// page 위치에 있는 값은 0부터 시작한다.
+        Page<ExperiencePost> postsPages = experienceRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+        Page<ListExperienceDto> postsResponsePage = postsPages.map(postPage -> ListExperienceDto.toDto(postPage));
+        return postsResponsePage;
     }
 
     private void uploadImages(List<Image> images, List<MultipartFile> fileImages) {

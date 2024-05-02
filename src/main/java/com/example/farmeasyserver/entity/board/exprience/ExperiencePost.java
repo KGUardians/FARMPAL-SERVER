@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -24,15 +25,16 @@ public class ExperiencePost extends Post {
     private String title;
     @Embedded
     private Recruitment recruitment;
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private CropCategory cropCategory;
     private String farmName;
     @OneToMany(mappedBy = "e_post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Image> imageList;
+    private List<Image> imageList = new ArrayList<>();
 
-    public ExperiencePost(String title, Recruitment recruitment) {
+    public ExperiencePost(String title, Recruitment recruitment, CropCategory cropCategory) {
         this.title = title;
         this.recruitment = recruitment;
+        this.cropCategory = cropCategory;
     }
 
     public void addImages(List<Image> added) {
@@ -45,5 +47,6 @@ public class ExperiencePost extends Post {
     public void setAuthor(User author){
         this.author = author;
         author.getExperiencePosts().add(this);
+        this.farmName = author.getName();
     }
 }

@@ -11,8 +11,6 @@ import java.util.Optional;
 public interface ExperienceRepository extends JpaRepository<ExperiencePost,Long> {
     @Query("SELECT ep FROM ExperiencePost ep join fetch ep.author ORDER BY ep.id DESC limit 4")
     List<ExperiencePost> findTop4OrderByIdDesc();
-    @Query("SELECT cp.id FROM ExperiencePost cp ORDER BY cp.id DESC limit 4")
-    List<Long> findTop4IdOrderByIdDesc();
 
     @Query("select ep from ExperiencePost ep join fetch ep.author where ep.id = :id")
     Optional<ExperiencePost> findByIdWithUser(Long id);

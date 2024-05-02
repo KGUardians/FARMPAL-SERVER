@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -27,7 +28,7 @@ public class MarketPost extends Post {
     @Embedded
     private Item item;
     @OneToMany(mappedBy = "m_post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Image> imageList;
+    private List<Image> imageList = new ArrayList<>();
 
     public MarketPost(String title, String content, Item item) {
         this.title = title;
