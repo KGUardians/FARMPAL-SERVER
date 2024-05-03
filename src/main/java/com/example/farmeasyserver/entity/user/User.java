@@ -1,9 +1,7 @@
 package com.example.farmeasyserver.entity.user;
 
 import com.example.farmeasyserver.entity.board.Comment;
-import com.example.farmeasyserver.entity.board.community.CommunityPost;
-import com.example.farmeasyserver.entity.board.exprience.ExperiencePost;
-import com.example.farmeasyserver.entity.board.market.MarketPost;
+import com.example.farmeasyserver.entity.board.Post;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,14 +34,7 @@ public class User {
     @Embedded
     private Address address;
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    private List<CommunityPost> communityPosts = new ArrayList<>();
-
-    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    private List<MarketPost> marketPosts = new ArrayList<>();
-
-    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    private List<ExperiencePost> experiencePosts = new ArrayList<>();
-
+    private List<Post> postList = new ArrayList<>();
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 

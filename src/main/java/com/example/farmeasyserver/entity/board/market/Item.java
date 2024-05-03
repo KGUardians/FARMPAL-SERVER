@@ -11,16 +11,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Item {
     private String itemName;
-    @Enumerated(EnumType.STRING)
-    private CropCategory cropCategory;
     @Column(name = "itemPrice")
     private int price;
     private int gram;
     private boolean isAvailable = true;
 
-    public Item(String itemName, CropCategory cropCategory, int price, int gram){
+    public Item(String itemName, int price, int gram){
         this.itemName = itemName;
-        this.cropCategory = cropCategory;
         this.price = price;
         this.gram = gram;
     }

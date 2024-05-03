@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Recruitment {
+    private String farmName;
     private String startTime;
     private int recruitmentNum;
     @Lob

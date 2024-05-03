@@ -1,8 +1,5 @@
 package com.example.farmeasyserver.entity.board;
 
-import com.example.farmeasyserver.entity.board.community.CommunityPost;
-import com.example.farmeasyserver.entity.board.exprience.ExperiencePost;
-import com.example.farmeasyserver.entity.board.market.MarketPost;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,14 +19,7 @@ public class Image {
     private String uniqueName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private MarketPost m_post;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private CommunityPost c_post;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private ExperiencePost e_post;
-
+    private Post post;
 
     private final static String supportedExtension[] = {"jpg","jpeg","gif","bmp","png"};
 
@@ -38,21 +28,9 @@ public class Image {
         this.uniqueName = generatedUniqueName(extractExtension(imageName));
     }
 
-    public void setPost(CommunityPost post) {
-        if(this.c_post == null) {
-            this.c_post = post;
-        }
-    }
-
-    public void setPost(MarketPost post) {
-        if(this.m_post == null) {
-            this.m_post = post;
-        }
-    }
-
-    public void setPost(ExperiencePost post) {
-        if(this.e_post == null) {
-            this.e_post = post;
+    public void setPost(Post post) {
+        if(this.post == null) {
+            this.post = post;
         }
     }
 

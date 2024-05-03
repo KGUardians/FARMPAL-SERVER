@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiModelProperty;
 import jakarta.persistence.Lob;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public abstract class PostCreateRequest {
+public abstract class CreatePostRequest {
     @ApiModelProperty(value = "게시글 제목", notes = "게시글 제목을 입력해주세요", required = true, example = "my title")
     @NotBlank(message = "게시글 제목을 입력해주세요.")
     private String title;
@@ -29,6 +28,8 @@ public abstract class PostCreateRequest {
     @NotBlank(message = "게시글 본문을 입력해주세요.")
     @Lob
     private String content;
+
+    private int postLike;
 
     @ApiModelProperty(value = "이미지", notes = "이미지를 첨부해주세요.")
     private List<MultipartFile> imageList = new ArrayList<>();

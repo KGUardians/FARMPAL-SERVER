@@ -33,7 +33,7 @@ public class ListExperienceDto extends ListPostDto {
                 post.getPostLike(),
                 post.getAuthor().getAddress().getSigungu(),
                 post.getCropCategory(),
-                post.getFarmName(),
+                post.getRecruitment().getFarmName(),
                 post.getRecruitment().getStartTime()
         );
     }
