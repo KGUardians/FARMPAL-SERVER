@@ -33,7 +33,7 @@ public interface PostService {
 
 
     Slice<ListCommunityDto> getCommunityPostList(Pageable pageable);
-    Slice<ListMarketDto> getMarketPostList(Pageable pageable);
-    Slice<ListExperienceDto> getExperiencePostList(Pageable pageable);
+    Slice<ListMarketDto> getMarketPostList(Pageable pageable,String sido,String sigungu);
+    Slice<ListExperienceDto> getExperiencePostList(Pageable pageable,String sido,String sigungu);
 
 }

@@ -1,7 +1,10 @@
 package com.example.farmeasyserver.repository.post;
 
 import com.example.farmeasyserver.dto.ImageDto;
+import com.example.farmeasyserver.entity.board.exprience.ExperiencePost;
 import com.example.farmeasyserver.entity.board.market.MarketPost;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -21,4 +24,10 @@ public interface MarketRepository extends JpaRepository<MarketPost,Long> {
             " where i.m_post.id in :postIds")
     List<ImageDto> findImagesDtoByPostIds(List<Long> postIds);
 
+    @Query("select mp from MarketPost mp join fetch mp.author")
+    Slice<MarketPost> findAllWithUser(PageRequest id);
+
+
+    @Query("select mp from MarketPost mp join fetch mp.author a where a.address.address like concat('%',:sigungu,'%') ")
+    Slice<MarketPost> findBySidoAndSigungu(PageRequest id, String sigungu);
 }

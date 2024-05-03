@@ -19,8 +19,9 @@ public class ExperienceController {
     private final PostService postService;
 
     @GetMapping
-    public Response readExperiencePostList(Pageable pageable){
-        return Response.success(postService.getExperiencePostList(pageable));
+    public Response readExperiencePostList(Pageable pageable,@RequestParam(value = "sido", required = false) String sido,
+                                           @RequestParam(value = "sigungu", required = false) String sigungu){
+        return Response.success(postService.getExperiencePostList(pageable,sido,sigungu));
     }
 
     @PostMapping("/post")

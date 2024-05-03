@@ -192,8 +192,15 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Slice<ListMarketDto> getMarketPostList(Pageable pageable) {
-        Slice<MarketPost> postsPages = marketRepository.findAll(PageRequest.of(pageable.getPageNumber(), pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+    public Slice<ListMarketDto> getMarketPostList(Pageable pageable,String sido,String sigungu) {
+        Slice<MarketPost> postsPages;
+        if (sigungu != null && !sigungu.isEmpty()) {
+            //sigungu 값이 주어진 경우
+            postsPages = marketRepository.findBySidoAndSigungu(PageRequest.of(pageable.getPageNumber(), pageLimit, Sort.by(Sort.Direction.DESC, "id")), sigungu);
+        } else {
+            //sigungu 값이 주어지지 않은 경우
+            postsPages = marketRepository.findAllWithUser(PageRequest.of(pageable.getPageNumber(), pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+        }
         List<Long> postIdList = postsPages.getContent().stream()
                 .map(MarketPost::getId)
                 .collect(toList());
@@ -210,8 +217,15 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Slice<ListExperienceDto> getExperiencePostList(Pageable pageable) {
-        Slice<ExperiencePost> postsPages = experienceRepository.findAll(PageRequest.of(pageable.getPageNumber(), pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+    public Slice<ListExperienceDto> getExperiencePostList(Pageable pageable,String sido,String sigungu) {
+        Slice<ExperiencePost> postsPages;
+        if (sigungu != null && !sigungu.isEmpty()) {
+            // sido와 sigungu 값이 모두 주어진 경우
+            postsPages = experienceRepository.findBySidoAndSigungu(PageRequest.of(pageable.getPageNumber(), pageLimit, Sort.by(Sort.Direction.DESC, "id")),sigungu);
+        } else {
+            // sido와 sigungu 값이 주어지지 않은 경우
+            postsPages = experienceRepository.findAllWithUser(PageRequest.of(pageable.getPageNumber(), pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+        }
         List<Long> postIdList = postsPages.getContent().stream()
                 .map(ExperiencePost::getId)
                 .collect(toList());
