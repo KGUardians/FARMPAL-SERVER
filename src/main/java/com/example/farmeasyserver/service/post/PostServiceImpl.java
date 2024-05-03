@@ -110,17 +110,14 @@ public class PostServiceImpl implements PostService{
         return mainExperiencePosts;
     }
 
-    public <T extends Post, R extends CreatePostRequest> T createPost(T p, R req) throws ChangeSetPersister.NotFoundException{
+    public <T extends Post> T createPost(T p, CreatePostRequest req) throws ChangeSetPersister.NotFoundException{
         T post = p;
         User author = userRepository.findById(req.getUserId()).orElseThrow(ChangeSetPersister.NotFoundException::new);
         List<Image> imageList = req.getImageList().stream().map(i -> new Image(i.getOriginalFilename())).toList();
 
-        post.setPostLike(req.getPostLike());
-        post.setTitle(req.getTitle());
-        post.setContent(req.getContent());
-        post.setCropCategory(req.getCropCategory());
-        post.setAuthor(author);
-        post.addImages(imageList);
+        post.setPostLike(req.getPostLike()); post.setTitle(req.getTitle());
+        post.setContent(req.getContent());  post.setCropCategory(req.getCropCategory());
+        post.setAuthor(author); post.addImages(imageList);
 
         uploadImages(post.getImageList(),req.getImageList());
         return post;
