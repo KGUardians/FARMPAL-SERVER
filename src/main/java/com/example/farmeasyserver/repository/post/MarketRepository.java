@@ -18,16 +18,17 @@ public interface MarketRepository extends JpaRepository<MarketPost,Long> {
     @Query("select mp from MarketPost mp join fetch mp.author where mp.id = :id")
     Optional<MarketPost> findByIdWithUser(Long id);
 
-    @Query("select new com.example.farmeasyserver.dto.ImageDto(i.id,mp.id,i.originName,i.uniqueName)"+
+    @Query("select new com.example.farmeasyserver.dto.ImageDto(i.id,i.post.id,i.originName,i.uniqueName)"+
             " from Image i"+
-            " join i.m_post mp"+
-            " where i.m_post.id in :postIds")
+            " where i.post.id in :postIds")
     List<ImageDto> findImagesDtoByPostIds(List<Long> postIds);
 
     @Query("select mp from MarketPost mp join fetch mp.author")
     Slice<MarketPost> findAllWithUser(PageRequest id);
 
 
-    @Query("select mp from MarketPost mp join fetch mp.author a where a.address.address like concat('%',:sigungu,'%') ")
+    @Query("select mp from MarketPost mp " +
+            "join fetch mp.author a " +
+            "where a.address.address like concat('%',:sigungu,'%') ")
     Slice<MarketPost> findBySidoAndSigungu(PageRequest id, String sigungu);
 }

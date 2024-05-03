@@ -1,6 +1,6 @@
 package com.example.farmeasyserver.controller.post;
 
-import com.example.farmeasyserver.dto.post.community.CommunityRequest;
+import com.example.farmeasyserver.dto.post.community.CommunityPostRequest;
 import com.example.farmeasyserver.dto.response.Response;
 import com.example.farmeasyserver.service.post.PostService;
 import io.swagger.annotations.Api;
@@ -10,7 +10,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +27,7 @@ public class CommunityController {
     }
 
     @PostMapping("/post")
-    public Response create(@Valid @ModelAttribute CommunityRequest req) throws ChangeSetPersister.NotFoundException {
+    public Response create(@Valid @ModelAttribute CommunityPostRequest req) throws ChangeSetPersister.NotFoundException {
         return Response.success(postService.createCommunityPost(req));
     }
 

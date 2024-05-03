@@ -4,14 +4,16 @@ import com.example.farmeasyserver.dto.ImageDto;
 import com.example.farmeasyserver.dto.mainpage.ListCommunityDto;
 import com.example.farmeasyserver.dto.mainpage.ListExperienceDto;
 import com.example.farmeasyserver.dto.mainpage.ListMarketDto;
-import com.example.farmeasyserver.dto.post.PostCreateResponse;
+import com.example.farmeasyserver.dto.post.CreatePostRequest;
+import com.example.farmeasyserver.dto.post.CreatePostResponse;
 import com.example.farmeasyserver.dto.post.community.CommunityPostDto;
 import com.example.farmeasyserver.dto.post.market.MarketPostDto;
 import com.example.farmeasyserver.dto.post.experience.ExperiencePostDto;
-import com.example.farmeasyserver.dto.post.community.CommunityRequest;
-import com.example.farmeasyserver.dto.post.market.MarketRequest;
-import com.example.farmeasyserver.dto.post.experience.ExperienceRequest;
+import com.example.farmeasyserver.dto.post.community.CommunityPostRequest;
+import com.example.farmeasyserver.dto.post.market.MarketPostRequest;
+import com.example.farmeasyserver.dto.post.experience.ExperiencePostRequest;
 import com.example.farmeasyserver.entity.board.Image;
+import com.example.farmeasyserver.entity.board.Post;
 import com.example.farmeasyserver.entity.board.community.CommunityPost;
 import com.example.farmeasyserver.entity.board.exprience.ExperiencePost;
 import com.example.farmeasyserver.entity.board.exprience.Recruitment;
@@ -108,62 +110,52 @@ public class PostServiceImpl implements PostService{
         return mainExperiencePosts;
     }
 
-
-    @Override
-    @Transactional
-    public PostCreateResponse createCommunityPost(CommunityRequest req) throws ChangeSetPersister.NotFoundException {
-        User author = userRepository.findById(req.getUserId())
-                .orElseThrow(ChangeSetPersister.NotFoundException::new);
-        List<Image> imageList = req.getImageList().stream().map(i -> new Image(i.getOriginalFilename())).collect(toList());
-        CommunityPost communityPost = new CommunityPost(req.getTitle(), req.getType(), req.getContent());
-
-        communityPost.setAuthor(author);
-        communityPost.addImages(imageList);
-        communityRepository.save(communityPost);
-
-        uploadImages(communityPost.getImageList(),req.getImageList());
-        return new PostCreateResponse(communityPost.getId(),"community");
-    }
-
-
-    @Override
-    @Transactional
-    public PostCreateResponse createMarketPost(MarketRequest req) throws ChangeSetPersister.NotFoundException {
+    public <T extends Post, R extends CreatePostRequest> T createPost(T p, R req) throws ChangeSetPersister.NotFoundException{
+        T post = p;
         User author = userRepository.findById(req.getUserId()).orElseThrow(ChangeSetPersister.NotFoundException::new);
-        List<Image> imageList = req.getImageList().stream().map(i -> new Image(i.getOriginalFilename())).collect(toList());
-        Item item = new Item(req.getItemName(),req.getCropCategory(), req.getPrice(), req.getGram());
-        MarketPost marketPost = new MarketPost(req.getTitle(),req.getContent(),item);
+        List<Image> imageList = req.getImageList().stream().map(i -> new Image(i.getOriginalFilename())).toList();
 
-        marketPost.setAuthor(author);
-        marketPost.addImages(imageList);
+        post.setPostLike(req.getPostLike());
+        post.setTitle(req.getTitle());
+        post.setContent(req.getContent());
+        post.setCropCategory(req.getCropCategory());
+        post.setAuthor(author);
+        post.addImages(imageList);
 
-        marketRepository.save(marketPost);
-
-        uploadImages(marketPost.getImageList(),req.getImageList());
-        return new PostCreateResponse(marketPost.getId(),"market");
+        uploadImages(post.getImageList(),req.getImageList());
+        return post;
     }
 
     @Override
     @Transactional
-    public PostCreateResponse createExperiencePost(ExperienceRequest req) throws ChangeSetPersister.NotFoundException {
-        User author = userRepository.findById(req.getUserId())
-                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+    public CreatePostResponse createCommunityPost(CommunityPostRequest req) throws ChangeSetPersister.NotFoundException {
+        CommunityPost communityPost = createPost(new CommunityPost(req.getType()),req);
+        communityRepository.save(communityPost);
+        return new CreatePostResponse(communityPost.getId(),"community");
+    }
 
-        List<Image> imageList = req.getImageList().stream()
-                .map(i -> new Image(i.getOriginalFilename())).collect(toList());
 
+    @Override
+    @Transactional
+    public CreatePostResponse createMarketPost(MarketPostRequest req) throws ChangeSetPersister.NotFoundException {
+        Item item = new Item(req.getItemName(),req.getPrice(), req.getGram());
+        MarketPost marketPost = createPost(new MarketPost(req.getContent(),item),req);
+        marketRepository.save(marketPost);
+        return new CreatePostResponse(marketPost.getId(),"market");
+    }
+
+
+    @Override
+    @Transactional
+    public CreatePostResponse createExperiencePost(ExperiencePostRequest req) throws ChangeSetPersister.NotFoundException {
         Recruitment recruitment = new Recruitment(
+                req.getFarmName(),
                 req.getStartTime(), req.getRecruitmentNum(),
                 req.getDetailedRecruitmentCondition()
         );
-
-        ExperiencePost post = new ExperiencePost(req.getTitle(), recruitment, req.getCropCategory());
-        post.addImages(imageList);
-        post.setAuthor(author);
+        ExperiencePost post = createPost(new ExperiencePost(recruitment),req);
         experienceRepository.save(post);
-
-        uploadImages(post.getImageList(),req.getImageList());
-        return new PostCreateResponse(post.getId(),"experience");
+        return new CreatePostResponse(post.getId(),"experience");
     }
 
     @Override

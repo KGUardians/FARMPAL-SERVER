@@ -1,6 +1,6 @@
 package com.example.farmeasyserver.controller.post;
 
-import com.example.farmeasyserver.dto.post.experience.ExperienceRequest;
+import com.example.farmeasyserver.dto.post.experience.ExperiencePostRequest;
 import com.example.farmeasyserver.dto.response.Response;
 import com.example.farmeasyserver.service.post.PostService;
 import io.swagger.annotations.ApiOperation;
@@ -25,7 +25,7 @@ public class ExperienceController {
     }
 
     @PostMapping("/post")
-    public Response create(@Valid @ModelAttribute ExperienceRequest req) throws ChangeSetPersister.NotFoundException {
+    public Response create(@Valid @ModelAttribute ExperiencePostRequest req) throws ChangeSetPersister.NotFoundException {
         return Response.success(postService.createExperiencePost(req));
     }
 

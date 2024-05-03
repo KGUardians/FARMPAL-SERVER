@@ -11,20 +11,25 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ExperienceRepository extends JpaRepository<ExperiencePost,Long> {
-    @Query("SELECT ep FROM ExperiencePost ep join fetch ep.author ORDER BY ep.id DESC limit 4")
+    @Query("SELECT ep FROM ExperiencePost ep " +
+            "join fetch ep.author " +
+            "ORDER BY ep.id DESC limit 4")
     List<ExperiencePost> findTop4OrderByIdDesc();
 
-    @Query("select ep from ExperiencePost ep join fetch ep.author where ep.id = :id")
+    @Query("select ep from ExperiencePost ep " +
+            "join fetch ep.author " +
+            "where ep.id = :id")
     Optional<ExperiencePost> findByIdWithUser(Long id);
 
-    @Query("select new com.example.farmeasyserver.dto.ImageDto(i.id,ep.id,i.originName,i.uniqueName)"+
+    @Query("select new com.example.farmeasyserver.dto.ImageDto(i.id,i.post.id,i.originName,i.uniqueName)"+
             " from Image i"+
-            " join i.e_post ep"+
-            " where i.e_post.id in :postIds")
+            " where i.post.id in :postIds")
     List<ImageDto> findImagesDtoByPostIds(List<Long> postIds);
 
 
-    @Query("select ep from ExperiencePost ep join fetch ep.author a where a.address.address like concat('%',:sigungu,'%')")
+    @Query("select ep from ExperiencePost ep " +
+            "join fetch ep.author a " +
+            "where a.address.address like concat('%',:sigungu,'%')")
     Slice<ExperiencePost> findBySidoAndSigungu(PageRequest id,String sigungu);
 
     @Query("select ep from ExperiencePost ep join fetch ep.author")
