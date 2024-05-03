@@ -27,10 +27,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -188,38 +185,46 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Page<ListCommunityDto> getCommunityPostList(Pageable pageable) {
-        int page = pageable.getPageNumber() - 1;// page 위치에 있는 값은 0부터 시작한다.
-        Page<CommunityPost> postsPages = communityRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
-        Page<ListCommunityDto> postsResponseDtos = postsPages.map(postPage -> ListCommunityDto.toDto(postPage));
-        return postsResponseDtos;
+    public Slice<ListCommunityDto> getCommunityPostList(Pageable pageable) {
+        Slice<CommunityPost> postSlice = communityRepository.findAll(PageRequest.of(pageable.getPageNumber(), pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+        Slice<ListCommunityDto> postsResponseSlice = postSlice.map(postPage -> ListCommunityDto.toDto(postPage));
+        return postsResponseSlice;
     }
 
     @Override
-    public Page<ListMarketDto> getMarketPostList(Pageable pageable) {
-        int page = pageable.getPageNumber() - 1;// page 위치에 있는 값은 0부터 시작한다.
-        Page<MarketPost> postsPages = marketRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+    public Slice<ListMarketDto> getMarketPostList(Pageable pageable) {
+        Slice<MarketPost> postsPages = marketRepository.findAll(PageRequest.of(pageable.getPageNumber(), pageLimit, Sort.by(Sort.Direction.DESC, "id")));
         List<Long> postIdList = postsPages.getContent().stream()
                 .map(MarketPost::getId)
                 .collect(toList());
         List<ImageDto> postImages= marketRepository.findImagesDtoByPostIds(postIdList);
 
-        Page<ListMarketDto> postsResponseDtoPage = postsPages.map(postPage -> ListMarketDto.toDto(postPage));
-        postsResponseDtoPage.forEach(p -> {
+        Slice<ListMarketDto> postsResponseSlice = postsPages.map(postPage -> ListMarketDto.toDto(postPage));
+        postsResponseSlice.forEach(p -> {
             List<ImageDto> imageDtos = groupImagesByPostId(postImages).get(p.getPostId());
             if(imageDtos != null && !imageDtos.isEmpty())
                 p.setImage(imageDtos.get(0));
             }
         );
-        return postsResponseDtoPage;
+        return postsResponseSlice;
     }
 
     @Override
-    public Page<ListExperienceDto> getExperiencePostDto(Pageable pageable) {
-        int page = pageable.getPageNumber() - 1;// page 위치에 있는 값은 0부터 시작한다.
-        Page<ExperiencePost> postsPages = experienceRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
-        Page<ListExperienceDto> postsResponsePage = postsPages.map(postPage -> ListExperienceDto.toDto(postPage));
-        return postsResponsePage;
+    public Slice<ListExperienceDto> getExperiencePostList(Pageable pageable) {
+        Slice<ExperiencePost> postsPages = experienceRepository.findAll(PageRequest.of(pageable.getPageNumber(), pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+        List<Long> postIdList = postsPages.getContent().stream()
+                .map(ExperiencePost::getId)
+                .collect(toList());
+        List<ImageDto> postImages= experienceRepository.findImagesDtoByPostIds(postIdList);
+
+        Slice<ListExperienceDto> postsResponseSlice = postsPages.map(postPage -> ListExperienceDto.toDto(postPage));
+        postsResponseSlice.forEach(p -> {
+                    List<ImageDto> imageDtos = groupImagesByPostId(postImages).get(p.getPostId());
+                    if(imageDtos != null && !imageDtos.isEmpty())
+                        p.setImage(imageDtos.get(0));
+                }
+        );
+        return postsResponseSlice;
     }
 
     private void uploadImages(List<Image> images, List<MultipartFile> fileImages) {

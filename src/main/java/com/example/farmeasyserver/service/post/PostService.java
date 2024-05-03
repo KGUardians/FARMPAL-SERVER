@@ -13,6 +13,8 @@ import com.example.farmeasyserver.dto.post.experience.ExperienceRequest;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 
 import java.util.List;
 
@@ -30,7 +32,8 @@ public interface PostService {
     ExperiencePostDto readExperiencePost(Long postId) throws ChangeSetPersister.NotFoundException;
 
 
-    Page<ListCommunityDto> getCommunityPostList(Pageable pageable);
-    Page<ListMarketDto> getMarketPostList(Pageable pageable);
-    Page<ListExperienceDto> getExperiencePostDto(Pageable pageable);
+    Slice<ListCommunityDto> getCommunityPostList(Pageable pageable);
+    Slice<ListMarketDto> getMarketPostList(Pageable pageable);
+    Slice<ListExperienceDto> getExperiencePostList(Pageable pageable);
+
 }
