@@ -3,12 +3,15 @@ package com.example.farmeasyserver.controller.post;
 import com.example.farmeasyserver.dto.post.market.MarketRequest;
 import com.example.farmeasyserver.dto.response.Response;
 import com.example.farmeasyserver.service.post.PostService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +23,7 @@ public class MarketController {
     private final PostService postService;
 
     @GetMapping
-    public Response readMarketPostList(Pageable pageable,@RequestParam(value = "sido", required = false) String sido,
+    public Response readMarketPostList(@PageableDefault(page = 1) Pageable pageable, @RequestParam(value = "sido", required = false) String sido,
                                        @RequestParam(value = "sigungu", required = false) String sigungu){
         return Response.success(postService.getMarketPostList(pageable,sido,sigungu));
     }

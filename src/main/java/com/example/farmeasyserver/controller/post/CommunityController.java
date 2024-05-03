@@ -23,7 +23,7 @@ public class CommunityController {
     private final PostService postService;
 
     @GetMapping
-    public Response readCommunityPostList(Pageable pageable){
+    public Response readCommunityPostList(@PageableDefault(page = 1) Pageable pageable){
         return Response.success(postService.getCommunityPostList(pageable));
     }
 
