@@ -1,7 +1,6 @@
 package com.example.farmeasyserver.repository.post;
 
 import com.example.farmeasyserver.dto.ImageDto;
-import com.example.farmeasyserver.entity.board.exprience.ExperiencePost;
 import com.example.farmeasyserver.entity.board.market.MarketPost;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;

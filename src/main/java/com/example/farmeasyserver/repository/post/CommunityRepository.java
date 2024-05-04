@@ -1,6 +1,5 @@
 package com.example.farmeasyserver.repository.post;
 
-import com.example.farmeasyserver.dto.ImageDto;
 import com.example.farmeasyserver.entity.board.community.CommunityPost;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

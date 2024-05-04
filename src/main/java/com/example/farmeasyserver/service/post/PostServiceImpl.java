@@ -6,6 +6,7 @@ import com.example.farmeasyserver.dto.mainpage.ListExperienceDto;
 import com.example.farmeasyserver.dto.mainpage.ListMarketDto;
 import com.example.farmeasyserver.dto.post.CreatePostRequest;
 import com.example.farmeasyserver.dto.post.CreatePostResponse;
+import com.example.farmeasyserver.dto.post.ListPostDto;
 import com.example.farmeasyserver.dto.post.community.CommunityPostDto;
 import com.example.farmeasyserver.dto.post.market.MarketPostDto;
 import com.example.farmeasyserver.dto.post.experience.ExperiencePostDto;
@@ -24,6 +25,7 @@ import com.example.farmeasyserver.repository.UserRepository;
 import com.example.farmeasyserver.repository.post.CommunityRepository;
 import com.example.farmeasyserver.repository.post.ExperienceRepository;
 import com.example.farmeasyserver.repository.post.MarketRepository;
+import com.example.farmeasyserver.repository.post.PostRepository;
 import com.example.farmeasyserver.service.file.FileService;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
@@ -48,79 +50,36 @@ public class PostServiceImpl implements PostService{
     private final CommunityRepository communityRepository;
     private final MarketRepository marketRepository;
     private final ExperienceRepository experienceRepository;
+    private final PostRepository postRepository;
     private final FileService fileService;
     @Value("${page.limit}")
     private int pageLimit;
 
-    private Map<Long, List<ImageDto>> groupImagesByPostId(List<ImageDto> postImages) {
-        return postImages.stream()
-                .collect(Collectors.groupingBy(ImageDto::getPostId));
-    }
-
     @Override
     public List<ListCommunityDto> getMainCommunityPosts() {
         List<CommunityPost> communityPosts = communityRepository.findTop5OrderByIdDesc();
-        List<ListCommunityDto> mainCommunityPosts = communityPosts.stream()
-                .map(ListCommunityDto::toDto)
-                .collect(toList());
 
-        return mainCommunityPosts;
+        return communityPosts.stream()
+                .map(ListCommunityDto::toDto)
+                .toList();
     }
 
     @Override
     public List<ListMarketDto> getMainMarketPosts() {
-
         List<MarketPost> marketPosts = marketRepository.findTop4OrderByIdDesc();
-        List<Long> postIdList = marketPosts.stream()
-                .map(MarketPost::getId)
-                .collect(toList());
-        List<ImageDto> postImages = marketRepository.findImagesDtoByPostIds(postIdList);
-
         List<ListMarketDto> mainMarketPosts = marketPosts.stream()
                 .map(ListMarketDto::toDto)
                 .collect(toList());
-
-        mainMarketPosts.forEach(p -> {
-            List<ImageDto> imageDtos = groupImagesByPostId(postImages).get(p.getPostId());
-            if (imageDtos != null && !imageDtos.isEmpty())
-                p.setImage(imageDtos.get(0));
-        });
-        return mainMarketPosts;
+        return imageMapping(marketPosts,mainMarketPosts);
     }
 
     @Override
     public List<ListExperienceDto> getMainExperiencePosts() {
-
         List<ExperiencePost> experiencePosts = experienceRepository.findTop4OrderByIdDesc();
-        List<Long> postIdList = experiencePosts.stream()
-                .map(ExperiencePost::getId)
-                .collect(toList());
-        List<ImageDto> postImages = experienceRepository.findImagesDtoByPostIds(postIdList);
-
         List<ListExperienceDto> mainExperiencePosts = experiencePosts.stream()
                 .map(ListExperienceDto::toDto)
                 .collect(toList());
-
-        mainExperiencePosts.forEach(p -> {
-            List<ImageDto> imageDtos = groupImagesByPostId(postImages).get(p.getPostId());
-            if (imageDtos != null && !imageDtos.isEmpty())
-                p.setImage(imageDtos.get(0));
-        });
-
-        return mainExperiencePosts;
-    }
-
-    public <T extends Post> T createPost(T p, CreatePostRequest req) throws ChangeSetPersister.NotFoundException{
-        T post = p;
-        User author = userRepository.findById(req.getUserId()).orElseThrow(ChangeSetPersister.NotFoundException::new);
-        List<Image> imageList = req.getImageList().stream().map(i -> new Image(i.getOriginalFilename())).toList();
-
-        post.setPostLike(req.getPostLike()); post.setTitle(req.getTitle());
-        post.setContent(req.getContent());  post.setCropCategory(req.getCropCategory());
-        post.setAuthor(author); post.addImages(imageList);
-
-        uploadImages(post.getImageList(),req.getImageList());
-        return post;
+        return imageMapping(experiencePosts,mainExperiencePosts);
     }
 
     @Override
@@ -140,7 +99,6 @@ public class PostServiceImpl implements PostService{
         marketRepository.save(marketPost);
         return new CreatePostResponse(marketPost.getId(),"market");
     }
-
 
     @Override
     @Transactional
@@ -176,8 +134,7 @@ public class PostServiceImpl implements PostService{
     @Override
     public Slice<ListCommunityDto> getCommunityPostList(Pageable pageable) {
         Slice<CommunityPost> postSlice = communityRepository.findAll(PageRequest.of(pageable.getPageNumber(), pageLimit, Sort.by(Sort.Direction.DESC, "id")));
-        Slice<ListCommunityDto> postsResponseSlice = postSlice.map(postPage -> ListCommunityDto.toDto(postPage));
-        return postsResponseSlice;
+        return postSlice.map(ListCommunityDto::toDto);
     }
 
     @Override
@@ -195,7 +152,7 @@ public class PostServiceImpl implements PostService{
                 .collect(toList());
         List<ImageDto> postImages= marketRepository.findImagesDtoByPostIds(postIdList);
 
-        Slice<ListMarketDto> postsResponseSlice = postsPages.map(postPage -> ListMarketDto.toDto(postPage));
+        Slice<ListMarketDto> postsResponseSlice = postsPages.map(ListMarketDto::toDto);
         postsResponseSlice.forEach(p -> {
             List<ImageDto> imageDtos = groupImagesByPostId(postImages).get(p.getPostId());
             if(imageDtos != null && !imageDtos.isEmpty())
@@ -220,7 +177,7 @@ public class PostServiceImpl implements PostService{
                 .collect(toList());
         List<ImageDto> postImages= experienceRepository.findImagesDtoByPostIds(postIdList);
 
-        Slice<ListExperienceDto> postsResponseSlice = postsPages.map(postPage -> ListExperienceDto.toDto(postPage));
+        Slice<ListExperienceDto> postsResponseSlice = postsPages.map(ListExperienceDto::toDto);
         postsResponseSlice.forEach(p -> {
                     List<ImageDto> imageDtos = groupImagesByPostId(postImages).get(p.getPostId());
                     if(imageDtos != null && !imageDtos.isEmpty())
@@ -229,6 +186,37 @@ public class PostServiceImpl implements PostService{
         );
         return postsResponseSlice;
     }
+
+    public <T extends ListPostDto,R extends Post> List<T> imageMapping(List<R> postList,List<T> mainPageDto){
+        List<Long> postIdList = postList.stream()
+                .map(R::getId)
+                .collect(toList());
+        List<ImageDto> postImages = postRepository.findImagesDtoByPostIds(postIdList);
+        mainPageDto.forEach(p -> {
+            List<ImageDto> imageDtos = groupImagesByPostId(postImages).get(p.getPostId());
+            if (imageDtos != null && !imageDtos.isEmpty())
+                p.setImage(imageDtos.get(0));
+        });
+        return mainPageDto;
+    }
+
+    public <T extends Post> T createPost(T p, CreatePostRequest req) throws ChangeSetPersister.NotFoundException{
+        User author = userRepository.findById(req.getUserId()).orElseThrow(ChangeSetPersister.NotFoundException::new);
+        List<Image> imageList = req.getImageList().stream().map(i -> new Image(i.getOriginalFilename())).toList();
+
+        p.setPostLike(req.getPostLike()); p.setTitle(req.getTitle());
+        p.setContent(req.getContent());  p.setCropCategory(req.getCropCategory());
+        p.setAuthor(author); p.addImages(imageList);
+
+        uploadImages(p.getImageList(),req.getImageList());
+        return p;
+    }
+    private Map<Long, List<ImageDto>> groupImagesByPostId(List<ImageDto> postImages) {
+        return postImages.stream()
+                .collect(Collectors.groupingBy(ImageDto::getPostId));
+    }
+
+
 
     private void uploadImages(List<Image> images, List<MultipartFile> fileImages) {
         IntStream.range(0, images.size()).forEach(i -> {
