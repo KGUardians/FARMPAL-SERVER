@@ -14,7 +14,6 @@ import java.util.List;
 
 @Entity
 @Data
-@DiscriminatorValue("COMMUNITY")
 @NoArgsConstructor
 public class CommunityPost extends Post {
 

@@ -2,6 +2,8 @@ package com.example.farmeasyserver.controller.post;
 
 import com.example.farmeasyserver.dto.post.community.CommunityPostRequest;
 import com.example.farmeasyserver.dto.response.Response;
+import com.example.farmeasyserver.entity.board.CropCategory;
+import com.example.farmeasyserver.entity.board.community.CommunityType;
 import com.example.farmeasyserver.service.post.PostService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,8 +23,12 @@ import org.springframework.web.bind.annotation.*;
 public class CommunityController {
     private final PostService postService;
 
-    @GetMapping
-    public Response readCommunityPostList(@PageableDefault(page = 1) Pageable pageable){
+    @GetMapping("/{type}")
+    public Response readCommunityPostList(Pageable pageable,
+                                          @PathVariable(value = "type") CommunityType type,
+                                          @RequestParam(value = "crop", required = false) CropCategory crop,
+                                          @RequestParam(value = "search", required = false) String content){
+
         return Response.success(postService.getCommunityPostList(pageable));
     }
 

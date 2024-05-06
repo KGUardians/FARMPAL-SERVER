@@ -11,7 +11,6 @@ import java.util.List;
 
 
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "POST_TYPE")
 @Data
 @Entity
 @NoArgsConstructor
@@ -36,6 +35,8 @@ public abstract class Post {
     private LocalDateTime postedTime;
     private LocalDateTime updatedTime;
     private int postLike;
+    @Enumerated(EnumType.STRING)
+    private PostType postType;
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> imageList = new ArrayList<>();

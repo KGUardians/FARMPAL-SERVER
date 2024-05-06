@@ -21,7 +21,7 @@ public class MarketController {
     private final PostService postService;
 
     @GetMapping
-    public Response readMarketPostList(@PageableDefault(page = 1) Pageable pageable, @RequestParam(value = "sido", required = false) String sido,
+    public Response readMarketPostList(Pageable pageable, @RequestParam(value = "sido", required = false) String sido,
                                        @RequestParam(value = "sigungu", required = false) String sigungu){
         return Response.success(postService.getMarketPostList(pageable,sido,sigungu));
     }

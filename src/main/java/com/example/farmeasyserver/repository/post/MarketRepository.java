@@ -17,11 +17,6 @@ public interface MarketRepository extends JpaRepository<MarketPost,Long> {
     @Query("select mp from MarketPost mp join fetch mp.author where mp.id = :id")
     Optional<MarketPost> findByIdWithUser(Long id);
 
-    @Query("select new com.example.farmeasyserver.dto.ImageDto(i.id,i.post.id,i.originName,i.uniqueName)"+
-            " from Image i"+
-            " where i.post.id in :postIds")
-    List<ImageDto> findImagesDtoByPostIds(List<Long> postIds);
-
     @Query("select mp from MarketPost mp join fetch mp.author")
     Slice<MarketPost> findAllWithUser(PageRequest id);
 

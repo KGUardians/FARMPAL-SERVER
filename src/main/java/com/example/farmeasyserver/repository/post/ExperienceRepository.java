@@ -21,12 +21,6 @@ public interface ExperienceRepository extends JpaRepository<ExperiencePost,Long>
             "where ep.id = :id")
     Optional<ExperiencePost> findByIdWithUser(Long id);
 
-    @Query("select new com.example.farmeasyserver.dto.ImageDto(i.id,i.post.id,i.originName,i.uniqueName)"+
-            " from Image i"+
-            " where i.post.id in :postIds")
-    List<ImageDto> findImagesDtoByPostIds(List<Long> postIds);
-
-
     @Query("select ep from ExperiencePost ep " +
             "join fetch ep.author a " +
             "where a.address.address like concat('%',:sigungu,'%')")

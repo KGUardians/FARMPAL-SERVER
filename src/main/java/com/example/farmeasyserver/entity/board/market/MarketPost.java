@@ -13,7 +13,6 @@ import java.util.List;
 
 @Entity
 @Data
-@DiscriminatorValue("MARKET")
 @NoArgsConstructor
 public class MarketPost extends Post {
     @Lob

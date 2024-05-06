@@ -15,6 +15,7 @@ import com.example.farmeasyserver.dto.post.market.MarketPostRequest;
 import com.example.farmeasyserver.dto.post.experience.ExperiencePostRequest;
 import com.example.farmeasyserver.entity.board.Image;
 import com.example.farmeasyserver.entity.board.Post;
+import com.example.farmeasyserver.entity.board.PostType;
 import com.example.farmeasyserver.entity.board.community.CommunityPost;
 import com.example.farmeasyserver.entity.board.exprience.ExperiencePost;
 import com.example.farmeasyserver.entity.board.exprience.Recruitment;
@@ -55,6 +56,11 @@ public class PostServiceImpl implements PostService{
     @Value("${page.limit}")
     private int pageLimit;
 
+    /*
+
+    메인 페이지 게시글 리스트 조회
+
+    */
     @Override
     public List<ListCommunityDto> getMainCommunityPosts() {
         List<CommunityPost> communityPosts = communityRepository.findTop5OrderByIdDesc();
@@ -82,10 +88,16 @@ public class PostServiceImpl implements PostService{
         return imageMapping(experiencePosts,mainExperiencePosts);
     }
 
+    /*
+
+    게시글 작성 메소드
+
+    */
     @Override
     @Transactional
     public CreatePostResponse createCommunityPost(CommunityPostRequest req) throws ChangeSetPersister.NotFoundException {
         CommunityPost communityPost = createPost(new CommunityPost(req.getType()),req);
+        communityPost.setPostType(PostType.COMMUNITY);
         communityRepository.save(communityPost);
         return new CreatePostResponse(communityPost.getId(),"community");
     }
@@ -96,6 +108,7 @@ public class PostServiceImpl implements PostService{
     public CreatePostResponse createMarketPost(MarketPostRequest req) throws ChangeSetPersister.NotFoundException {
         Item item = new Item(req.getItemName(),req.getPrice(), req.getGram());
         MarketPost marketPost = createPost(new MarketPost(req.getContent(),item),req);
+        marketPost.setPostType(PostType.MARKET);
         marketRepository.save(marketPost);
         return new CreatePostResponse(marketPost.getId(),"market");
     }
@@ -108,11 +121,17 @@ public class PostServiceImpl implements PostService{
                 req.getStartTime(), req.getRecruitmentNum(),
                 req.getDetailedRecruitmentCondition()
         );
-        ExperiencePost post = createPost(new ExperiencePost(recruitment),req);
-        experienceRepository.save(post);
-        return new CreatePostResponse(post.getId(),"experience");
+        ExperiencePost experiencePost = createPost(new ExperiencePost(recruitment),req);
+        experiencePost.setPostType(PostType.EXPERIENCE);
+        experienceRepository.save(experiencePost);
+        return new CreatePostResponse(experiencePost.getId(),"experience");
     }
 
+    /*
+
+    게시판 게시글 조회 메소드
+
+    */
     @Override
     public CommunityPostDto readCommunityPost(Long postId) throws ChangeSetPersister.NotFoundException {
         return CommunityPostDto.toDto(communityRepository.findByIdWithUser(postId)
@@ -131,62 +150,63 @@ public class PostServiceImpl implements PostService{
                 .orElseThrow(ChangeSetPersister.NotFoundException::new));
     }
 
+    /*
+
+    각 게시판 게시글 리스트 조회 메소드
+
+    */
     @Override
     public Slice<ListCommunityDto> getCommunityPostList(Pageable pageable) {
         Slice<CommunityPost> postSlice = communityRepository.findAll(PageRequest.of(pageable.getPageNumber(), pageLimit, Sort.by(Sort.Direction.DESC, "id")));
-        return postSlice.map(ListCommunityDto::toDto);
+        Slice<ListCommunityDto> listResponse = postSlice.map(ListCommunityDto::toDto);
+
+        return sliceImageMapping(postSlice,listResponse);
     }
 
     @Override
     public Slice<ListMarketDto> getMarketPostList(Pageable pageable,String sido,String sigungu) {
-        Slice<MarketPost> postsPages;
+        Slice<MarketPost> postSlice;
         if (sigungu != null && !sigungu.isEmpty()) {
-            //sigungu 값이 주어진 경우
-            postsPages = marketRepository.findBySidoAndSigungu(PageRequest.of(pageable.getPageNumber(), pageLimit, Sort.by(Sort.Direction.DESC, "id")), sigungu);
+            postSlice = marketRepository.findBySidoAndSigungu(PageRequest.of(pageable.getPageNumber(), pageLimit, Sort.by(Sort.Direction.DESC, "id")), sigungu);
         } else {
-            //sigungu 값이 주어지지 않은 경우
-            postsPages = marketRepository.findAllWithUser(PageRequest.of(pageable.getPageNumber(), pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+            postSlice = marketRepository.findAllWithUser(PageRequest.of(pageable.getPageNumber(), pageLimit, Sort.by(Sort.Direction.DESC, "id")));
         }
-        List<Long> postIdList = postsPages.getContent().stream()
-                .map(MarketPost::getId)
-                .collect(toList());
-        List<ImageDto> postImages= marketRepository.findImagesDtoByPostIds(postIdList);
+        Slice<ListMarketDto> listResponse = postSlice.map(ListMarketDto::toDto);
 
-        Slice<ListMarketDto> postsResponseSlice = postsPages.map(ListMarketDto::toDto);
-        postsResponseSlice.forEach(p -> {
-            List<ImageDto> imageDtos = groupImagesByPostId(postImages).get(p.getPostId());
-            if(imageDtos != null && !imageDtos.isEmpty())
-                p.setImage(imageDtos.get(0));
-            }
-        );
-        return postsResponseSlice;
+        return sliceImageMapping(postSlice,listResponse);
     }
 
     @Override
     public Slice<ListExperienceDto> getExperiencePostList(Pageable pageable,String sido,String sigungu) {
-        Slice<ExperiencePost> postsPages;
+        Slice<ExperiencePost> postSlice;
         if (sigungu != null && !sigungu.isEmpty()) {
-            // sido와 sigungu 값이 모두 주어진 경우
-            postsPages = experienceRepository.findBySidoAndSigungu(PageRequest.of(pageable.getPageNumber(), pageLimit, Sort.by(Sort.Direction.DESC, "id")),sigungu);
+            postSlice = experienceRepository.findBySidoAndSigungu(PageRequest.of(pageable.getPageNumber(), pageLimit, Sort.by(Sort.Direction.DESC, "id")),sigungu);
         } else {
-            // sido와 sigungu 값이 주어지지 않은 경우
-            postsPages = experienceRepository.findAllWithUser(PageRequest.of(pageable.getPageNumber(), pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+            postSlice = experienceRepository.findAllWithUser(PageRequest.of(pageable.getPageNumber(), pageLimit, Sort.by(Sort.Direction.DESC, "id")));
         }
-        List<Long> postIdList = postsPages.getContent().stream()
-                .map(ExperiencePost::getId)
-                .collect(toList());
-        List<ImageDto> postImages= experienceRepository.findImagesDtoByPostIds(postIdList);
+        Slice<ListExperienceDto> listResponse = postSlice.map(ListExperienceDto::toDto);
 
-        Slice<ListExperienceDto> postsResponseSlice = postsPages.map(ListExperienceDto::toDto);
-        postsResponseSlice.forEach(p -> {
-                    List<ImageDto> imageDtos = groupImagesByPostId(postImages).get(p.getPostId());
-                    if(imageDtos != null && !imageDtos.isEmpty())
-                        p.setImage(imageDtos.get(0));
-                }
-        );
-        return postsResponseSlice;
+        return sliceImageMapping(postSlice,listResponse);
     }
 
+    public <T extends ListPostDto,R extends Post> Slice<T> sliceImageMapping(Slice<R> postSlice,Slice<T> listResponse){
+        List<Long> postIdList = postSlice.stream()
+                .map(R::getId)
+                .collect(toList());
+        List<ImageDto> postImages = postRepository.findImagesDtoByPostIds(postIdList);
+        listResponse.forEach(p -> {
+            List<ImageDto> imageDtos = groupImagesByPostId(postImages).get(p.getPostId());
+            if (imageDtos != null && !imageDtos.isEmpty())
+                p.setImage(imageDtos.get(0));
+        });
+        return listResponse;
+    }
+
+    /*
+
+    리스트 이미지 매핑
+
+    */
     public <T extends ListPostDto,R extends Post> List<T> imageMapping(List<R> postList,List<T> mainPageDto){
         List<Long> postIdList = postList.stream()
                 .map(R::getId)
@@ -200,6 +220,11 @@ public class PostServiceImpl implements PostService{
         return mainPageDto;
     }
 
+    /*
+
+    게시글 작성 메소드
+
+    */
     public <T extends Post> T createPost(T p, CreatePostRequest req) throws ChangeSetPersister.NotFoundException{
         User author = userRepository.findById(req.getUserId()).orElseThrow(ChangeSetPersister.NotFoundException::new);
         List<Image> imageList = req.getImageList().stream().map(i -> new Image(i.getOriginalFilename())).toList();
@@ -211,6 +236,12 @@ public class PostServiceImpl implements PostService{
         uploadImages(p.getImageList(),req.getImageList());
         return p;
     }
+
+    /*
+
+    각 게시글 이미지 매핑
+
+    */
     private Map<Long, List<ImageDto>> groupImagesByPostId(List<ImageDto> postImages) {
         return postImages.stream()
                 .collect(Collectors.groupingBy(ImageDto::getPostId));

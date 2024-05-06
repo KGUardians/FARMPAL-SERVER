@@ -33,4 +33,5 @@ public abstract class CreatePostRequest {
 
     @ApiModelProperty(value = "이미지", notes = "이미지를 첨부해주세요.")
     private List<MultipartFile> imageList = new ArrayList<>();
+
 }

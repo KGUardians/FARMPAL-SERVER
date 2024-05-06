@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@DiscriminatorValue("EXPERIENCE")
 @NoArgsConstructor
 public class ExperiencePost extends Post {
     @Embedded
