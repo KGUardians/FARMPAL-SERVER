@@ -1,6 +1,8 @@
 package com.example.farmeasyserver.repository.post;
 
+import com.example.farmeasyserver.entity.board.CropCategory;
 import com.example.farmeasyserver.entity.board.community.CommunityPost;
+import com.example.farmeasyserver.entity.board.community.CommunityType;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -18,7 +20,12 @@ public interface CommunityRepository extends JpaRepository<CommunityPost,Long> {
     @Query("select cp from CommunityPost cp join fetch cp.author where cp.id = :id")
     Optional<CommunityPost> findByIdWithUser(Long id);
 
+    Slice<CommunityPost> findByCommunityTypeAndAndCropCategory(CommunityType type, CropCategory crop, Pageable pageable);
 
-    Slice<CommunityPost> findByCommunityType(PageRequest id);
+    @Query("select cp from CommunityPost cp " +
+            "where cp.cropCategory = :crop " +
+            "and cp.title like concat('%',:search,'%') " +
+            "or cp.content like concat('%',:search,'%') ")
+    Slice<CommunityPost> findByCropCategoryAndSearch(CropCategory crop,String search, Pageable pageable);
 
 }

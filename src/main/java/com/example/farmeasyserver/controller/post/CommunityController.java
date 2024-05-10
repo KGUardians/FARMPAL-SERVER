@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +25,12 @@ public class CommunityController {
     private final PostService postService;
 
     @GetMapping("/{type}")
-    public Response readCommunityPostList(Pageable pageable,
-                                          @PathVariable(value = "type") CommunityType type,
+    public Response readCommunityPostList(@PathVariable(value = "type") CommunityType type,
                                           @RequestParam(value = "crop", required = false) CropCategory crop,
-                                          @RequestParam(value = "search", required = false) String content){
+                                          @RequestParam(value = "search", required = false) String search,
+                                          @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
 
-        return Response.success(postService.getCommunityPostList(pageable));
+        return Response.success(postService.getCommunityPostList(type,crop,search,pageable));
     }
 
     @PostMapping("/post")

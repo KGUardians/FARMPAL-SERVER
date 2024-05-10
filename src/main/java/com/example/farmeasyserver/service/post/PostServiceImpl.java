@@ -13,10 +13,12 @@ import com.example.farmeasyserver.dto.post.experience.ExperiencePostDto;
 import com.example.farmeasyserver.dto.post.community.CommunityPostRequest;
 import com.example.farmeasyserver.dto.post.market.MarketPostRequest;
 import com.example.farmeasyserver.dto.post.experience.ExperiencePostRequest;
+import com.example.farmeasyserver.entity.board.CropCategory;
 import com.example.farmeasyserver.entity.board.Image;
 import com.example.farmeasyserver.entity.board.Post;
 import com.example.farmeasyserver.entity.board.PostType;
 import com.example.farmeasyserver.entity.board.community.CommunityPost;
+import com.example.farmeasyserver.entity.board.community.CommunityType;
 import com.example.farmeasyserver.entity.board.exprience.ExperiencePost;
 import com.example.farmeasyserver.entity.board.exprience.Recruitment;
 import com.example.farmeasyserver.entity.board.market.Item;
@@ -156,28 +158,23 @@ public class PostServiceImpl implements PostService{
 
     */
     @Override
-    public Slice<ListCommunityDto> getCommunityPostList(Pageable pageable) {
-        Slice<CommunityPost> postSlice = communityRepository.findAll(PageRequest.of(pageable.getPageNumber(), pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+    public Slice<ListCommunityDto> getCommunityPostList(CommunityType type, CropCategory crop, String search, Pageable pageable) {
+        Slice<CommunityPost> postSlice = communityRepository.findByCommunityTypeAndAndCropCategory(type,crop,pageable);
         Slice<ListCommunityDto> listResponse = postSlice.map(ListCommunityDto::toDto);
 
         return sliceImageMapping(postSlice,listResponse);
     }
 
     @Override
-    public Slice<ListMarketDto> getMarketPostList(Pageable pageable,String sido,String sigungu) {
-        Slice<MarketPost> postSlice;
-        if (sigungu != null && !sigungu.isEmpty()) {
-            postSlice = marketRepository.findBySidoAndSigungu(PageRequest.of(pageable.getPageNumber(), pageLimit, Sort.by(Sort.Direction.DESC, "id")), sigungu);
-        } else {
-            postSlice = marketRepository.findAllWithUser(PageRequest.of(pageable.getPageNumber(), pageLimit, Sort.by(Sort.Direction.DESC, "id")));
-        }
+    public Slice<ListMarketDto> getMarketPostList(CropCategory crop, Pageable pageable) {
+        Slice<MarketPost> postSlice = marketRepository.findBySidoAndSigungu(crop, pageable);
         Slice<ListMarketDto> listResponse = postSlice.map(ListMarketDto::toDto);
 
         return sliceImageMapping(postSlice,listResponse);
     }
 
     @Override
-    public Slice<ListExperienceDto> getExperiencePostList(Pageable pageable,String sido,String sigungu) {
+    public Slice<ListExperienceDto> getExperiencePostList(String sido,String sigungu, Pageable pageable) {
         Slice<ExperiencePost> postSlice;
         if (sigungu != null && !sigungu.isEmpty()) {
             postSlice = experienceRepository.findBySidoAndSigungu(PageRequest.of(pageable.getPageNumber(), pageLimit, Sort.by(Sort.Direction.DESC, "id")),sigungu);

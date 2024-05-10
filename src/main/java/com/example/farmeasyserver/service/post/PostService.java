@@ -10,6 +10,8 @@ import com.example.farmeasyserver.dto.post.experience.ExperiencePostDto;
 import com.example.farmeasyserver.dto.post.community.CommunityPostRequest;
 import com.example.farmeasyserver.dto.post.market.MarketPostRequest;
 import com.example.farmeasyserver.dto.post.experience.ExperiencePostRequest;
+import com.example.farmeasyserver.entity.board.CropCategory;
+import com.example.farmeasyserver.entity.board.community.CommunityType;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -30,8 +32,8 @@ public interface PostService {
     ExperiencePostDto readExperiencePost(Long postId) throws ChangeSetPersister.NotFoundException;
 
 
-    Slice<ListCommunityDto> getCommunityPostList(Pageable pageable);
-    Slice<ListMarketDto> getMarketPostList(Pageable pageable,String sido,String sigungu);
-    Slice<ListExperienceDto> getExperiencePostList(Pageable pageable,String sido,String sigungu);
+    Slice<ListCommunityDto> getCommunityPostList(CommunityType type, CropCategory crop, String search, Pageable pageable);
+    Slice<ListMarketDto> getMarketPostList(CropCategory crop, Pageable pageable);
+    Slice<ListExperienceDto> getExperiencePostList(String sido,String sigungu, Pageable pageable);
 
 }

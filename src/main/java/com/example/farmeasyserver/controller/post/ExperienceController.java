@@ -9,6 +9,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,9 +21,10 @@ public class ExperienceController {
     private final PostService postService;
 
     @GetMapping
-    public Response readExperiencePostList(Pageable pageable,@RequestParam(value = "sido", required = false) String sido,
-                                           @RequestParam(value = "sigungu", required = false) String sigungu){
-        return Response.success(postService.getExperiencePostList(pageable,sido,sigungu));
+    public Response readExperiencePostList(@RequestParam(value = "sido", required = false) String sido,
+                                           @RequestParam(value = "sigungu", required = false) String sigungu,
+                                           @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+        return Response.success(postService.getExperiencePostList(sido, sigungu, pageable));
     }
 
     @PostMapping("/post")
