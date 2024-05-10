@@ -1,4 +1,4 @@
-package com.example.farmeasyserver.dto.post;
+package com.example.farmeasyserver.dto.mainpage;
 
 import com.example.farmeasyserver.dto.ImageDto;
 import com.example.farmeasyserver.dto.mainpage.ListExperienceDto;

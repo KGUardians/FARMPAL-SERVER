@@ -20,12 +20,11 @@ public interface CommunityRepository extends JpaRepository<CommunityPost,Long> {
     @Query("select cp from CommunityPost cp join fetch cp.author where cp.id = :id")
     Optional<CommunityPost> findByIdWithUser(Long id);
 
-    Slice<CommunityPost> findByCommunityTypeAndAndCropCategory(CommunityType type, CropCategory crop, Pageable pageable);
-
     @Query("select cp from CommunityPost cp " +
-            "where cp.cropCategory = :crop " +
+            "where cp.communityType = :type " +
+            "and cp.cropCategory = :crop " +
             "and cp.title like concat('%',:search,'%') " +
             "or cp.content like concat('%',:search,'%') ")
-    Slice<CommunityPost> findByCropCategoryAndSearch(CropCategory crop,String search, Pageable pageable);
+    Slice<CommunityPost> findByCommunityTypeAndCropCategoryAndSearch(CommunityType type, CropCategory crop,String search, Pageable pageable);
 
 }

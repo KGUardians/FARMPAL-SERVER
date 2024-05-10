@@ -26,8 +26,8 @@ public class CommunityController {
 
     @GetMapping("/{type}")
     public Response readCommunityPostList(@PathVariable(value = "type") CommunityType type,
-                                          @RequestParam(value = "crop", required = false) CropCategory crop,
-                                          @RequestParam(value = "search", required = false) String search,
+                                          @RequestParam(value = "crop", required = false, defaultValue = "STRAWBERRY") CropCategory crop,
+                                          @RequestParam(value = "search", required = false, defaultValue = "") String search,
                                           @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
 
         return Response.success(postService.getCommunityPostList(type,crop,search,pageable));

@@ -1,6 +1,5 @@
 package com.example.farmeasyserver.dto.mainpage;
 
-import com.example.farmeasyserver.dto.post.ListPostDto;
 import com.example.farmeasyserver.entity.board.CropCategory;
 import com.example.farmeasyserver.entity.board.market.MarketPost;
 import lombok.AllArgsConstructor;

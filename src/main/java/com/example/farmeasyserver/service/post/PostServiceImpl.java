@@ -6,7 +6,7 @@ import com.example.farmeasyserver.dto.mainpage.ListExperienceDto;
 import com.example.farmeasyserver.dto.mainpage.ListMarketDto;
 import com.example.farmeasyserver.dto.post.CreatePostRequest;
 import com.example.farmeasyserver.dto.post.CreatePostResponse;
-import com.example.farmeasyserver.dto.post.ListPostDto;
+import com.example.farmeasyserver.dto.mainpage.ListPostDto;
 import com.example.farmeasyserver.dto.post.community.CommunityPostDto;
 import com.example.farmeasyserver.dto.post.market.MarketPostDto;
 import com.example.farmeasyserver.dto.post.experience.ExperiencePostDto;
@@ -159,7 +159,7 @@ public class PostServiceImpl implements PostService{
     */
     @Override
     public Slice<ListCommunityDto> getCommunityPostList(CommunityType type, CropCategory crop, String search, Pageable pageable) {
-        Slice<CommunityPost> postSlice = communityRepository.findByCommunityTypeAndAndCropCategory(type,crop,pageable);
+        Slice<CommunityPost> postSlice = communityRepository.findByCommunityTypeAndCropCategoryAndSearch(type,crop,search,pageable);
         Slice<ListCommunityDto> listResponse = postSlice.map(ListCommunityDto::toDto);
 
         return sliceImageMapping(postSlice,listResponse);
