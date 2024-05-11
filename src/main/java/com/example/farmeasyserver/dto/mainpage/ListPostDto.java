@@ -1,11 +1,7 @@
 package com.example.farmeasyserver.dto.mainpage;
 
 import com.example.farmeasyserver.dto.ImageDto;
-import com.example.farmeasyserver.dto.mainpage.ListExperienceDto;
 import com.example.farmeasyserver.entity.board.CropCategory;
-import com.example.farmeasyserver.entity.board.Post;
-import com.example.farmeasyserver.entity.board.exprience.ExperiencePost;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

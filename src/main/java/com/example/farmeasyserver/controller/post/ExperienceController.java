@@ -3,6 +3,7 @@ package com.example.farmeasyserver.controller.post;
 import com.example.farmeasyserver.dto.post.experience.ExpApplicationRequest;
 import com.example.farmeasyserver.dto.post.experience.ExperiencePostRequest;
 import com.example.farmeasyserver.dto.response.Response;
+import com.example.farmeasyserver.repository.post.experience.ExperienceFilter;
 import com.example.farmeasyserver.service.post.PostService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -10,8 +11,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +23,9 @@ public class ExperienceController {
     @GetMapping
     public Response readExperiencePostList(@RequestParam(value = "sido", required = false) String sido,
                                            @RequestParam(value = "sigungu", required = false) String sigungu,
-                                           @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
-        return Response.success(postService.getExperiencePostList(sido, sigungu, pageable));
+                                           Pageable pageable){
+        ExperienceFilter filter = new ExperienceFilter(sido,sigungu);
+        return Response.success(postService.getExperiencePostList(filter, pageable));
     }
 
     @PostMapping("/post")

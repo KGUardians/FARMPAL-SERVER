@@ -1,9 +1,9 @@
 package com.example.farmeasyserver.service.post;
 
 import com.example.farmeasyserver.dto.ImageDto;
-import com.example.farmeasyserver.dto.mainpage.ListCommunityDto;
-import com.example.farmeasyserver.dto.mainpage.ListExperienceDto;
-import com.example.farmeasyserver.dto.mainpage.ListMarketDto;
+import com.example.farmeasyserver.dto.post.community.ListCommunityDto;
+import com.example.farmeasyserver.dto.post.experience.ListExperienceDto;
+import com.example.farmeasyserver.dto.post.market.ListMarketDto;
 import com.example.farmeasyserver.dto.post.CreatePostRequest;
 import com.example.farmeasyserver.dto.post.CreatePostResponse;
 import com.example.farmeasyserver.dto.mainpage.ListPostDto;
@@ -14,12 +14,10 @@ import com.example.farmeasyserver.dto.post.experience.ExperiencePostDto;
 import com.example.farmeasyserver.dto.post.community.CommunityPostRequest;
 import com.example.farmeasyserver.dto.post.market.MarketPostRequest;
 import com.example.farmeasyserver.dto.post.experience.ExperiencePostRequest;
-import com.example.farmeasyserver.entity.board.CropCategory;
 import com.example.farmeasyserver.entity.board.Image;
 import com.example.farmeasyserver.entity.board.Post;
 import com.example.farmeasyserver.entity.board.PostType;
 import com.example.farmeasyserver.entity.board.community.CommunityPost;
-import com.example.farmeasyserver.entity.board.community.CommunityType;
 import com.example.farmeasyserver.entity.board.exprience.ExpApplication;
 import com.example.farmeasyserver.entity.board.exprience.ExperiencePost;
 import com.example.farmeasyserver.entity.board.exprience.Recruitment;
@@ -28,10 +26,19 @@ import com.example.farmeasyserver.entity.board.market.MarketPost;
 import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.UserRepository;
 import com.example.farmeasyserver.repository.post.*;
+import com.example.farmeasyserver.repository.post.community.CommunityFilter;
+import com.example.farmeasyserver.repository.post.community.CommunityQueryRepo;
+import com.example.farmeasyserver.repository.post.community.CommunityRepository;
+import com.example.farmeasyserver.repository.post.experience.ExpApplicationRepository;
+import com.example.farmeasyserver.repository.post.experience.ExperienceFilter;
+import com.example.farmeasyserver.repository.post.experience.ExperienceQueryRepo;
+import com.example.farmeasyserver.repository.post.experience.ExperienceRepository;
+import com.example.farmeasyserver.repository.post.market.MarketFilter;
+import com.example.farmeasyserver.repository.post.market.MarketQueryRepo;
+import com.example.farmeasyserver.repository.post.market.MarketRepository;
 import com.example.farmeasyserver.service.file.FileService;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -41,7 +48,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.nio.charset.CharacterCodingException;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -52,13 +58,14 @@ import static java.util.stream.Collectors.toList;
 public class PostServiceImpl implements PostService{
     private final UserRepository userRepository;
     private final CommunityRepository communityRepository;
+    private final CommunityQueryRepo communityQueryRepo;
     private final MarketRepository marketRepository;
+    private final MarketQueryRepo marketQueryRepo;
     private final ExperienceRepository experienceRepository;
+    private final ExperienceQueryRepo experienceQueryRepo;
     private final ExpApplicationRepository expApplicationRepository;
     private final PostRepository postRepository;
     private final FileService fileService;
-    @Value("${page.limit}")
-    private int pageLimit;
 
     /*
 
@@ -160,29 +167,23 @@ public class PostServiceImpl implements PostService{
 
     */
     @Override
-    public Slice<ListCommunityDto> getCommunityPostList(CommunityType type, CropCategory crop, String search, Pageable pageable) {
-        Slice<CommunityPost> postSlice = communityRepository.findByCommunityTypeAndCropCategoryAndSearch(type,crop,search,pageable);
+    public Slice<ListCommunityDto> getCommunityPostList(CommunityFilter filter, Pageable pageable) {
+        Slice<CommunityPost> postSlice = communityQueryRepo.findPostList(filter,pageable);
         Slice<ListCommunityDto> listResponse = postSlice.map(ListCommunityDto::toDto);
-
         return sliceImageMapping(postSlice,listResponse);
     }
 
     @Override
-    public Slice<ListMarketDto> getMarketPostList(CropCategory crop, Pageable pageable) {
-        Slice<MarketPost> postSlice = marketRepository.findBySidoAndSigungu(crop, pageable);
+    public Slice<ListMarketDto> getMarketPostList(MarketFilter filter, Pageable pageable) {
+        Slice<MarketPost> postSlice = marketQueryRepo.findPostList(filter, pageable);
         Slice<ListMarketDto> listResponse = postSlice.map(ListMarketDto::toDto);
 
         return sliceImageMapping(postSlice,listResponse);
     }
 
     @Override
-    public Slice<ListExperienceDto> getExperiencePostList(String sido,String sigungu, Pageable pageable) {
-        Slice<ExperiencePost> postSlice;
-        if (sigungu != null && !sigungu.isEmpty()) {
-            postSlice = experienceRepository.findBySidoAndSigungu(PageRequest.of(pageable.getPageNumber(), pageLimit, Sort.by(Sort.Direction.DESC, "id")),sigungu);
-        } else {
-            postSlice = experienceRepository.findAllWithUser(PageRequest.of(pageable.getPageNumber(), pageLimit, Sort.by(Sort.Direction.DESC, "id")));
-        }
+    public Slice<ListExperienceDto> getExperiencePostList(ExperienceFilter filter, Pageable pageable) {
+        Slice<ExperiencePost> postSlice = experienceQueryRepo.findPostList(filter,pageable);
         Slice<ListExperienceDto> listResponse = postSlice.map(ListExperienceDto::toDto);
 
         return sliceImageMapping(postSlice,listResponse);

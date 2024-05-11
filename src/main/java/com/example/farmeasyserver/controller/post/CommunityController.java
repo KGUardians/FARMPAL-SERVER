@@ -4,6 +4,7 @@ import com.example.farmeasyserver.dto.post.community.CommunityPostRequest;
 import com.example.farmeasyserver.dto.response.Response;
 import com.example.farmeasyserver.entity.board.CropCategory;
 import com.example.farmeasyserver.entity.board.community.CommunityType;
+import com.example.farmeasyserver.repository.post.community.CommunityFilter;
 import com.example.farmeasyserver.service.post.PostService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -12,8 +13,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,11 +25,11 @@ public class CommunityController {
 
     @GetMapping("/{type}")
     public Response readCommunityPostList(@PathVariable(value = "type") CommunityType type,
-                                          @RequestParam(value = "crop", required = false, defaultValue = "STRAWBERRY") CropCategory crop,
-                                          @RequestParam(value = "search", required = false, defaultValue = "") String search,
-                                          @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
-
-        return Response.success(postService.getCommunityPostList(type,crop,search,pageable));
+                                          @RequestParam(value = "crop", required = false) CropCategory crop,
+                                          @RequestParam(value = "search", required = false) String search,
+                                          Pageable pageable){
+        CommunityFilter filter = new CommunityFilter(type,crop,search);
+        return Response.success(postService.getCommunityPostList(filter,pageable));
     }
 
     @PostMapping("/post")

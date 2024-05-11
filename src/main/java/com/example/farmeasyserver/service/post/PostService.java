@@ -1,8 +1,8 @@
 package com.example.farmeasyserver.service.post;
 
-import com.example.farmeasyserver.dto.mainpage.ListCommunityDto;
-import com.example.farmeasyserver.dto.mainpage.ListExperienceDto;
-import com.example.farmeasyserver.dto.mainpage.ListMarketDto;
+import com.example.farmeasyserver.dto.post.community.ListCommunityDto;
+import com.example.farmeasyserver.dto.post.experience.ListExperienceDto;
+import com.example.farmeasyserver.dto.post.market.ListMarketDto;
 import com.example.farmeasyserver.dto.post.CreatePostResponse;
 import com.example.farmeasyserver.dto.post.community.CommunityPostDto;
 import com.example.farmeasyserver.dto.post.experience.ExpApplicationRequest;
@@ -13,6 +13,9 @@ import com.example.farmeasyserver.dto.post.market.MarketPostRequest;
 import com.example.farmeasyserver.dto.post.experience.ExperiencePostRequest;
 import com.example.farmeasyserver.entity.board.CropCategory;
 import com.example.farmeasyserver.entity.board.community.CommunityType;
+import com.example.farmeasyserver.repository.post.community.CommunityFilter;
+import com.example.farmeasyserver.repository.post.experience.ExperienceFilter;
+import com.example.farmeasyserver.repository.post.market.MarketFilter;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -33,9 +36,9 @@ public interface PostService {
     ExperiencePostDto readExperiencePost(Long postId) throws ChangeSetPersister.NotFoundException;
 
 
-    Slice<ListCommunityDto> getCommunityPostList(CommunityType type, CropCategory crop, String search, Pageable pageable);
-    Slice<ListMarketDto> getMarketPostList(CropCategory crop, Pageable pageable);
-    Slice<ListExperienceDto> getExperiencePostList(String sido,String sigungu, Pageable pageable);
+    Slice<ListCommunityDto> getCommunityPostList(CommunityFilter filter, Pageable pageable);
+    Slice<ListMarketDto> getMarketPostList(MarketFilter filter, Pageable pageable);
+    Slice<ListExperienceDto> getExperiencePostList(ExperienceFilter filter, Pageable pageable);
 
     ExpApplicationRequest requestExperience(ExpApplicationRequest req) throws Exception;
 

@@ -1,5 +1,8 @@
 package com.example.farmeasyserver.dto.mainpage;
 
+import com.example.farmeasyserver.dto.post.community.ListCommunityDto;
+import com.example.farmeasyserver.dto.post.experience.ListExperienceDto;
+import com.example.farmeasyserver.dto.post.market.ListMarketDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

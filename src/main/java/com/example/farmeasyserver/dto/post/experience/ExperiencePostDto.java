@@ -4,8 +4,6 @@ import com.example.farmeasyserver.dto.ImageDto;
 import com.example.farmeasyserver.entity.board.CropCategory;
 import com.example.farmeasyserver.entity.board.exprience.ExperiencePost;
 import com.example.farmeasyserver.entity.board.exprience.Recruitment;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

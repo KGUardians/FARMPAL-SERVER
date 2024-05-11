@@ -3,6 +3,7 @@ package com.example.farmeasyserver.controller.post;
 import com.example.farmeasyserver.dto.post.market.MarketPostRequest;
 import com.example.farmeasyserver.dto.response.Response;
 import com.example.farmeasyserver.entity.board.CropCategory;
+import com.example.farmeasyserver.repository.post.market.MarketFilter;
 import com.example.farmeasyserver.service.post.PostService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -10,8 +11,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,9 +22,10 @@ public class MarketController {
     private final PostService postService;
 
     @GetMapping
-    public Response readMarketPostList(@RequestParam(value = "crop", defaultValue = "STRAWBERRY") CropCategory crop,
-                                       @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
-        return Response.success(postService.getMarketPostList(crop,pageable));
+    public Response readMarketPostList(@RequestParam(value = "crop",required = false) CropCategory crop,
+                                       Pageable pageable){
+        MarketFilter filter = new MarketFilter(crop);
+        return Response.success(postService.getMarketPostList(filter,pageable));
     }
 
     @PostMapping("/post")
