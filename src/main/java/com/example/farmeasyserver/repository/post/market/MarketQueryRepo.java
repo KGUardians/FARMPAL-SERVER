@@ -1,13 +1,15 @@
 package com.example.farmeasyserver.repository.post.market;
 
+import com.example.farmeasyserver.dto.post.market.ListMarketDto;
 import com.example.farmeasyserver.entity.board.CropCategory;
-import com.example.farmeasyserver.entity.board.market.MarketPost;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,12 +26,29 @@ public class MarketQueryRepo {
         this.query = new JPAQueryFactory(em);
     }
 
-    public Slice<MarketPost> findPostList(MarketFilter filter, Pageable pageable){
+    public List<ListMarketDto> findTop4OrderByIdDesc(){
+        return em.createQuery(
+                "SELECT new com.example.farmeasyserver.dto.post.market.ListMarketDto(mp.id,a.address.sigungu,mp.cropCategory,mp.item.price,mp.item.gram,mp.postLike) " +
+                        "FROM MarketPost mp " +
+                        "join mp.author a " +
+                        "ORDER BY mp.id DESC limit 4", ListMarketDto.class)
+                .getResultList();
+    };
+
+    public Slice<ListMarketDto> findPostList(MarketFilter filter, Pageable pageable){
 
         int pageSize = pageable.getPageSize();
-        List<MarketPost> postList;
+        List<ListMarketDto> postList;
         postList = query
-                .select(marketPost)
+                .select(Projections.constructor(
+                        ListMarketDto.class,
+                        marketPost.id,
+                        marketPost.author.address.sigungu,
+                        marketPost.cropCategory,
+                        marketPost.item.price,
+                        marketPost.item.gram,
+                        marketPost.postLike
+                ))
                 .from(marketPost)
                 .innerJoin(marketPost.author)
                 .where(cropEq(filter.getCrop()))

@@ -83,20 +83,14 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public List<ListMarketDto> getMainMarketPosts() {
-        List<MarketPost> marketPosts = marketRepository.findTop4OrderByIdDesc();
-        List<ListMarketDto> mainMarketPosts = marketPosts.stream()
-                .map(ListMarketDto::toDto)
-                .collect(toList());
-        return imageMapping(marketPosts,mainMarketPosts);
+        List<ListMarketDto> mainMarketPosts = marketQueryRepo.findTop4OrderByIdDesc();
+        imageMapping(mainMarketPosts); return mainMarketPosts;
     }
 
     @Override
     public List<ListExperienceDto> getMainExperiencePosts() {
-        List<ExperiencePost> experiencePosts = experienceRepository.findTop4OrderByIdDesc();
-        List<ListExperienceDto> mainExperiencePosts = experiencePosts.stream()
-                .map(ListExperienceDto::toDto)
-                .collect(toList());
-        return imageMapping(experiencePosts,mainExperiencePosts);
+        List<ListExperienceDto> mainExperiencePosts = experienceQueryRepo.findTop4OrderByIdDesc();
+        imageMapping(mainExperiencePosts); return mainExperiencePosts;
     }
 
     /*
@@ -168,25 +162,20 @@ public class PostServiceImpl implements PostService{
     */
     @Override
     public Slice<ListCommunityDto> getCommunityPostList(CommunityFilter filter, Pageable pageable) {
-        Slice<CommunityPost> postSlice = communityQueryRepo.findPostList(filter,pageable);
-        Slice<ListCommunityDto> listResponse = postSlice.map(ListCommunityDto::toDto);
-        return sliceImageMapping(postSlice,listResponse);
+        Slice<ListCommunityDto> listResponse = communityQueryRepo.findPostList(filter,pageable);
+        imageMapping(listResponse.stream().toList()); return listResponse;
     }
 
     @Override
     public Slice<ListMarketDto> getMarketPostList(MarketFilter filter, Pageable pageable) {
-        Slice<MarketPost> postSlice = marketQueryRepo.findPostList(filter, pageable);
-        Slice<ListMarketDto> listResponse = postSlice.map(ListMarketDto::toDto);
-
-        return sliceImageMapping(postSlice,listResponse);
+        Slice<ListMarketDto> listResponse = marketQueryRepo.findPostList(filter, pageable);
+        imageMapping(listResponse.stream().toList()); return listResponse;
     }
 
     @Override
     public Slice<ListExperienceDto> getExperiencePostList(ExperienceFilter filter, Pageable pageable) {
-        Slice<ExperiencePost> postSlice = experienceQueryRepo.findPostList(filter,pageable);
-        Slice<ListExperienceDto> listResponse = postSlice.map(ListExperienceDto::toDto);
-
-        return sliceImageMapping(postSlice,listResponse);
+        Slice<ListExperienceDto> listResponse = experienceQueryRepo.findPostList(filter,pageable);
+        imageMapping(listResponse.stream().toList()); return listResponse;
     }
 
     /*
@@ -215,27 +204,14 @@ public class PostServiceImpl implements PostService{
         return req;
     }
 
-    public <T extends ListPostDto,R extends Post> Slice<T> sliceImageMapping(Slice<R> postSlice,Slice<T> listResponse){
-        List<Long> postIdList = postSlice.stream()
-                .map(R::getId)
-                .collect(toList());
-        List<ImageDto> postImages = postRepository.findImagesDtoByPostIds(postIdList);
-        listResponse.forEach(p -> {
-            List<ImageDto> imageDtos = groupImagesByPostId(postImages).get(p.getPostId());
-            if (imageDtos != null && !imageDtos.isEmpty())
-                p.setImage(imageDtos.get(0));
-        });
-        return listResponse;
-    }
-
     /*
 
     리스트 이미지 매핑
 
     */
-    public <T extends ListPostDto,R extends Post> List<T> imageMapping(List<R> postList,List<T> mainPageDto){
-        List<Long> postIdList = postList.stream()
-                .map(R::getId)
+    public <T extends ListPostDto> void imageMapping(List<T> mainPageDto){
+        List<Long> postIdList = mainPageDto.stream()
+                .map(T::getPostId)
                 .collect(toList());
         List<ImageDto> postImages = postRepository.findImagesDtoByPostIds(postIdList);
         mainPageDto.forEach(p -> {
@@ -243,7 +219,6 @@ public class PostServiceImpl implements PostService{
             if (imageDtos != null && !imageDtos.isEmpty())
                 p.setImage(imageDtos.get(0));
         });
-        return mainPageDto;
     }
 
     /*

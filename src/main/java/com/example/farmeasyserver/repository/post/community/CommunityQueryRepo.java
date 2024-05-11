@@ -1,8 +1,10 @@
 package com.example.farmeasyserver.repository.post.community;
 
+import com.example.farmeasyserver.dto.post.community.ListCommunityDto;
 import com.example.farmeasyserver.entity.board.community.CommunityPost;
 import com.example.farmeasyserver.entity.board.CropCategory;
 import com.example.farmeasyserver.entity.board.community.CommunityType;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -25,12 +27,19 @@ public class CommunityQueryRepo {
         this.em = em;
         this.query = new JPAQueryFactory(em);
     }
-    public Slice<CommunityPost> findPostList(CommunityFilter filter, Pageable pageable){
+    public Slice<ListCommunityDto> findPostList(CommunityFilter filter, Pageable pageable){
 
         int pageSize = pageable.getPageSize();
-        List<CommunityPost> postList;
+        List<ListCommunityDto> postList;
         postList = query
-                .select(communityPost)
+                .select(Projections.constructor(
+                        ListCommunityDto.class,
+                        communityPost.id,
+                        communityPost.title,
+                        communityPost.postLike,
+                        communityPost.cropCategory
+                        )
+                )
                 .from(communityPost)
                 .where(typeEq(filter.getType()),
                         cropEq(filter.getCrop()),
