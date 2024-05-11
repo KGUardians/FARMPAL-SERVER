@@ -2,6 +2,7 @@ package com.example.farmeasyserver.entity.user;
 
 import com.example.farmeasyserver.entity.board.Comment;
 import com.example.farmeasyserver.entity.board.Post;
+import com.example.farmeasyserver.entity.board.exprience.ExpApplication;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,7 +38,8 @@ public class User {
     private List<Post> postList = new ArrayList<>();
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
-
+    @OneToMany(mappedBy = "applicants", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<ExpApplication> expApplications = new ArrayList<>();
     public User(String username, String password, String name, Gender gender, String phoneNumber, String email, Day birthday, Address address,Role role) {
         this.username = username;
         this.password = password;

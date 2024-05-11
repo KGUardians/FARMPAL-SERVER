@@ -11,7 +11,4 @@ import java.util.Optional;
 public interface UserService {
     UserDto join (JoinUserForm user);
 
-    User findUser(String username);
-
-    Optional<User> getUser(Long id);
 }

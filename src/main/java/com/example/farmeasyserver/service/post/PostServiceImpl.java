@@ -8,6 +8,7 @@ import com.example.farmeasyserver.dto.post.CreatePostRequest;
 import com.example.farmeasyserver.dto.post.CreatePostResponse;
 import com.example.farmeasyserver.dto.mainpage.ListPostDto;
 import com.example.farmeasyserver.dto.post.community.CommunityPostDto;
+import com.example.farmeasyserver.dto.post.experience.ExpApplicationRequest;
 import com.example.farmeasyserver.dto.post.market.MarketPostDto;
 import com.example.farmeasyserver.dto.post.experience.ExperiencePostDto;
 import com.example.farmeasyserver.dto.post.community.CommunityPostRequest;
@@ -19,16 +20,14 @@ import com.example.farmeasyserver.entity.board.Post;
 import com.example.farmeasyserver.entity.board.PostType;
 import com.example.farmeasyserver.entity.board.community.CommunityPost;
 import com.example.farmeasyserver.entity.board.community.CommunityType;
+import com.example.farmeasyserver.entity.board.exprience.ExpApplication;
 import com.example.farmeasyserver.entity.board.exprience.ExperiencePost;
 import com.example.farmeasyserver.entity.board.exprience.Recruitment;
 import com.example.farmeasyserver.entity.board.market.Item;
 import com.example.farmeasyserver.entity.board.market.MarketPost;
 import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.UserRepository;
-import com.example.farmeasyserver.repository.post.CommunityRepository;
-import com.example.farmeasyserver.repository.post.ExperienceRepository;
-import com.example.farmeasyserver.repository.post.MarketRepository;
-import com.example.farmeasyserver.repository.post.PostRepository;
+import com.example.farmeasyserver.repository.post.*;
 import com.example.farmeasyserver.service.file.FileService;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
@@ -39,8 +38,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.charset.CharacterCodingException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -53,6 +54,7 @@ public class PostServiceImpl implements PostService{
     private final CommunityRepository communityRepository;
     private final MarketRepository marketRepository;
     private final ExperienceRepository experienceRepository;
+    private final ExpApplicationRepository expApplicationRepository;
     private final PostRepository postRepository;
     private final FileService fileService;
     @Value("${page.limit}")
@@ -184,6 +186,32 @@ public class PostServiceImpl implements PostService{
         Slice<ListExperienceDto> listResponse = postSlice.map(ListExperienceDto::toDto);
 
         return sliceImageMapping(postSlice,listResponse);
+    }
+
+    /*
+
+    농촌체험 신청
+
+    */
+    @Override
+    public ExpApplicationRequest requestExperience(ExpApplicationRequest req) throws Exception {
+        ExperiencePost experiencePost = experienceRepository.findById(req.getPostId())
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+        // 신청 가능한 인원 확인
+        int num = experiencePost.getRecruitment().getRecruitmentNum();
+        if (num < req.getParticipants()) {
+            throw new Exception("인원이 충분하지 않습니다.");
+        }
+        // 사용자 확인
+        User applicant = userRepository.findByUsernameAndPhoneNumber(req.getName(), req.getPhoneNumber())
+                .orElseThrow(CharacterCodingException::new);
+
+        ExpApplication expApplication = new ExpApplication();
+        expApplication.setApplicants(applicant);
+        expApplication.setPost(experiencePost);
+        experiencePost.getRecruitment().setRecruitmentNum(num - req.getParticipants());
+        expApplicationRepository.save(expApplication);
+        return req;
     }
 
     public <T extends ListPostDto,R extends Post> Slice<T> sliceImageMapping(Slice<R> postSlice,Slice<T> listResponse){

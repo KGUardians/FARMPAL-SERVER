@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 @Entity
 @Data
@@ -12,6 +14,9 @@ import lombok.NoArgsConstructor;
 public class ExperiencePost extends Post {
     @Embedded
     private Recruitment recruitment;
+
+    @OneToMany(mappedBy = "experiencePost", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<ExpApplication> application;
 
     public ExperiencePost(Recruitment recruitment) {
         this.recruitment = recruitment;

@@ -1,5 +1,6 @@
 package com.example.farmeasyserver.controller.post;
 
+import com.example.farmeasyserver.dto.post.experience.ExpApplicationRequest;
 import com.example.farmeasyserver.dto.post.experience.ExperiencePostRequest;
 import com.example.farmeasyserver.dto.response.Response;
 import com.example.farmeasyserver.service.post.PostService;
@@ -37,5 +38,11 @@ public class ExperienceController {
     @ResponseStatus(HttpStatus.OK)
     public Response read(@ApiParam(value = "게시글 id", required = true) @PathVariable Long postId) throws ChangeSetPersister.NotFoundException {
         return Response.success(postService.readExperiencePost(postId));
+    }
+
+    @PostMapping("/application/{postId}")
+    public Response request(@PathVariable Long postId, @RequestBody ExpApplicationRequest req) throws Exception {
+        req.setPostId(postId);
+        return Response.success(postService.requestExperience(req));
     }
 }

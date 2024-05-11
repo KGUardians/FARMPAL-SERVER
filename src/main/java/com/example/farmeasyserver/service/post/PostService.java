@@ -5,6 +5,7 @@ import com.example.farmeasyserver.dto.mainpage.ListExperienceDto;
 import com.example.farmeasyserver.dto.mainpage.ListMarketDto;
 import com.example.farmeasyserver.dto.post.CreatePostResponse;
 import com.example.farmeasyserver.dto.post.community.CommunityPostDto;
+import com.example.farmeasyserver.dto.post.experience.ExpApplicationRequest;
 import com.example.farmeasyserver.dto.post.market.MarketPostDto;
 import com.example.farmeasyserver.dto.post.experience.ExperiencePostDto;
 import com.example.farmeasyserver.dto.post.community.CommunityPostRequest;
@@ -35,5 +36,7 @@ public interface PostService {
     Slice<ListCommunityDto> getCommunityPostList(CommunityType type, CropCategory crop, String search, Pageable pageable);
     Slice<ListMarketDto> getMarketPostList(CropCategory crop, Pageable pageable);
     Slice<ListExperienceDto> getExperiencePostList(String sido,String sigungu, Pageable pageable);
+
+    ExpApplicationRequest requestExperience(ExpApplicationRequest req) throws Exception;
 
 }

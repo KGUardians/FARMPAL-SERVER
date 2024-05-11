@@ -40,13 +40,4 @@ public class UserServiceImpl implements UserService {
         return new UserDto(user.getId(), user.getName(), user.getAddress(),user.getBirthday());
     }
 
-    @Override
-    public User findUser(String userName) {
-        return userRepository.findByUsername(userName);
-    }
-
-    @Override
-    public Optional<User> getUser(Long id) {
-        return userRepository.findById(id);
-    }
 }
