@@ -37,6 +37,7 @@ public abstract class Post {
     private int postLike;
     @Enumerated(EnumType.STRING)
     private PostType postType;
+    private int viewCount;
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> imageList = new ArrayList<>();
@@ -64,5 +65,9 @@ public abstract class Post {
 
     public Post(String title){
         this.title = title;
+    }
+
+    public void viewCountUp(Post post){
+        post.viewCount++;
     }
 }

@@ -1,10 +1,6 @@
 package com.example.farmeasyserver.entity.board.community;
 
-import com.example.farmeasyserver.entity.board.Comment;
-import com.example.farmeasyserver.entity.board.CropCategory;
-import com.example.farmeasyserver.entity.board.Image;
 import com.example.farmeasyserver.entity.board.Post;
-import com.example.farmeasyserver.entity.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

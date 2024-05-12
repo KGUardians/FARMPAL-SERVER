@@ -1,6 +1,7 @@
 package com.example.farmeasyserver.service.post;
 
 import com.example.farmeasyserver.dto.ImageDto;
+import com.example.farmeasyserver.dto.post.community.CommentRequest;
 import com.example.farmeasyserver.dto.post.community.ListCommunityDto;
 import com.example.farmeasyserver.dto.post.experience.ListExperienceDto;
 import com.example.farmeasyserver.dto.post.market.ListMarketDto;
@@ -17,6 +18,7 @@ import com.example.farmeasyserver.dto.post.experience.ExperiencePostRequest;
 import com.example.farmeasyserver.entity.board.Image;
 import com.example.farmeasyserver.entity.board.Post;
 import com.example.farmeasyserver.entity.board.PostType;
+import com.example.farmeasyserver.entity.board.community.Comment;
 import com.example.farmeasyserver.entity.board.community.CommunityPost;
 import com.example.farmeasyserver.entity.board.exprience.ExpApplication;
 import com.example.farmeasyserver.entity.board.exprience.ExperiencePost;
@@ -26,6 +28,7 @@ import com.example.farmeasyserver.entity.board.market.MarketPost;
 import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.UserRepository;
 import com.example.farmeasyserver.repository.post.*;
+import com.example.farmeasyserver.repository.post.community.CommentRepository;
 import com.example.farmeasyserver.repository.post.community.CommunityFilter;
 import com.example.farmeasyserver.repository.post.community.CommunityQueryRepo;
 import com.example.farmeasyserver.repository.post.community.CommunityRepository;
@@ -59,6 +62,7 @@ public class PostServiceImpl implements PostService{
     private final UserRepository userRepository;
     private final CommunityRepository communityRepository;
     private final CommunityQueryRepo communityQueryRepo;
+    private final CommentRepository commentRepository;
     private final MarketRepository marketRepository;
     private final MarketQueryRepo marketQueryRepo;
     private final ExperienceRepository experienceRepository;
@@ -201,6 +205,17 @@ public class PostServiceImpl implements PostService{
         expApplication.setPost(experiencePost);
         experiencePost.getRecruitment().setRecruitmentNum(num - req.getParticipants());
         expApplicationRepository.save(expApplication);
+        return req;
+    }
+
+    @Override
+    public CommentRequest requestComment(Long postId, CommentRequest req) throws ChangeSetPersister.NotFoundException {
+        CommunityPost post = communityRepository.findById(postId).orElseThrow(ChangeSetPersister.NotFoundException::new);
+        User author = userRepository.findById(req.getAuthorId()).orElseThrow(ChangeSetPersister.NotFoundException::new);
+        Comment comment = new Comment(req.getComment());
+        comment.setPost(post);
+        comment.setAuthor(author);
+        commentRepository.save(comment);
         return req;
     }
 

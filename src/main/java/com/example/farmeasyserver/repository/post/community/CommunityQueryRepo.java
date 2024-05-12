@@ -37,7 +37,8 @@ public class CommunityQueryRepo {
                         communityPost.id,
                         communityPost.title,
                         communityPost.postLike,
-                        communityPost.cropCategory
+                        communityPost.cropCategory,
+                        communityPost.commentList.size()
                         )
                 )
                 .from(communityPost)

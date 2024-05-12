@@ -1,5 +1,6 @@
 package com.example.farmeasyserver.controller.post;
 
+import com.example.farmeasyserver.dto.post.community.CommentRequest;
 import com.example.farmeasyserver.dto.post.community.CommunityPostRequest;
 import com.example.farmeasyserver.dto.response.Response;
 import com.example.farmeasyserver.entity.board.CropCategory;
@@ -42,6 +43,11 @@ public class CommunityController {
     @ResponseStatus(HttpStatus.OK)
     public Response read(@ApiParam(value = "게시글 id", required = true) @PathVariable Long postId) throws ChangeSetPersister.NotFoundException {
         return Response.success(postService.readCommunityPost(postId));
+    }
+
+    @PostMapping("/post/comment/{postId}")
+    public Response comment(@PathVariable Long postId, @RequestBody CommentRequest req) throws ChangeSetPersister.NotFoundException {
+        return Response.success(postService.requestComment(postId,req));
     }
 
 }

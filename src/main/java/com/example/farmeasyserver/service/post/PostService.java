@@ -1,5 +1,6 @@
 package com.example.farmeasyserver.service.post;
 
+import com.example.farmeasyserver.dto.post.community.CommentRequest;
 import com.example.farmeasyserver.dto.post.community.ListCommunityDto;
 import com.example.farmeasyserver.dto.post.experience.ListExperienceDto;
 import com.example.farmeasyserver.dto.post.market.ListMarketDto;
@@ -42,4 +43,5 @@ public interface PostService {
 
     ExpApplicationRequest requestExperience(ExpApplicationRequest req) throws Exception;
 
+    CommentRequest requestComment(Long postId, CommentRequest req) throws ChangeSetPersister.NotFoundException;
 }

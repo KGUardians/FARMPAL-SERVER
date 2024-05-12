@@ -1,6 +1,6 @@
 package com.example.farmeasyserver.entity.user;
 
-import com.example.farmeasyserver.entity.board.Comment;
+import com.example.farmeasyserver.entity.board.community.Comment;
 import com.example.farmeasyserver.entity.board.Post;
 import com.example.farmeasyserver.entity.board.exprience.ExpApplication;
 import jakarta.persistence.*;

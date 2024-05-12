@@ -1,6 +1,6 @@
 package com.example.farmeasyserver.dto.post.community;
 
-import com.example.farmeasyserver.entity.board.Comment;
+import com.example.farmeasyserver.entity.board.community.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -11,15 +11,17 @@ import java.time.LocalDateTime;
 public class CommentDto {
     private Long id;
     private String comment;
-    private CommunityAuthorDto authorDto;
+    private String author;
     private LocalDateTime postedTime;
+    private LocalDateTime updatedTime;
 
     public static CommentDto toDto(Comment comment){
         return new CommentDto(
                 comment.getId(),
                 comment.getComment(),
-                CommunityAuthorDto.toDto(comment.getAuthor()),
-                comment.getPostedTime()
+                comment.getAuthor().getName(),
+                comment.getPostedTime(),
+                comment.getUpdatedTime()
         );
     }
 }
