@@ -8,7 +8,4 @@ public enum CommunityType {
     //공지
     NOTICE,
     //마켓
-    MARKET,
-    //농촌체험
-    RURAL_EXP
 }

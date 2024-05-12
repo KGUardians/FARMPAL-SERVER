@@ -1,7 +1,6 @@
 package com.example.farmeasyserver.dto.post.market;
 
 import com.example.farmeasyserver.dto.ImageDto;
-import com.example.farmeasyserver.dto.post.PostDto;
 import com.example.farmeasyserver.entity.board.market.Item;
 import com.example.farmeasyserver.entity.board.market.MarketPost;
 import lombok.AllArgsConstructor;
@@ -12,7 +11,7 @@ import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
-public class MarketPostDto extends PostDto {
+public class MarketPostDto {
     private Long postId;
     private String title;
     private MarketAuthorDto author;

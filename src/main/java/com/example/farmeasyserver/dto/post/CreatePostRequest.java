@@ -1,35 +1,37 @@
-package com.example.farmeasyserver.dto.post.community;
+package com.example.farmeasyserver.dto.post;
 
-import com.example.farmeasyserver.entity.board.community.CommunityType;
-import io.swagger.annotations.ApiModel;
+import com.example.farmeasyserver.entity.board.CropCategory;
 import io.swagger.annotations.ApiModelProperty;
+import jakarta.persistence.Lob;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@ApiModel(value = "커뮤니티 게시글 생성 요청")
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class CommunityRequest {
+public abstract class CreatePostRequest {
     @ApiModelProperty(value = "게시글 제목", notes = "게시글 제목을 입력해주세요", required = true, example = "my title")
     @NotBlank(message = "게시글 제목을 입력해주세요.")
     private String title;
 
-    @ApiModelProperty(value = "게시글 본문", notes = "게시글 본문을 입력해주세요", required = true, example = "my content")
-    @NotBlank(message = "게시글 본문을 입력해주세요.")
-    private String content;
-
-    private CommunityType type;
-
     @ApiModelProperty(hidden = true)
     private Long userId;
 
+    @ApiModelProperty(value = "작물 종류", required = true, example = "STRAWBERRY")
+    @NotNull(message = "작물 종류 선택")
+    private CropCategory cropCategory;
+
+    @ApiModelProperty(value = "게시글 본문", required = true, example = "my content")
+    @NotBlank(message = "게시글 본문을 입력해주세요.")
+    @Lob
+    private String content;
+
+    private int postLike;
+
     @ApiModelProperty(value = "이미지", notes = "이미지를 첨부해주세요.")
     private List<MultipartFile> imageList = new ArrayList<>();
+
 }

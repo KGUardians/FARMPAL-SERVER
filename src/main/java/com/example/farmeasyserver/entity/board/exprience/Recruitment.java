@@ -13,7 +13,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Recruitment {
-    private LocalDateTime startTime;
+    private String farmName;
+    private String startTime;
     private int recruitmentNum;
     @Lob
     private String detailedRecruitmentCondition;
