@@ -5,7 +5,7 @@ import com.example.farmeasyserver.dto.user.UserDto;
 import com.example.farmeasyserver.entity.user.Address;
 import com.example.farmeasyserver.entity.user.Day;
 import com.example.farmeasyserver.entity.user.Role;
-import com.example.farmeasyserver.repository.UserRepository;
+import com.example.farmeasyserver.repository.UserJpaRepo;
 import com.example.farmeasyserver.entity.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
+    private final UserJpaRepo userRepository;
 
     @Override
     @Transactional

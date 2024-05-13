@@ -12,10 +12,8 @@ import com.example.farmeasyserver.dto.post.experience.ExperiencePostDto;
 import com.example.farmeasyserver.dto.post.community.CommunityPostRequest;
 import com.example.farmeasyserver.dto.post.market.MarketPostRequest;
 import com.example.farmeasyserver.dto.post.experience.ExperiencePostRequest;
-import com.example.farmeasyserver.entity.board.CropCategory;
-import com.example.farmeasyserver.entity.board.community.CommunityType;
 import com.example.farmeasyserver.repository.post.community.CommunityFilter;
-import com.example.farmeasyserver.repository.post.experience.ExperienceFilter;
+import com.example.farmeasyserver.repository.post.experience.ExpFilter;
 import com.example.farmeasyserver.repository.post.market.MarketFilter;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Pageable;
@@ -39,7 +37,7 @@ public interface PostService {
 
     Slice<ListCommunityDto> getCommunityPostList(CommunityFilter filter, Pageable pageable);
     Slice<ListMarketDto> getMarketPostList(MarketFilter filter, Pageable pageable);
-    Slice<ListExperienceDto> getExperiencePostList(ExperienceFilter filter, Pageable pageable);
+    Slice<ListExperienceDto> getExperiencePostList(ExpFilter filter, Pageable pageable);
 
     ExpApplicationRequest requestExperience(ExpApplicationRequest req) throws Exception;
 

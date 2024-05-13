@@ -1,7 +1,7 @@
 package com.example.farmeasyserver.service.crop;
 
 import com.example.farmeasyserver.dto.CropPestDto;
-import com.example.farmeasyserver.repository.CropRepository;
+import com.example.farmeasyserver.repository.CropJpaRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CropServiceImpl implements CropService {
 
-    private final CropRepository cropRepository;
+    private final CropJpaRepo cropRepository;
 
     public List<CropPestDto> findPests(Long cropId,List<String> pestList){
         //리턴할 목록
