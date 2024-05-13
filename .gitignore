@@ -40,3 +40,4 @@ out/
 src/main/resources/application.properties
 src/main/resources/application-swagger.properties
 src/main/resources/application-oauth2.properties
+src/main/resources/application-jwt.properties
