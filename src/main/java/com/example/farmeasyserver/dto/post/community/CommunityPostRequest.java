@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 
 @ApiModel(value = "커뮤니티 게시글 생성 요청")
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class CommunityPostRequest extends CreatePostRequest {
 
 }
