@@ -11,12 +11,20 @@
       <change beforePath="$PROJECT_DIR$/.gradle/8.6/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.6/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.6/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.6/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/example/farmeasyserver/entity/user/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/example/farmeasyserver/entity/user/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/build/resources/main/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/config/login/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/config/login/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/dto/post/community/CommunityPostRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/dto/post/community/CommunityPostRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/config/login/jwt/JwtAuthenticationEntryPoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/config/login/jwt/JwtAuthenticationEntryPoint.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/config/login/jwt/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/config/login/jwt/JwtAuthenticationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/config/login/jwt/JwtProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/config/login/jwt/JwtProperties.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/dto/user/UserDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/dto/user/UserDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/user/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/user/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/UserJpaRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/UserJpaRepo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/service/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/service/user/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/service/user/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/service/user/UserServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -252,7 +260,7 @@
       <workItem from="1714629337759" duration="35098000" />
       <workItem from="1714753786697" duration="24057000" />
       <workItem from="1715299876961" duration="40244000" />
-      <workItem from="1715565154076" duration="8839000" />
+      <workItem from="1715565154076" duration="17529000" />
     </task>
     <task id="LOCAL-00001" summary="CropService Implements 생성">
       <option name="closed" value="true" />
