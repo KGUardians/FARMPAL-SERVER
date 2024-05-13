@@ -12,19 +12,17 @@ import lombok.NoArgsConstructor;
 public class UserTokenDto {
     private String username;
     private String token;
-    private Role role;
+
 
     @Builder
-    public UserTokenDto(String username, String token, Role role){
+    public UserTokenDto(String username, String token){
         this.username = username;
         this.token = token;
-        this.role = role;
     }
     public static UserTokenDto fromEntity(User user, String token) {
         return UserTokenDto.builder()
                 .username(user.getUsername())
                 .token(token)
-                .role(user.getRole())
                 .build();
     }
 }
