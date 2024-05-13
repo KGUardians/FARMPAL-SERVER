@@ -20,6 +20,7 @@ import com.example.farmeasyserver.entity.board.Post;
 import com.example.farmeasyserver.entity.board.PostType;
 import com.example.farmeasyserver.entity.board.community.Comment;
 import com.example.farmeasyserver.entity.board.community.CommunityPost;
+import com.example.farmeasyserver.entity.board.community.CommunityType;
 import com.example.farmeasyserver.entity.board.exprience.ExpApplication;
 import com.example.farmeasyserver.entity.board.exprience.ExperiencePost;
 import com.example.farmeasyserver.entity.board.exprience.Recruitment;
@@ -104,8 +105,8 @@ public class PostServiceImpl implements PostService{
     */
     @Override
     @Transactional
-    public CreatePostResponse createCommunityPost(CommunityPostRequest req) throws ChangeSetPersister.NotFoundException {
-        CommunityPost communityPost = createPost(new CommunityPost(req.getType()),req);
+    public CreatePostResponse createCommunityPost(CommunityPostRequest req, CommunityType type) throws ChangeSetPersister.NotFoundException {
+        CommunityPost communityPost = createPost(new CommunityPost(type),req);
         communityPost.setPostType(PostType.COMMUNITY);
         communityJpaRepo.save(communityPost);
         return new CreatePostResponse(communityPost.getId(),"community");
