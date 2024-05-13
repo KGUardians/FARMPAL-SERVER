@@ -5,47 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="de0cdbe6-1223-4966-a859-c0e420d285a9" name="변경" comment="CropService Implements 생성">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/config/login/SecurityConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/config/login/jwt/JwtAuthenticationEntryPoint.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/config/login/jwt/JwtAuthenticationFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/config/login/jwt/JwtProperties.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/application-oauth2.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/application-swagger.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.6/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.6/executionHistory/executionHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.6/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.6/executionHistory/executionHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.6/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.6/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.6/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.6/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.6/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.6/fileHashes/resourceHashesCache.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/example/farmeasyserver/entity/user/Role.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/example/farmeasyserver/entity/user/Role.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/resources/main/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/build/resources/main/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/controller/post/ExperienceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/controller/post/ExperienceController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/dto/post/community/CommentDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/dto/post/community/CommentDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/dto/post/experience/ListExperienceDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/dto/post/experience/ListExperienceDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/dto/post/market/ListMarketDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/dto/post/market/ListMarketDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/Post.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/Post.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/community/CommunityType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/board/community/CommunityType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/user/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/entity/user/Role.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/CropRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/CropJpaRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/UserJpaRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/post/PostRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/post/PostJpaRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/post/community/CommentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/post/community/CommentJpaRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/post/community/CommunityQueryRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/post/community/CommunityRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/post/community/CommunityRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/post/community/CommunityJpaRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/post/experience/ExpApplicationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/post/experience/ExpAppJpaRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/post/experience/ExperienceFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/post/experience/ExpFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/post/experience/ExperienceQueryRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/post/experience/ExpRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/post/experience/ExperienceRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/post/experience/ExpJpaRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/post/market/MarketQueryRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/post/market/MarketRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/post/market/MarketRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/repository/post/market/MarketJpaRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/service/crop/CropServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/service/crop/CropServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/service/post/PostService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/service/post/PostService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/service/post/PostServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/service/post/PostServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/service/user/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/farmeasyserver/service/user/UserServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -281,7 +242,7 @@
       <workItem from="1714629337759" duration="35098000" />
       <workItem from="1714753786697" duration="24057000" />
       <workItem from="1715299876961" duration="40244000" />
-      <workItem from="1715565154076" duration="6357000" />
+      <workItem from="1715565154076" duration="6511000" />
     </task>
     <task id="LOCAL-00001" summary="CropService Implements 생성">
       <option name="closed" value="true" />
