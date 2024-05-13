@@ -9,7 +9,6 @@ import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,11 +16,11 @@ import java.util.List;
 import static com.example.farmeasyserver.entity.board.market.QMarketPost.*;
 
 @Repository
-public class MarketQueryRepo {
+public class MarketRepo {
     private final EntityManager em;
     private final JPAQueryFactory query;
 
-    public MarketQueryRepo(EntityManager em){
+    public MarketRepo(EntityManager em){
         this.em = em;
         this.query = new JPAQueryFactory(em);
     }

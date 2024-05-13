@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface CropRepository extends JpaRepository<Crop,Long> {
+public interface CropJpaRepo extends JpaRepository<Crop,Long> {
     @Query("select new com.example.farmeasyserver.dto.CropPestDto(c.name, cp.pestName, cp.description) " +
             "from Crop c " +
             "join c.pests cp " +

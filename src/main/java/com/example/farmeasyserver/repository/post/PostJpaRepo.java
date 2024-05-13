@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface PostRepository extends JpaRepository<Post,Long> {
+public interface PostJpaRepo extends JpaRepository<Post,Long> {
     @Query("select new com.example.farmeasyserver.dto.ImageDto(i.id,i.post.id,i.originName,i.uniqueName)"+
             " from Image i"+
             " where i.post.id in :postIds")

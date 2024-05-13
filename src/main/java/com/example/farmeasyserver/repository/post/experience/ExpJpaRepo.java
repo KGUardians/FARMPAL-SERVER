@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-public interface ExperienceRepository extends JpaRepository<ExperiencePost,Long> {
+public interface ExpJpaRepo extends JpaRepository<ExperiencePost,Long> {
 
     @Query("select ep from ExperiencePost ep " +
             "join fetch ep.author " +

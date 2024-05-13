@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ExperienceFilter{
+public class ExpFilter {
     private String sido;
     private String sigungu;
 }

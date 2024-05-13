@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import java.util.Optional;
 
-public interface CommunityRepository extends JpaRepository<CommunityPost,Long> {
+public interface CommunityJpaRepo extends JpaRepository<CommunityPost,Long> {
     @Query("SELECT cp FROM CommunityPost cp " +
             "ORDER BY cp.id DESC limit 5")
     List<CommunityPost> findTop5OrderByIdDesc();

@@ -1,7 +1,6 @@
 package com.example.farmeasyserver.repository.post.community;
 
 import com.example.farmeasyserver.dto.post.community.ListCommunityDto;
-import com.example.farmeasyserver.entity.board.community.CommunityPost;
 import com.example.farmeasyserver.entity.board.CropCategory;
 import com.example.farmeasyserver.entity.board.community.CommunityType;
 import com.querydsl.core.types.Projections;
@@ -18,12 +17,12 @@ import java.util.List;
 import static com.example.farmeasyserver.entity.board.community.QCommunityPost.*;
 
 @Repository
-public class CommunityQueryRepo {
+public class CommunityRepo {
 
     private final EntityManager em;
     private final JPAQueryFactory query;
 
-    public CommunityQueryRepo(EntityManager em){
+    public CommunityRepo(EntityManager em){
         this.em = em;
         this.query = new JPAQueryFactory(em);
     }

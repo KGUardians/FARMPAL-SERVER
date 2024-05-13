@@ -6,6 +6,5 @@ public enum CommunityType {
     //자유
     FREE,
     //공지
-    NOTICE,
-    //마켓
+    NOTICE
 }

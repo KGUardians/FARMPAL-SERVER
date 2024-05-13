@@ -1,7 +1,6 @@
 package com.example.farmeasyserver.repository.post.experience;
 
 import com.example.farmeasyserver.dto.post.experience.ListExperienceDto;
-import com.example.farmeasyserver.entity.board.exprience.ExperiencePost;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -9,7 +8,6 @@ import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,12 +15,12 @@ import java.util.List;
 import static com.example.farmeasyserver.entity.board.exprience.QExperiencePost.*;
 
 @Repository
-public class ExperienceQueryRepo {
+public class ExpRepo {
 
     private final EntityManager em;
     private final JPAQueryFactory query;
 
-    public ExperienceQueryRepo(EntityManager em){
+    public ExpRepo(EntityManager em){
         this.em = em;
         this.query = new JPAQueryFactory(em);
     }
@@ -34,7 +32,7 @@ public class ExperienceQueryRepo {
                 .getResultList();
     };
 
-    public Slice<ListExperienceDto> findPostList(ExperienceFilter filter, Pageable pageable){
+    public Slice<ListExperienceDto> findPostList(ExpFilter filter, Pageable pageable){
 
         int pageSize = pageable.getPageSize();
         List<ListExperienceDto> postList;
