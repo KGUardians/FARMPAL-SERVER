@@ -5,9 +5,6 @@ import com.example.farmeasyserver.dto.user.JoinUserForm;
 import com.example.farmeasyserver.dto.user.LoginRequest;
 import com.example.farmeasyserver.dto.user.UserDto;
 import com.example.farmeasyserver.dto.user.UserTokenDto;
-import com.example.farmeasyserver.entity.user.Address;
-import com.example.farmeasyserver.entity.user.Day;
-import com.example.farmeasyserver.entity.user.Role;
 import com.example.farmeasyserver.repository.UserJpaRepo;
 import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.util.exception.ResourceNotFoundException;
@@ -36,24 +33,15 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDto join(JoinUserForm form) {
-        Address address = new Address(form.getZipcode(), form.getAddress(), form.getSido(), form.getSigungu());
-        Day birthday = new Day(form.getYear(), form.getMonth(), form.getDay());
+        isExistUsername(form.getUsername());
+        checkPassword(form.getPassword(), form.getCheckPassword());
 
         String encodePwd = passwordEncoder.encode(form.getPassword());
         form.setPassword(encodePwd);
 
-        User user = new User(
-                form.getUsername(),
-                form.getPassword(),
-                form.getName(),
-                form.getGender(),
-                form.getPhoneNumber(),
-                form.getEmail(),
-                birthday,
-                address,
-                Role.ROLE_USER
-        );
+        User user = JoinUserForm.toEntity(form);
         userJpaRepo.save(user);
+
         return new UserDto(user.getId(), user.getName(), user.getAddress(),user.getBirthday());
     }
 
