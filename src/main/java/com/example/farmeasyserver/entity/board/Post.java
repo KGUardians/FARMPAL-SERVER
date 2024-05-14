@@ -63,10 +63,6 @@ public abstract class Post {
         author.getPostList().add(this);
     }
 
-    public Post(String title){
-        this.title = title;
-    }
-
     public void viewCountUp(Post post){
         post.viewCount++;
     }

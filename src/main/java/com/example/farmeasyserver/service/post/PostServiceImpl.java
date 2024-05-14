@@ -20,25 +20,26 @@ import com.example.farmeasyserver.entity.board.Post;
 import com.example.farmeasyserver.entity.board.PostType;
 import com.example.farmeasyserver.entity.board.community.Comment;
 import com.example.farmeasyserver.entity.board.community.CommunityPost;
+import com.example.farmeasyserver.entity.board.community.CommunityType;
 import com.example.farmeasyserver.entity.board.exprience.ExpApplication;
 import com.example.farmeasyserver.entity.board.exprience.ExperiencePost;
 import com.example.farmeasyserver.entity.board.exprience.Recruitment;
 import com.example.farmeasyserver.entity.board.market.Item;
 import com.example.farmeasyserver.entity.board.market.MarketPost;
 import com.example.farmeasyserver.entity.user.User;
-import com.example.farmeasyserver.repository.UserRepository;
+import com.example.farmeasyserver.repository.UserJpaRepo;
 import com.example.farmeasyserver.repository.post.*;
-import com.example.farmeasyserver.repository.post.community.CommentRepository;
+import com.example.farmeasyserver.repository.post.community.CommentJpaRepo;
 import com.example.farmeasyserver.repository.post.community.CommunityFilter;
-import com.example.farmeasyserver.repository.post.community.CommunityQueryRepo;
-import com.example.farmeasyserver.repository.post.community.CommunityRepository;
-import com.example.farmeasyserver.repository.post.experience.ExpApplicationRepository;
-import com.example.farmeasyserver.repository.post.experience.ExperienceFilter;
-import com.example.farmeasyserver.repository.post.experience.ExperienceQueryRepo;
-import com.example.farmeasyserver.repository.post.experience.ExperienceRepository;
+import com.example.farmeasyserver.repository.post.community.CommunityRepo;
+import com.example.farmeasyserver.repository.post.community.CommunityJpaRepo;
+import com.example.farmeasyserver.repository.post.experience.ExpAppJpaRepo;
+import com.example.farmeasyserver.repository.post.experience.ExpFilter;
+import com.example.farmeasyserver.repository.post.experience.ExpRepo;
+import com.example.farmeasyserver.repository.post.experience.ExpJpaRepo;
 import com.example.farmeasyserver.repository.post.market.MarketFilter;
-import com.example.farmeasyserver.repository.post.market.MarketQueryRepo;
-import com.example.farmeasyserver.repository.post.market.MarketRepository;
+import com.example.farmeasyserver.repository.post.market.MarketRepo;
+import com.example.farmeasyserver.repository.post.market.MarketJpaRepo;
 import com.example.farmeasyserver.service.file.FileService;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
@@ -59,16 +60,16 @@ import static java.util.stream.Collectors.toList;
 @Service
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService{
-    private final UserRepository userRepository;
-    private final CommunityRepository communityRepository;
-    private final CommunityQueryRepo communityQueryRepo;
-    private final CommentRepository commentRepository;
-    private final MarketRepository marketRepository;
-    private final MarketQueryRepo marketQueryRepo;
-    private final ExperienceRepository experienceRepository;
-    private final ExperienceQueryRepo experienceQueryRepo;
-    private final ExpApplicationRepository expApplicationRepository;
-    private final PostRepository postRepository;
+    private final UserJpaRepo userJpaRepo;
+    private final CommunityJpaRepo communityJpaRepo;
+    private final CommunityRepo communityRepo;
+    private final CommentJpaRepo commentJpaRepo;
+    private final MarketJpaRepo marketJpaRepo;
+    private final MarketRepo marketRepo;
+    private final ExpJpaRepo expJpaRepo;
+    private final ExpRepo expRepo;
+    private final ExpAppJpaRepo expAppJpaRepo;
+    private final PostJpaRepo postJpaRepo;
     private final FileService fileService;
 
     /*
@@ -78,7 +79,7 @@ public class PostServiceImpl implements PostService{
     */
     @Override
     public List<ListCommunityDto> getMainCommunityPosts() {
-        List<CommunityPost> communityPosts = communityRepository.findTop5OrderByIdDesc();
+        List<CommunityPost> communityPosts = communityJpaRepo.findTop5OrderByIdDesc();
 
         return communityPosts.stream()
                 .map(ListCommunityDto::toDto)
@@ -87,13 +88,13 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public List<ListMarketDto> getMainMarketPosts() {
-        List<ListMarketDto> mainMarketPosts = marketQueryRepo.findTop4OrderByIdDesc();
+        List<ListMarketDto> mainMarketPosts = marketRepo.findTop4OrderByIdDesc();
         imageMapping(mainMarketPosts); return mainMarketPosts;
     }
 
     @Override
     public List<ListExperienceDto> getMainExperiencePosts() {
-        List<ListExperienceDto> mainExperiencePosts = experienceQueryRepo.findTop4OrderByIdDesc();
+        List<ListExperienceDto> mainExperiencePosts = expRepo.findTop4OrderByIdDesc();
         imageMapping(mainExperiencePosts); return mainExperiencePosts;
     }
 
@@ -104,10 +105,10 @@ public class PostServiceImpl implements PostService{
     */
     @Override
     @Transactional
-    public CreatePostResponse createCommunityPost(CommunityPostRequest req) throws ChangeSetPersister.NotFoundException {
-        CommunityPost communityPost = createPost(new CommunityPost(req.getType()),req);
+    public CreatePostResponse createCommunityPost(CommunityPostRequest req, CommunityType type) throws ChangeSetPersister.NotFoundException {
+        CommunityPost communityPost = createPost(new CommunityPost(type),req);
         communityPost.setPostType(PostType.COMMUNITY);
-        communityRepository.save(communityPost);
+        communityJpaRepo.save(communityPost);
         return new CreatePostResponse(communityPost.getId(),"community");
     }
 
@@ -118,7 +119,7 @@ public class PostServiceImpl implements PostService{
         Item item = new Item(req.getItemName(),req.getPrice(), req.getGram());
         MarketPost marketPost = createPost(new MarketPost(req.getContent(),item),req);
         marketPost.setPostType(PostType.MARKET);
-        marketRepository.save(marketPost);
+        marketJpaRepo.save(marketPost);
         return new CreatePostResponse(marketPost.getId(),"market");
     }
 
@@ -132,7 +133,7 @@ public class PostServiceImpl implements PostService{
         );
         ExperiencePost experiencePost = createPost(new ExperiencePost(recruitment),req);
         experiencePost.setPostType(PostType.EXPERIENCE);
-        experienceRepository.save(experiencePost);
+        expJpaRepo.save(experiencePost);
         return new CreatePostResponse(experiencePost.getId(),"experience");
     }
 
@@ -143,19 +144,19 @@ public class PostServiceImpl implements PostService{
     */
     @Override
     public CommunityPostDto readCommunityPost(Long postId) throws ChangeSetPersister.NotFoundException {
-        return CommunityPostDto.toDto(communityRepository.findByIdWithUser(postId)
+        return CommunityPostDto.toDto(communityJpaRepo.findByIdWithUser(postId)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new));
     }
 
     @Override
     public MarketPostDto readMarketPost(Long postId) throws ChangeSetPersister.NotFoundException {
-        return MarketPostDto.toDto(marketRepository.findByIdWithUser(postId)
+        return MarketPostDto.toDto(marketJpaRepo.findByIdWithUser(postId)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new));
     }
 
     @Override
     public ExperiencePostDto readExperiencePost(Long postId) throws ChangeSetPersister.NotFoundException {
-        return ExperiencePostDto.toDto(experienceRepository.findByIdWithUser(postId)
+        return ExperiencePostDto.toDto(expJpaRepo.findByIdWithUser(postId)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new));
     }
 
@@ -166,19 +167,19 @@ public class PostServiceImpl implements PostService{
     */
     @Override
     public Slice<ListCommunityDto> getCommunityPostList(CommunityFilter filter, Pageable pageable) {
-        Slice<ListCommunityDto> listResponse = communityQueryRepo.findPostList(filter,pageable);
+        Slice<ListCommunityDto> listResponse = communityRepo.findPostList(filter,pageable);
         imageMapping(listResponse.stream().toList()); return listResponse;
     }
 
     @Override
     public Slice<ListMarketDto> getMarketPostList(MarketFilter filter, Pageable pageable) {
-        Slice<ListMarketDto> listResponse = marketQueryRepo.findPostList(filter, pageable);
+        Slice<ListMarketDto> listResponse = marketRepo.findPostList(filter, pageable);
         imageMapping(listResponse.stream().toList()); return listResponse;
     }
 
     @Override
-    public Slice<ListExperienceDto> getExperiencePostList(ExperienceFilter filter, Pageable pageable) {
-        Slice<ListExperienceDto> listResponse = experienceQueryRepo.findPostList(filter,pageable);
+    public Slice<ListExperienceDto> getExperiencePostList(ExpFilter filter, Pageable pageable) {
+        Slice<ListExperienceDto> listResponse = expRepo.findPostList(filter,pageable);
         imageMapping(listResponse.stream().toList()); return listResponse;
     }
 
@@ -189,7 +190,7 @@ public class PostServiceImpl implements PostService{
     */
     @Override
     public ExpApplicationRequest requestExperience(ExpApplicationRequest req) throws Exception {
-        ExperiencePost experiencePost = experienceRepository.findById(req.getPostId())
+        ExperiencePost experiencePost = expJpaRepo.findById(req.getPostId())
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
         // 신청 가능한 인원 확인
         int num = experiencePost.getRecruitment().getRecruitmentNum();
@@ -197,25 +198,25 @@ public class PostServiceImpl implements PostService{
             throw new Exception("인원이 충분하지 않습니다.");
         }
         // 사용자 확인
-        User applicant = userRepository.findByUsernameAndPhoneNumber(req.getName(), req.getPhoneNumber())
+        User applicant = userJpaRepo.findByUsernameAndPhoneNumber(req.getName(), req.getPhoneNumber())
                 .orElseThrow(CharacterCodingException::new);
 
         ExpApplication expApplication = new ExpApplication();
         expApplication.setApplicants(applicant);
         expApplication.setPost(experiencePost);
         experiencePost.getRecruitment().setRecruitmentNum(num - req.getParticipants());
-        expApplicationRepository.save(expApplication);
+        expAppJpaRepo.save(expApplication);
         return req;
     }
 
     @Override
     public CommentRequest requestComment(Long postId, CommentRequest req) throws ChangeSetPersister.NotFoundException {
-        CommunityPost post = communityRepository.findById(postId).orElseThrow(ChangeSetPersister.NotFoundException::new);
-        User author = userRepository.findById(req.getAuthorId()).orElseThrow(ChangeSetPersister.NotFoundException::new);
+        CommunityPost post = communityJpaRepo.findById(postId).orElseThrow(ChangeSetPersister.NotFoundException::new);
+        User author = userJpaRepo.findById(req.getAuthorId()).orElseThrow(ChangeSetPersister.NotFoundException::new);
         Comment comment = new Comment(req.getComment());
         comment.setPost(post);
         comment.setAuthor(author);
-        commentRepository.save(comment);
+        commentJpaRepo.save(comment);
         return req;
     }
 
@@ -228,7 +229,7 @@ public class PostServiceImpl implements PostService{
         List<Long> postIdList = mainPageDto.stream()
                 .map(T::getPostId)
                 .collect(toList());
-        List<ImageDto> postImages = postRepository.findImagesDtoByPostIds(postIdList);
+        List<ImageDto> postImages = postJpaRepo.findImagesDtoByPostIds(postIdList);
         mainPageDto.forEach(p -> {
             List<ImageDto> imageDtos = groupImagesByPostId(postImages).get(p.getPostId());
             if (imageDtos != null && !imageDtos.isEmpty())
@@ -242,7 +243,7 @@ public class PostServiceImpl implements PostService{
 
     */
     public <T extends Post> T createPost(T p, CreatePostRequest req) throws ChangeSetPersister.NotFoundException{
-        User author = userRepository.findById(req.getUserId()).orElseThrow(ChangeSetPersister.NotFoundException::new);
+        User author = userJpaRepo.findById(req.getUserId()).orElseThrow(ChangeSetPersister.NotFoundException::new);
         List<Image> imageList = req.getImageList().stream().map(i -> new Image(i.getOriginalFilename())).toList();
 
         p.setPostLike(req.getPostLike()); p.setTitle(req.getTitle());

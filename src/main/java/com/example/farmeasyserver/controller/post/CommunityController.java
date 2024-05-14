@@ -33,9 +33,10 @@ public class CommunityController {
         return Response.success(postService.getCommunityPostList(filter,pageable));
     }
 
-    @PostMapping("/post")
-    public Response create(@Valid @ModelAttribute CommunityPostRequest req) throws ChangeSetPersister.NotFoundException {
-        return Response.success(postService.createCommunityPost(req));
+    @PostMapping("/post/{type}")
+    public Response create(@RequestParam(value = "type") CommunityType type,
+            @Valid @ModelAttribute CommunityPostRequest req) throws ChangeSetPersister.NotFoundException {
+        return Response.success(postService.createCommunityPost(req, type));
     }
 
     @ApiOperation(value = "커뮤니티 게시글 조회", notes = "게시글을 조회한다.")

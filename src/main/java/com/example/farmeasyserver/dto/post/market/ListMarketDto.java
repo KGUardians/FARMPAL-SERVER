@@ -20,14 +20,4 @@ public class ListMarketDto extends ListPostDto {
         this.gram = gram;
     }
 
-   /* public static ListMarketDto toDto(MarketPost post){
-        return new ListMarketDto(
-                post.getId(),
-                post.getAuthor().getAddress().getSigungu(),
-                post.getCropCategory(),
-                post.getItem().getPrice(),
-                post.getItem().getGram(),
-                post.getPostLike()
-        );
-    }*/
 }

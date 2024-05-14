@@ -3,7 +3,7 @@ package com.example.farmeasyserver.controller.post;
 import com.example.farmeasyserver.dto.post.experience.ExpApplicationRequest;
 import com.example.farmeasyserver.dto.post.experience.ExperiencePostRequest;
 import com.example.farmeasyserver.dto.response.Response;
-import com.example.farmeasyserver.repository.post.experience.ExperienceFilter;
+import com.example.farmeasyserver.repository.post.experience.ExpFilter;
 import com.example.farmeasyserver.service.post.PostService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -24,7 +24,7 @@ public class ExperienceController {
     public Response readExperiencePostList(@RequestParam(value = "sido", required = false) String sido,
                                            @RequestParam(value = "sigungu", required = false) String sigungu,
                                            Pageable pageable){
-        ExperienceFilter filter = new ExperienceFilter(sido,sigungu);
+        ExpFilter filter = new ExpFilter(sido,sigungu);
         return Response.success(postService.getExperiencePostList(filter, pageable));
     }
 

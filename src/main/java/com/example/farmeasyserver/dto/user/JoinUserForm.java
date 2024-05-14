@@ -1,8 +1,6 @@
 package com.example.farmeasyserver.dto.user;
 
-import com.example.farmeasyserver.entity.user.Address;
-import com.example.farmeasyserver.entity.user.Day;
-import com.example.farmeasyserver.entity.user.Gender;
+import com.example.farmeasyserver.entity.user.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -11,6 +9,7 @@ import lombok.Data;
 public class JoinUserForm {
     private String username;
     private String password;
+    private String checkPassword;
     private String name;
     private int year;
     private int month;
@@ -22,4 +21,18 @@ public class JoinUserForm {
     private String sido;
     private String sigungu;
     private String phoneNumber;
+
+    public static User toEntity(JoinUserForm form){
+        return new User(
+                form.getUsername(),
+                form.getPassword(),
+                form.getName(),
+                form.getGender(),
+                form.getPhoneNumber(),
+                form.getEmail(),
+                new Day(form.getYear(), form.getMonth(), form.getDay()),
+                new Address(form.getZipcode(), form.getAddress(), form.getSido(), form.getSigungu()),
+                Role.USER
+        );
+    }
 }
