@@ -45,6 +45,7 @@ public class SecurityConfig {
                 ->authorize
                         .requestMatchers("/","/community/**",
                                 "/experience","/market","/user/**").permitAll()
+                        .requestMatchers("/v3/**","/swagger-ui/**","/swagger").permitAll()
                         .requestMatchers(HttpMethod.POST,"/experience/post","/market/post").hasRole("FARMER")
                         .requestMatchers(HttpMethod.POST,"/community/NOTICE").hasRole("ADMIN")
                         .anyRequest().authenticated())
