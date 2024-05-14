@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
                 form.getEmail(),
                 birthday,
                 address,
-                Role.USER
+                Role.ROLE_USER
         );
         userJpaRepo.save(user);
         return new UserDto(user.getId(), user.getName(), user.getAddress(),user.getBirthday());

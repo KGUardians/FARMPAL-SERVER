@@ -2,8 +2,8 @@ package com.example.farmeasyserver.entity.user;
 
 
 public enum Role {
-    USER,
-    ADMIN,
-    FARMER
+    ROLE_USER,
+    ROLE_ADMIN,
+    ROLE_FARMER
 
 }

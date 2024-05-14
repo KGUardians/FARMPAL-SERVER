@@ -44,8 +44,8 @@ public class SecurityConfig {
                 ->authorize
                         .requestMatchers("/","/community/**",
                                 "/experience","/market","/user/**").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/experience/post","/market/post").hasRole("FARMER")
-                        .requestMatchers(HttpMethod.POST,"/community/NOTICE").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST,"/experience/post","/market/post").hasRole("ROLE_FARMER")
+                        .requestMatchers(HttpMethod.POST,"/community/NOTICE").hasRole("ROLE_ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
