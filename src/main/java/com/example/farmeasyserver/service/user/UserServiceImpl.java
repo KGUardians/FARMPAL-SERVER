@@ -1,10 +1,9 @@
 package com.example.farmeasyserver.service.user;
 
 import com.example.farmeasyserver.config.login.jwt.JwtProperties;
-import com.example.farmeasyserver.dto.user.JoinUserReq;
-import com.example.farmeasyserver.dto.user.LoginReq;
-import com.example.farmeasyserver.dto.user.UserDto;
-import com.example.farmeasyserver.dto.user.UserTokenDto;
+import com.example.farmeasyserver.dto.user.*;
+import com.example.farmeasyserver.entity.user.Farm;
+import com.example.farmeasyserver.repository.FarmJpaRepo;
 import com.example.farmeasyserver.repository.UserJpaRepo;
 import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.util.exception.ResourceNotFoundException;
@@ -15,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,6 +27,7 @@ public class UserServiceImpl implements UserService {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
     private final UserJpaRepo userJpaRepo;
+    private final FarmJpaRepo farmJpaRepo;
     private final PasswordEncoder passwordEncoder;
     private final JwtProperties jwtProperties;
 
@@ -57,6 +58,16 @@ public class UserServiceImpl implements UserService {
 
         String token = jwtProperties.generateToken(userDetails);
         return UserTokenDto.fromEntity(user,token);
+    }
+
+    @Override
+    public CreateFarmReq createFarm(CreateFarmReq req) {
+        User user = userJpaRepo.findById(req.getUserId()).orElseThrow();
+        Farm farm = CreateFarmReq.toEntity(req);
+        farm.setUser(user);
+        farmJpaRepo.save(farm);
+        
+        return req;
     }
 
     private void authenticate(String username, String pwd) {
