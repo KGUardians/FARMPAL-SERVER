@@ -49,8 +49,8 @@ public class CommunityController {
     }
 
     @PostMapping("/post/comment/{postId}")
-    public Response comment(@PathVariable Long postId, @RequestBody CommentRequest req) throws ChangeSetPersister.NotFoundException {
-        return Response.success(postService.requestComment(postId,req));
+    public Response comment(@PathVariable Long postId, @RequestBody CommentRequest req, @AuthenticationPrincipal User user) throws ChangeSetPersister.NotFoundException {
+        return Response.success(postService.requestComment(postId, req, user));
     }
 
 }

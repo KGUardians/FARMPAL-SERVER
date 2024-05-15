@@ -41,6 +41,7 @@ import com.example.farmeasyserver.repository.post.market.MarketFilter;
 import com.example.farmeasyserver.repository.post.market.MarketRepo;
 import com.example.farmeasyserver.repository.post.market.MarketJpaRepo;
 import com.example.farmeasyserver.service.file.FileService;
+import com.example.farmeasyserver.util.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -142,21 +143,18 @@ public class PostServiceImpl implements PostService{
 
     */
     @Override
-    public CommunityPostDto readCommunityPost(Long postId) throws ChangeSetPersister.NotFoundException {
-        return CommunityPostDto.toDto(communityJpaRepo.findByIdWithUser(postId)
-                .orElseThrow(ChangeSetPersister.NotFoundException::new));
+    public CommunityPostDto readCommunityPost(Long postId){
+        return CommunityPostDto.toDto(communityJpaRepo.findByIdWithUser(postId).orElseThrow());
     }
 
     @Override
-    public MarketPostDto readMarketPost(Long postId) throws ChangeSetPersister.NotFoundException {
-        return MarketPostDto.toDto(marketJpaRepo.findByIdWithUser(postId)
-                .orElseThrow(ChangeSetPersister.NotFoundException::new));
+    public MarketPostDto readMarketPost(Long postId){
+        return MarketPostDto.toDto(marketJpaRepo.findByIdWithUser(postId).orElseThrow());
     }
 
     @Override
-    public ExperiencePostDto readExperiencePost(Long postId) throws ChangeSetPersister.NotFoundException {
-        return ExperiencePostDto.toDto(expJpaRepo.findByIdWithUser(postId)
-                .orElseThrow(ChangeSetPersister.NotFoundException::new));
+    public ExperiencePostDto readExperiencePost(Long postId){
+        return ExperiencePostDto.toDto(expJpaRepo.findByIdWithUser(postId).orElseThrow());
     }
 
     /*
@@ -209,9 +207,9 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public CommentRequest requestComment(Long postId, CommentRequest req) throws ChangeSetPersister.NotFoundException {
-        CommunityPost post = communityJpaRepo.findById(postId).orElseThrow(ChangeSetPersister.NotFoundException::new);
-        User author = userJpaRepo.findById(req.getAuthorId()).orElseThrow(ChangeSetPersister.NotFoundException::new);
+    public CommentRequest requestComment(Long postId, CommentRequest req, User user) {
+        CommunityPost post = communityJpaRepo.findById(postId).orElseThrow();
+        User author = userJpaRepo.findById(user.getId()).orElseThrow();
         Comment comment = new Comment(req.getComment());
         comment.setPost(post);
         comment.setAuthor(author);
