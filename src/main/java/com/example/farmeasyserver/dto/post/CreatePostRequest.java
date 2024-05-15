@@ -17,9 +17,6 @@ public abstract class CreatePostRequest {
     @NotBlank(message = "게시글 제목을 입력해주세요.")
     private String title;
 
-    @ApiModelProperty(hidden = true)
-    private Long userId;
-
     @ApiModelProperty(value = "작물 종류", required = true, example = "STRAWBERRY")
     @NotNull(message = "작물 종류 선택")
     private CropCategory cropCategory;
