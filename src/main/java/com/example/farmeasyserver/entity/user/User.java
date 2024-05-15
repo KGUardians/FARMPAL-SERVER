@@ -38,6 +38,9 @@ public class User implements UserDetails {
     private Role role;
     @Embedded
     private Address address;
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Farm farm;
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Post> postList = new ArrayList<>();
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
