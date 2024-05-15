@@ -4,9 +4,11 @@ import com.example.farmeasyserver.dto.user.JoinUserReq;
 import com.example.farmeasyserver.dto.response.Response;
 import com.example.farmeasyserver.dto.user.LoginReq;
 import com.example.farmeasyserver.dto.user.RegisterFarmReq;
+import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.service.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,8 +28,8 @@ public class UserController {
     }
 
     @PostMapping("/farm/register")
-    public Response registerFarm(@RequestBody RegisterFarmReq req){
-        return Response.success(userService.createFarm(req));
+    public Response registerFarm(@RequestBody RegisterFarmReq req, @AuthenticationPrincipal User user){
+        return Response.success(userService.createFarm(req, user));
     }
 
 }
