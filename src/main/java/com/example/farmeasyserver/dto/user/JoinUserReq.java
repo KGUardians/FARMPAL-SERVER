@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class JoinUserForm {
+public class JoinUserReq {
     private String username;
     private String password;
     private String checkPassword;
@@ -22,7 +22,7 @@ public class JoinUserForm {
     private String sigungu;
     private String phoneNumber;
 
-    public static User toEntity(JoinUserForm form){
+    public static User toEntity(JoinUserReq form){
         return new User(
                 form.getUsername(),
                 form.getPassword(),

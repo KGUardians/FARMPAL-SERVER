@@ -1,8 +1,8 @@
 package com.example.farmeasyserver.service.user;
 
 import com.example.farmeasyserver.config.login.jwt.JwtProperties;
-import com.example.farmeasyserver.dto.user.JoinUserForm;
-import com.example.farmeasyserver.dto.user.LoginRequest;
+import com.example.farmeasyserver.dto.user.JoinUserReq;
+import com.example.farmeasyserver.dto.user.LoginReq;
 import com.example.farmeasyserver.dto.user.UserDto;
 import com.example.farmeasyserver.dto.user.UserTokenDto;
 import com.example.farmeasyserver.repository.UserJpaRepo;
@@ -32,21 +32,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDto join(JoinUserForm form) {
+    public UserDto join(JoinUserReq form) {
         isExistUsername(form.getUsername());
         checkPassword(form.getPassword(), form.getCheckPassword());
 
         String encodePwd = passwordEncoder.encode(form.getPassword());
         form.setPassword(encodePwd);
 
-        User user = JoinUserForm.toEntity(form);
+        User user = JoinUserReq.toEntity(form);
         userJpaRepo.save(user);
 
         return new UserDto(user.getId(), user.getName(), user.getAddress(),user.getBirthday());
     }
 
     @Override
-    public UserTokenDto signIn(LoginRequest req) {
+    public UserTokenDto signIn(LoginReq req) {
         authenticate(req.getUsername(), req.getPassword());
         UserDetails userDetails = userDetailsService.loadUserByUsername(req.getUsername());
         checkEncodePassword(req.getPassword(),userDetails.getPassword());
