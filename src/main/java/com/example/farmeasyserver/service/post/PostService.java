@@ -13,6 +13,7 @@ import com.example.farmeasyserver.dto.post.community.CommunityPostRequest;
 import com.example.farmeasyserver.dto.post.market.MarketPostRequest;
 import com.example.farmeasyserver.dto.post.experience.ExperiencePostRequest;
 import com.example.farmeasyserver.entity.board.community.CommunityType;
+import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.post.community.CommunityFilter;
 import com.example.farmeasyserver.repository.post.experience.ExpFilter;
 import com.example.farmeasyserver.repository.post.market.MarketFilter;
@@ -27,9 +28,9 @@ public interface PostService {
     List<ListMarketDto> getMainMarketPosts();
     List<ListExperienceDto> getMainExperiencePosts();
 
-    CreatePostResponse createCommunityPost(CommunityPostRequest req, CommunityType type) throws ChangeSetPersister.NotFoundException;
-    CreatePostResponse createMarketPost(MarketPostRequest req) throws ChangeSetPersister.NotFoundException;
-    CreatePostResponse createExperiencePost(ExperiencePostRequest req) throws ChangeSetPersister.NotFoundException;
+    CreatePostResponse createCommunityPost(CommunityPostRequest req, CommunityType type, User author);
+    CreatePostResponse createMarketPost(MarketPostRequest req,User author);
+    CreatePostResponse createExperiencePost(ExperiencePostRequest req, User author);
 
     CommunityPostDto readCommunityPost(Long postId) throws ChangeSetPersister.NotFoundException;
     MarketPostDto readMarketPost(Long postId) throws ChangeSetPersister.NotFoundException;

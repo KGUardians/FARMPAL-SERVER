@@ -31,8 +31,8 @@ public class ExperienceController {
     }
 
     @PostMapping("/post")
-    public Response create(@Valid @ModelAttribute ExperiencePostRequest req, @AuthenticationPrincipal User author throws ChangeSetPersister.NotFoundException {
-        return Response.success(postService.createExperiencePost(req));
+    public Response create(@Valid @ModelAttribute ExperiencePostRequest req, @AuthenticationPrincipal User author) throws ChangeSetPersister.NotFoundException {
+        return Response.success(postService.createExperiencePost(req, author));
     }
 
     @ApiOperation(value = "농촌체험 해당 게시글 조회", notes = "게시글을 조회한다.")

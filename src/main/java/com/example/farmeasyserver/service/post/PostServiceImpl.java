@@ -105,8 +105,8 @@ public class PostServiceImpl implements PostService{
     */
     @Override
     @Transactional
-    public CreatePostResponse createCommunityPost(CommunityPostRequest req, CommunityType type) throws ChangeSetPersister.NotFoundException {
-        CommunityPost communityPost = createPost(new CommunityPost(type),req);
+    public CreatePostResponse createCommunityPost(CommunityPostRequest req, CommunityType type, User author) {
+        CommunityPost communityPost = createPost(new CommunityPost(type),req, author);
         communityPost.setPostType(PostType.COMMUNITY);
         communityJpaRepo.save(communityPost);
         return new CreatePostResponse(communityPost.getId(),"community");
@@ -115,9 +115,9 @@ public class PostServiceImpl implements PostService{
 
     @Override
     @Transactional
-    public CreatePostResponse createMarketPost(MarketPostRequest req) throws ChangeSetPersister.NotFoundException {
+    public CreatePostResponse createMarketPost(MarketPostRequest req, User author) {
         Item item = new Item(req.getItemName(),req.getPrice(), req.getGram());
-        MarketPost marketPost = createPost(new MarketPost(req.getContent(),item),req);
+        MarketPost marketPost = createPost(new MarketPost(req.getContent(), item), req, author);
         marketPost.setPostType(PostType.MARKET);
         marketJpaRepo.save(marketPost);
         return new CreatePostResponse(marketPost.getId(),"market");
@@ -125,12 +125,12 @@ public class PostServiceImpl implements PostService{
 
     @Override
     @Transactional
-    public CreatePostResponse createExperiencePost(ExperiencePostRequest req) throws ChangeSetPersister.NotFoundException {
+    public CreatePostResponse createExperiencePost(ExperiencePostRequest req,User author) {
         Recruitment recruitment = new Recruitment(
                 req.getStartTime(), req.getRecruitmentNum(),
                 req.getDetailedRecruitmentCondition()
         );
-        ExperiencePost experiencePost = createPost(new ExperiencePost(recruitment),req);
+        ExperiencePost experiencePost = createPost(new ExperiencePost(recruitment),req, author);
         experiencePost.setPostType(PostType.EXPERIENCE);
         expJpaRepo.save(experiencePost);
         return new CreatePostResponse(experiencePost.getId(),"experience");
@@ -241,8 +241,8 @@ public class PostServiceImpl implements PostService{
     게시글 작성 메소드
 
     */
-    public <T extends Post> T createPost(T p, CreatePostRequest req) throws ChangeSetPersister.NotFoundException{
-        User author = userJpaRepo.findById(req.getUserId()).orElseThrow(ChangeSetPersister.NotFoundException::new);
+    public <T extends Post> T createPost(T p, CreatePostRequest req, User user) {
+        User author = userJpaRepo.findById(user.getId()).orElseThrow();
         List<Image> imageList = req.getImageList().stream().map(i -> new Image(i.getOriginalFilename())).toList();
 
         p.setPostLike(req.getPostLike()); p.setTitle(req.getTitle());
