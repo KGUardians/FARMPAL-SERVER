@@ -14,7 +14,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -61,12 +60,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public CreateFarmReq createFarm(CreateFarmReq req) {
+    public RegisterFarmReq createFarm(RegisterFarmReq req) {
         User user = userJpaRepo.findById(req.getUserId()).orElseThrow();
-        Farm farm = CreateFarmReq.toEntity(req);
+        Farm farm = RegisterFarmReq.toEntity(req);
         farm.setUser(user);
         farmJpaRepo.save(farm);
-        
+
         return req;
     }
 

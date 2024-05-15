@@ -3,6 +3,7 @@ package com.example.farmeasyserver.controller;
 import com.example.farmeasyserver.dto.user.JoinUserReq;
 import com.example.farmeasyserver.dto.response.Response;
 import com.example.farmeasyserver.dto.user.LoginReq;
+import com.example.farmeasyserver.dto.user.RegisterFarmReq;
 import com.example.farmeasyserver.service.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,11 @@ public class UserController {
     @PostMapping("/sign-in")
     public Response signIn(@RequestBody LoginReq req){
         return Response.success(userService.signIn(req));
+    }
+
+    @PostMapping("/farm/register")
+    public Response registerFarm(@RequestBody RegisterFarmReq req){
+        return Response.success(userService.createFarm(req));
     }
 
 }

@@ -8,6 +8,6 @@ public interface UserService {
 
     UserTokenDto signIn(LoginReq req);
 
-    CreateFarmReq createFarm(CreateFarmReq req);
+    RegisterFarmReq createFarm(RegisterFarmReq req);
 
 }
