@@ -15,7 +15,6 @@ public class ExperiencePostRequest extends CreatePostRequest {
     @ApiModelProperty(value = "모집 인원", notes = "인원 수 입력해주세요", required = true, example = "my content")
     @NotNull
     private int recruitmentNum;
-    private String farmName;
     @ApiModelProperty(value = "상세 모집 조건", notes = "상세 모집 조건을 입력해주세요", required = true, example = "my content")
     @NotNull(message = "상세 모집 조건을 입력해주세요.")
     @Lob

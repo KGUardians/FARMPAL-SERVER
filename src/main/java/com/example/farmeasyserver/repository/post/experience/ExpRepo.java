@@ -25,12 +25,12 @@ public class ExpRepo {
         this.query = new JPAQueryFactory(em);
     }
     public List<ListExperienceDto> findTop4OrderByIdDesc(){
-        return em.createQuery("SELECT new com.example.farmeasyserver.dto.post.experience.ListExperienceDto(ep.id,ep.postLike,ep.title,a.address.sigungu,ep.cropCategory,ep.recruitment.farmName,ep.recruitment.startTime) " +
+        return em.createQuery("SELECT new com.example.farmeasyserver.dto.post.experience.ListExperienceDto(ep.id,ep.postLike,ep.title,a.address.sigungu,ep.cropCategory,a.farm.farmName,ep.recruitment.startTime) " +
                 "FROM ExperiencePost ep " +
                 "join ep.author a " +
                 "ORDER BY ep.id DESC limit 4", ListExperienceDto.class)
                 .getResultList();
-    };
+    }
 
     public Slice<ListExperienceDto> findPostList(ExpFilter filter, Pageable pageable){
 
@@ -44,7 +44,7 @@ public class ExpRepo {
                         experiencePost.title,
                         experiencePost.author.address.sigungu,
                         experiencePost.cropCategory,
-                        experiencePost.recruitment.farmName,
+                        experiencePost.author.farm.farmName,
                         experiencePost.recruitment.startTime
                         )
                 )

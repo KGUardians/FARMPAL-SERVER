@@ -3,6 +3,7 @@ package com.example.farmeasyserver.controller.post;
 import com.example.farmeasyserver.dto.post.experience.ExpApplicationRequest;
 import com.example.farmeasyserver.dto.post.experience.ExperiencePostRequest;
 import com.example.farmeasyserver.dto.response.Response;
+import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.post.experience.ExpFilter;
 import com.example.farmeasyserver.service.post.PostService;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,7 +31,7 @@ public class ExperienceController {
     }
 
     @PostMapping("/post")
-    public Response create(@Valid @ModelAttribute ExperiencePostRequest req) throws ChangeSetPersister.NotFoundException {
+    public Response create(@Valid @ModelAttribute ExperiencePostRequest req, @AuthenticationPrincipal User author throws ChangeSetPersister.NotFoundException {
         return Response.success(postService.createExperiencePost(req));
     }
 
