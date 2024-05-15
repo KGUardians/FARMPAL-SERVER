@@ -26,6 +26,7 @@ public class Farm {
     public void setUser(User user){
         this.user = user;
         user.setFarm(this);
+        user.setRole(Role.FARMER);
     }
 
 }

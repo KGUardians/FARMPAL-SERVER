@@ -3,6 +3,7 @@ package com.example.farmeasyserver.service.user;
 import com.example.farmeasyserver.config.login.jwt.JwtProperties;
 import com.example.farmeasyserver.dto.user.*;
 import com.example.farmeasyserver.entity.user.Farm;
+import com.example.farmeasyserver.entity.user.Role;
 import com.example.farmeasyserver.repository.FarmJpaRepo;
 import com.example.farmeasyserver.repository.UserJpaRepo;
 import com.example.farmeasyserver.entity.user.User;
@@ -64,6 +65,7 @@ public class UserServiceImpl implements UserService {
         User user = userJpaRepo.findById(req.getUserId()).orElseThrow();
         Farm farm = RegisterFarmReq.toEntity(req);
         farm.setUser(user);
+        user.setRole(Role.FARMER);
         farmJpaRepo.save(farm);
 
         return req;

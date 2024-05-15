@@ -127,7 +127,6 @@ public class PostServiceImpl implements PostService{
     @Transactional
     public CreatePostResponse createExperiencePost(ExperiencePostRequest req) throws ChangeSetPersister.NotFoundException {
         Recruitment recruitment = new Recruitment(
-                req.getFarmName(),
                 req.getStartTime(), req.getRecruitmentNum(),
                 req.getDetailedRecruitmentCondition()
         );

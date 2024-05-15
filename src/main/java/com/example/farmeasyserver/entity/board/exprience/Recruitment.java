@@ -6,14 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 
 @Data
 @Embeddable
 @AllArgsConstructor
 @NoArgsConstructor
 public class Recruitment {
-    private String farmName;
     private String startTime;
     private int recruitmentNum;
     @Lob
