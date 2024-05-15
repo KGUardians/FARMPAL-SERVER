@@ -27,7 +27,7 @@ public class MarketRepo {
 
     public List<ListMarketDto> findTop4OrderByIdDesc(){
         return em.createQuery(
-                "SELECT new com.example.farmeasyserver.dto.post.market.ListMarketDto(mp.id,a.address.sigungu,mp.cropCategory,mp.item.price,mp.item.gram,mp.postLike) " +
+                "SELECT new com.example.farmeasyserver.dto.post.market.ListMarketDto(mp.id, a.address.sigungu, a.farm.farmName, mp.cropCategory,mp.item.price,mp.item.gram,mp.postLike) " +
                         "FROM MarketPost mp " +
                         "join mp.author a " +
                         "ORDER BY mp.id DESC limit 4", ListMarketDto.class)
@@ -43,6 +43,7 @@ public class MarketRepo {
                         ListMarketDto.class,
                         marketPost.id,
                         marketPost.author.address.sigungu,
+                        marketPost.author.farm.farmName,
                         marketPost.cropCategory,
                         marketPost.item.price,
                         marketPost.item.gram,
