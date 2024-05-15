@@ -14,6 +14,6 @@ public class Farm {
 
     private String farmName;
     @Embedded
-    private Address address;
+    private Address farmAddress;
 
 }
