@@ -2,9 +2,11 @@ package com.example.farmeasyserver.entity.user;
 
 import com.example.farmeasyserver.dto.user.RegisterFarmReq;
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Data
 @NoArgsConstructor
 public class Farm {
 

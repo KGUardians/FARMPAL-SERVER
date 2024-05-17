@@ -2,16 +2,13 @@ package com.example.farmeasyserver.service.post;
 
 import com.example.farmeasyserver.dto.post.community.CommentRequest;
 import com.example.farmeasyserver.dto.post.community.ListCommunityDto;
-import com.example.farmeasyserver.dto.post.experience.ListExperienceDto;
+import com.example.farmeasyserver.dto.post.experience.*;
 import com.example.farmeasyserver.dto.post.market.ListMarketDto;
 import com.example.farmeasyserver.dto.post.CreatePostResponse;
 import com.example.farmeasyserver.dto.post.community.CommunityPostDto;
-import com.example.farmeasyserver.dto.post.experience.ExpApplicationRequest;
 import com.example.farmeasyserver.dto.post.market.MarketPostDto;
-import com.example.farmeasyserver.dto.post.experience.ExperiencePostDto;
 import com.example.farmeasyserver.dto.post.community.CommunityPostRequest;
 import com.example.farmeasyserver.dto.post.market.MarketPostRequest;
-import com.example.farmeasyserver.dto.post.experience.ExperiencePostRequest;
 import com.example.farmeasyserver.entity.board.community.CommunityType;
 import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.post.community.CommunityFilter;
@@ -41,7 +38,10 @@ public interface PostService {
     Slice<ListMarketDto> getMarketPostList(MarketFilter filter, Pageable pageable);
     Slice<ListExperienceDto> getExperiencePostList(ExpFilter filter, Pageable pageable);
 
+    ExpApplicationDto experiencePage(Long postId);
     ExpApplicationRequest requestExperience(ExpApplicationRequest req) throws Exception;
 
     CommentRequest requestComment(Long postId, CommentRequest req, User user);
+
+
 }

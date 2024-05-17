@@ -3,18 +3,15 @@ package com.example.farmeasyserver.service.post;
 import com.example.farmeasyserver.dto.ImageDto;
 import com.example.farmeasyserver.dto.post.community.CommentRequest;
 import com.example.farmeasyserver.dto.post.community.ListCommunityDto;
-import com.example.farmeasyserver.dto.post.experience.ListExperienceDto;
+import com.example.farmeasyserver.dto.post.experience.*;
 import com.example.farmeasyserver.dto.post.market.ListMarketDto;
 import com.example.farmeasyserver.dto.post.CreatePostRequest;
 import com.example.farmeasyserver.dto.post.CreatePostResponse;
 import com.example.farmeasyserver.dto.mainpage.ListPostDto;
 import com.example.farmeasyserver.dto.post.community.CommunityPostDto;
-import com.example.farmeasyserver.dto.post.experience.ExpApplicationRequest;
 import com.example.farmeasyserver.dto.post.market.MarketPostDto;
-import com.example.farmeasyserver.dto.post.experience.ExperiencePostDto;
 import com.example.farmeasyserver.dto.post.community.CommunityPostRequest;
 import com.example.farmeasyserver.dto.post.market.MarketPostRequest;
-import com.example.farmeasyserver.dto.post.experience.ExperiencePostRequest;
 import com.example.farmeasyserver.entity.board.Image;
 import com.example.farmeasyserver.entity.board.Post;
 import com.example.farmeasyserver.entity.board.PostType;
@@ -128,7 +125,7 @@ public class PostServiceImpl implements PostService{
     @Transactional
     public CreatePostResponse createExperiencePost(ExperiencePostRequest req,User author) {
         Recruitment recruitment = new Recruitment(
-                req.getStartTime(), req.getRecruitmentNum(),
+                req.getStartDate(), req.getStartTime(), req.getRecruitmentNum(),
                 req.getDetailedRecruitmentCondition()
         );
         ExperiencePost experiencePost = createPost(new ExperiencePost(recruitment),req, author);
@@ -180,11 +177,18 @@ public class PostServiceImpl implements PostService{
         imageMapping(listResponse.stream().toList()); return listResponse;
     }
 
+
     /*
 
     농촌체험 신청
 
     */
+
+    @Override
+    public ExpApplicationDto experiencePage(Long postId) {
+        ExperiencePost post = expJpaRepo.findById(postId).orElseThrow();
+        return ExpApplicationDto.toDto(post);
+    }
     @Override
     public ExpApplicationRequest requestExperience(ExpApplicationRequest req) throws Exception {
         ExperiencePost experiencePost = expJpaRepo.findById(req.getPostId())
