@@ -1,5 +1,6 @@
 package com.example.farmeasyserver.config.login.jwt;
 
+import com.example.farmeasyserver.config.login.auth.CustomUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -27,7 +27,7 @@ import java.io.IOException;
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final UserDetailsService userDetailsService; // 사용자 정보를 제공하는 서비스
+    private final CustomUserDetailsService userDetailsService; // 사용자 정보를 제공하는 서비스
     private final JwtProperties jwtProperties; // JWT 관련 속성 클래스
 
     @Value("${jwt.header}") private String HEADER_STRING; // HTTP 요청 헤더에서 JWT를 찾을 헤더 이름 -> "Authorization"
@@ -42,6 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // 토큰을 가져와 저장할 변수 선언
         String header = request.getHeader(HEADER_STRING);
         String username = null;
+        String email = null;
         String authToken = null;
 
         // 1. JWT 토큰을 가지고 있는 경우, 토큰을 추출한다.
@@ -50,6 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 // JWT에서 사용자 이름 추출
                 username = this.jwtProperties.getUsernameFromToken(authToken);
+                email = this.jwtProperties.getEmailFromJwt(authToken);
             } catch (IllegalArgumentException ex) {
                 log.info("사용자 ID 가져오기 실패");
                 ex.printStackTrace();
@@ -72,7 +74,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         //3. 요청에는 사용자의 식별 정보가 포함되어 있으면서, 현재 요청이 인증되지 않았을 때
         // -> (사용자가 인증되지 않은 상태에서 인증된 상태로 전환하는 과정이다.)
-        if ((username != null) && (SecurityContextHolder.getContext().getAuthentication() == null)) {
+        if ((username != null && email != null) && (SecurityContextHolder.getContext().getAuthentication() == null)) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
             // JWT 토큰 유효성 검사
             if (this.jwtProperties.validateToken(authToken, userDetails)) {
@@ -83,7 +85,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 // 인증된 사용자 정보 설정
                 authenticationToken
                         .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                log.info("인증된 사용자 " + username + ", 보안 컨텍스트 설정");
+                log.info("인증된 사용자 " + username + "이메일 : " + email + ", 보안 컨텍스트 설정");
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
             //  4. 인증되지 않은 JWT 토큰임을 로그로 알린다.

@@ -1,12 +1,12 @@
 package com.example.farmeasyserver.service.user;
 
+import com.example.farmeasyserver.config.login.auth.CustomUserDetailsService;
 import com.example.farmeasyserver.config.login.jwt.JwtProperties;
 import com.example.farmeasyserver.dto.user.*;
 import com.example.farmeasyserver.entity.user.Farm;
 import com.example.farmeasyserver.repository.FarmJpaRepo;
 import com.example.farmeasyserver.repository.UserJpaRepo;
 import com.example.farmeasyserver.entity.user.User;
-import com.example.farmeasyserver.util.exception.ResourceNotFoundException;
 import com.example.farmeasyserver.util.exception.user.UserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,8 +14,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final AuthenticationManager authenticationManager;
-    private final UserDetailsService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
     private final UserJpaRepo userJpaRepo;
     private final FarmJpaRepo farmJpaRepo;
     private final PasswordEncoder passwordEncoder;
@@ -48,18 +46,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserTokenDto signIn(LoginReq req) {
         authenticate(req.getUsername(), req.getPassword());
-        UserDetails userDetails = userDetailsService.loadUserByUsername(req.getUsername());
-        checkEncodePassword(req.getPassword(),userDetails.getPassword());
+        User user = (User) userDetailsService.loadUserByUsername(req.getUsername());
+        checkEncodePassword(req.getPassword(),user.getPassword());
 
-        User user = userJpaRepo.findByUsername(req.getUsername()).orElseThrow(
-                () -> new ResourceNotFoundException("User","User Email",req.getUsername())
-        );
-
-        String token = jwtProperties.generateToken(userDetails);
-        return UserTokenDto.fromEntity(user,token);
+        String token = jwtProperties.generateToken(user);
+        return UserTokenDto.toDto(user,token);
     }
 
     @Override
+    @Transactional
     public RegisterFarmReq createFarm(RegisterFarmReq req,User user) {
         Farm farm = RegisterFarmReq.toEntity(req);
         farm.setUser(user);
