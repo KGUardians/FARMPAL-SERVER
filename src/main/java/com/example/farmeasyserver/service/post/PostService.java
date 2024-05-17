@@ -14,7 +14,6 @@ import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.post.community.CommunityFilter;
 import com.example.farmeasyserver.repository.post.experience.ExpFilter;
 import com.example.farmeasyserver.repository.post.market.MarketFilter;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
@@ -38,7 +37,7 @@ public interface PostService {
     Slice<ListMarketDto> getMarketPostList(MarketFilter filter, Pageable pageable);
     Slice<ListExperienceDto> getExperiencePostList(ExpFilter filter, Pageable pageable);
 
-    ExpApplicationDto experiencePage(Long postId);
+    ExpApplicationPageDto experiencePage(Long postId);
     ExpApplicationRequest requestExperience(ExpApplicationRequest req) throws Exception;
 
     CommentRequest requestComment(Long postId, CommentRequest req, User user);

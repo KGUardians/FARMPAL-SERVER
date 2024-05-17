@@ -38,7 +38,6 @@ import com.example.farmeasyserver.repository.post.market.MarketFilter;
 import com.example.farmeasyserver.repository.post.market.MarketRepo;
 import com.example.farmeasyserver.repository.post.market.MarketJpaRepo;
 import com.example.farmeasyserver.service.file.FileService;
-import com.example.farmeasyserver.util.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -185,9 +184,9 @@ public class PostServiceImpl implements PostService{
     */
 
     @Override
-    public ExpApplicationDto experiencePage(Long postId) {
+    public ExpApplicationPageDto experiencePage(Long postId) {
         ExperiencePost post = expJpaRepo.findById(postId).orElseThrow();
-        return ExpApplicationDto.toDto(post);
+        return ExpApplicationPageDto.toDto(post);
     }
     @Override
     public ExpApplicationRequest requestExperience(ExpApplicationRequest req) throws Exception {
