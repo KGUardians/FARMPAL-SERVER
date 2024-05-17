@@ -6,14 +6,14 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ExpApplicationDto {
+public class ExpApplicationPageDto {
     private String farmName;
     private String detailedRecruitmentCondition;
     private String experienceDate;
     private String experienceTime;
 
-    public static ExpApplicationDto toDto(ExperiencePost post){
-        return new ExpApplicationDto(
+    public static ExpApplicationPageDto toDto(ExperiencePost post){
+        return new ExpApplicationPageDto(
                 post.getAuthor().getFarm().getFarmName(),
                 post.getRecruitment().getDetailedRecruitmentCondition(),
                 post.getRecruitment().getStartTime(),
