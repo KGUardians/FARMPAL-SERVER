@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Recruitment {
+    private String startDate;
     private String startTime;
     private int recruitmentNum;
     @Lob
