@@ -185,7 +185,7 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public ExpApplicationPageDto experiencePage(Long postId) {
-        ExperiencePost post = expJpaRepo.findById(postId).orElseThrow();
+        ExperiencePost post = expJpaRepo.findByIdWithRecruitment(postId).orElseThrow();
         return ExpApplicationPageDto.toDto(post);
     }
     @Override
