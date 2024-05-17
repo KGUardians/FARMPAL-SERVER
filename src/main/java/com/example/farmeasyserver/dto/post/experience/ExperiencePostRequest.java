@@ -9,6 +9,9 @@ import lombok.Data;
 @Data
 public class ExperiencePostRequest extends CreatePostRequest {
 
+    @ApiModelProperty(value = "시작 날짜", notes = "시작 날짜 입력해주세요", required = true, example = "my content")
+    @NotNull
+    private String startDate;
     @ApiModelProperty(value = "시작 시간", notes = "시작 시간을 입력해주세요", required = true, example = "my content")
     @NotNull
     private String startTime;
