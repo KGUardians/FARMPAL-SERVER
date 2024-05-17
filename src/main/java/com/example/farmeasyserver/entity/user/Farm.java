@@ -1,7 +1,6 @@
 package com.example.farmeasyserver.entity.user;
 
 import com.example.farmeasyserver.dto.user.RegisterFarmReq;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

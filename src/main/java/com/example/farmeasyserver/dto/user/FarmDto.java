@@ -2,7 +2,6 @@ package com.example.farmeasyserver.dto.user;
 
 import com.example.farmeasyserver.entity.user.Address;
 import com.example.farmeasyserver.entity.user.Farm;
-import jakarta.persistence.Access;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
