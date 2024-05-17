@@ -31,19 +31,24 @@ public class ExperienceController {
     }
 
     @PostMapping("/post")
-    public Response create(@Valid @ModelAttribute ExperiencePostRequest req, @AuthenticationPrincipal User author) throws ChangeSetPersister.NotFoundException {
+    public Response create(@Valid @ModelAttribute ExperiencePostRequest req, @AuthenticationPrincipal User author) {
         return Response.success(postService.createExperiencePost(req, author));
     }
 
     @ApiOperation(value = "농촌체험 해당 게시글 조회", notes = "게시글을 조회한다.")
     @GetMapping("/post/{postId}")
     @ResponseStatus(HttpStatus.OK)
-    public Response read(@ApiParam(value = "게시글 id", required = true) @PathVariable Long postId) throws ChangeSetPersister.NotFoundException {
+    public Response read(@ApiParam(value = "게시글 id", required = true) @PathVariable Long postId) {
         return Response.success(postService.readExperiencePost(postId));
     }
 
+    @GetMapping("/application/{postId}")
+    public Response applicationPage(@PathVariable Long postId){
+        return Response.success(postService.experiencePage(postId));
+    }
+
     @PostMapping("/application/{postId}")
-    public Response request(@PathVariable Long postId, @RequestBody ExpApplicationRequest req) throws Exception {
+    public Response applicationRequest(@PathVariable Long postId, @RequestBody ExpApplicationRequest req) throws Exception {
         req.setPostId(postId);
         return Response.success(postService.requestExperience(req));
     }
