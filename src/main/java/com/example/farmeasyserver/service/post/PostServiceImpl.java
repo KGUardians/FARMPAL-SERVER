@@ -39,10 +39,12 @@ import com.example.farmeasyserver.repository.post.market.MarketFilter;
 import com.example.farmeasyserver.repository.post.market.MarketRepo;
 import com.example.farmeasyserver.repository.post.market.MarketJpaRepo;
 import com.example.farmeasyserver.service.file.FileService;
+import com.example.farmeasyserver.util.exception.user.UserException;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -136,9 +138,12 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public Long deleteCommunityPost(Long postId, User user) {
-        CommunityPost post = communityJpaRepo.findById(postId).orElseThrow();
-
-        return postId;
+        CommunityPost post = communityJpaRepo.findByIdWithUser(postId).orElseThrow();
+        if(checkUser(user,post.getAuthor().getId())){
+            deleteImages(post.getImageList());
+            postJpaRepo.delete(post);
+            return postId;
+        }else throw new UserException("삭제할 권한이 없습니다.", HttpStatus.BAD_REQUEST);
     }
 
     /*
