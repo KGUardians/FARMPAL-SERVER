@@ -23,6 +23,7 @@ import com.example.farmeasyserver.entity.board.exprience.ExperiencePost;
 import com.example.farmeasyserver.entity.board.exprience.Recruitment;
 import com.example.farmeasyserver.entity.board.market.Item;
 import com.example.farmeasyserver.entity.board.market.MarketPost;
+import com.example.farmeasyserver.entity.user.Role;
 import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.UserJpaRepo;
 import com.example.farmeasyserver.repository.post.*;
@@ -281,6 +282,10 @@ public class PostServiceImpl implements PostService{
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    private boolean checkUser(User user, Long authorId){
+        return user.getRole().equals(Role.ADMIN) || user.getId().equals(authorId);
     }
 
     private void deleteImages(List<Image> images){
