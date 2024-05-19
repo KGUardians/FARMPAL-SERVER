@@ -133,6 +133,13 @@ public class PostServiceImpl implements PostService{
         return new CreatePostResponse(experiencePost.getId(),"experience");
     }
 
+    @Override
+    public Long deleteCommunityPost(Long postId, User user) {
+        CommunityPost post = communityJpaRepo.findById(postId).orElseThrow();
+
+        return postId;
+    }
+
     /*
 
     게시판 게시글 조회 메소드
@@ -274,6 +281,10 @@ public class PostServiceImpl implements PostService{
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    private void deleteImages(List<Image> images){
+        images.stream().forEach(i -> fileService.delete(i.getUniqueName()));
     }
 
 }
