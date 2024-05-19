@@ -14,11 +14,4 @@ public interface ExpJpaRepo extends JpaRepository<ExperiencePost,Long> {
             "where ep.id = :id")
     Optional<ExperiencePost> findByIdWithUser(Long id);
 
-    @Query("select ep from ExperiencePost ep " +
-            "join fetch ep.author " +
-            "join fetch ep.recruitment " +
-            "join fetch ep.author.farm " +
-            "where ep.id = :id")
-    Optional<ExperiencePost> findByIdWithRecruitment(Long id);
-
 }
