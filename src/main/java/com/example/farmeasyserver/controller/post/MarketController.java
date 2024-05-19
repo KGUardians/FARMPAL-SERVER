@@ -35,6 +35,11 @@ public class MarketController {
         return Response.success(postService.createMarketPost(req, author));
     }
 
+    @DeleteMapping("/post/{postId}")
+    public Response delete(@PathVariable Long postId, @AuthenticationPrincipal User user){
+        return Response.success(postService.deleteMarketPost(postId,user));
+    }
+
     @ApiOperation(value = "커뮤니티 게시글 조회", notes = "게시글을 조회한다.")
     @GetMapping("/post/{postId}")
     @ResponseStatus(HttpStatus.OK)

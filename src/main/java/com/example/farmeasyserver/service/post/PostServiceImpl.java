@@ -139,11 +139,29 @@ public class PostServiceImpl implements PostService{
     @Override
     public Long deleteCommunityPost(Long postId, User user) {
         CommunityPost post = communityJpaRepo.findByIdWithUser(postId).orElseThrow();
+        deletePost(post,user);
+        return postId;
+    }
+
+    private void deletePost(Post post, User user){
         if(checkUser(user,post.getAuthor().getId())){
             deleteImages(post.getImageList());
             postJpaRepo.delete(post);
-            return postId;
         }else throw new UserException("삭제할 권한이 없습니다.", HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    public Long deleteMarketPost(Long postId, User user) {
+        MarketPost post = marketJpaRepo.findByIdWithUser(postId).orElseThrow();
+        deletePost(post,user);
+        return postId;
+    }
+
+    @Override
+    public Long deleteExperiencePost(Long postId, User user) {
+        ExperiencePost post = expJpaRepo.findById(postId).orElseThrow();
+        deletePost(post,user);
+        return postId;
     }
 
     /*

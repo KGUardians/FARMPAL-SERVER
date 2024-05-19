@@ -28,6 +28,10 @@ public interface PostService {
     CreatePostResponse createMarketPost(MarketPostRequest req,User user);
     CreatePostResponse createExperiencePost(ExperiencePostRequest req, User user);
 
+    Long deleteCommunityPost(Long postId, User user);
+    Long deleteMarketPost(Long postId, User user);
+    Long deleteExperiencePost(Long postId, User user);
+
     CommunityPostDto readCommunityPost(Long postId);
     MarketPostDto readMarketPost(Long postId);
     ExperiencePostDto readExperiencePost(Long postId);
@@ -41,6 +45,8 @@ public interface PostService {
     ExpApplicationRequest requestExperience(ExpApplicationRequest req) throws Exception;
 
     CommentRequest requestComment(Long postId, CommentRequest req, User user);
+
+
 
 
 }
