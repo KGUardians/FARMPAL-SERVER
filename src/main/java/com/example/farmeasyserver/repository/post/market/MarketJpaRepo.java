@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface MarketJpaRepo extends JpaRepository<MarketPost,Long> {
 
-    @Query("select mp from MarketPost mp join fetch mp.author where mp.id = :id")
+    @Query("select mp from MarketPost mp join fetch mp.author join fetch mp.author.farm where mp.id = :id")
     Optional<MarketPost> findByIdWithUser(Long id);
 
 }
