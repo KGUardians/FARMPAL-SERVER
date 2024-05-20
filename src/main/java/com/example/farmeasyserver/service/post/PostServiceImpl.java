@@ -112,7 +112,6 @@ public class PostServiceImpl implements PostService{
         return new CreatePostResponse(communityPost.getId(),"community");
     }
 
-
     @Override
     @Transactional
     public CreatePostResponse createMarketPost(MarketPostRequest req, User author) {
@@ -137,20 +136,15 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
+    @Transactional
     public Long deleteCommunityPost(Long postId, User user) {
         CommunityPost post = communityJpaRepo.findByIdWithUser(postId).orElseThrow();
         deletePost(post,user);
         return postId;
     }
 
-    private void deletePost(Post post, User user){
-        if(checkUser(user,post.getAuthor().getId())){
-            deleteImages(post.getImageList());
-            postJpaRepo.delete(post);
-        }else throw new UserException("삭제할 권한이 없습니다.", HttpStatus.BAD_REQUEST);
-    }
-
     @Override
+    @Transactional
     public Long deleteMarketPost(Long postId, User user) {
         MarketPost post = marketJpaRepo.findByIdWithUser(postId).orElseThrow();
         deletePost(post,user);
@@ -158,6 +152,7 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
+    @Transactional
     public Long deleteExperiencePost(Long postId, User user) {
         ExperiencePost post = expJpaRepo.findById(postId).orElseThrow();
         deletePost(post,user);
@@ -220,6 +215,7 @@ public class PostServiceImpl implements PostService{
         return ExpApplicationPageDto.toDto(post);
     }
     @Override
+    @Transactional
     public ExpApplicationRequest requestExperience(ExpApplicationRequest req) throws Exception {
         ExperiencePost experiencePost = expJpaRepo.findById(req.getPostId())
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
@@ -241,6 +237,7 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
+    @Transactional
     public CommentRequest requestComment(Long postId, CommentRequest req, User user) {
         CommunityPost post = communityJpaRepo.findById(postId).orElseThrow();
         User author = userJpaRepo.findById(user.getId()).orElseThrow();
@@ -305,6 +302,13 @@ public class PostServiceImpl implements PostService{
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    private void deletePost(Post post, User user){
+        if(checkUser(user,post.getAuthor().getId())){
+            deleteImages(post.getImageList());
+            postJpaRepo.delete(post);
+        }else throw new UserException("삭제할 권한이 없습니다.", HttpStatus.BAD_REQUEST);
     }
 
     private boolean checkUser(User user, Long authorId){
