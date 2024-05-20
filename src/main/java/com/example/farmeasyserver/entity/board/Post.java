@@ -2,7 +2,9 @@ package com.example.farmeasyserver.entity.board;
 
 import com.example.farmeasyserver.entity.user.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,15 +48,15 @@ public abstract class Post {
         updatedTime = LocalDateTime.now();
     }
 
-    public void addImages(List<MultipartFile> list) {
-        List<Image> i_list = list.stream().map(i -> new Image(i.getOriginalFilename())).toList();
+    public void addImages(List<MultipartFile> imageFileList) {
+        List<Image> i_list = imageFileList.stream().map(i -> new Image(i.getOriginalFilename())).toList();
         i_list.stream().forEach(i -> {
             imageList.add(i);
             i.setPost(this);
         });
     }
 
-    
+    private ImageUpdatedResult findImage
 
 
     public void setAuthor(User author){
@@ -64,5 +66,13 @@ public abstract class Post {
 
     public void viewCountUp(Post post){
         post.viewCount++;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class ImageUpdatedResult { // 4
+        private List<MultipartFile> addedImageFiles;
+        private List<Image> addedImages;
+        private List<Image> deletedImages;
     }
 }
