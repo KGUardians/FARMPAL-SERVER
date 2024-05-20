@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class ImageUpdateResult {
-    private List<MultipartFile> addedImageFileList;
-    private List<Image> addedImageList;
+    private List<MultipartFile> addedImageList;
     private List<Image> deletedImageList;
+
 }

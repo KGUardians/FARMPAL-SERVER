@@ -22,7 +22,6 @@ public abstract class CreatePostRequest {
     private CropCategory cropCategory;
 
     @ApiModelProperty(value = "게시글 본문", required = true, example = "my content")
-    @NotBlank(message = "게시글 본문을 입력해주세요.")
     @Lob
     private String content;
 
