@@ -26,8 +26,6 @@ public abstract class CreatePostRequest {
     @Lob
     private String content;
 
-    private int postLike;
-
     @ApiModelProperty(value = "이미지", notes = "이미지를 첨부해주세요.")
     private List<MultipartFile> imageList = new ArrayList<>();
 
