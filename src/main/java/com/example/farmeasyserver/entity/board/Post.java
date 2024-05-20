@@ -1,17 +1,18 @@
 package com.example.farmeasyserver.entity.board;
 
+import com.example.farmeasyserver.dto.post.CreatePostRequest;
 import com.example.farmeasyserver.dto.post.ImageUpdateResult;
+import com.example.farmeasyserver.dto.post.UpdatePostRequest;
 import com.example.farmeasyserver.entity.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -56,25 +57,42 @@ public abstract class Post {
             i.setPost(this);
         });
     }
-    private void deleteImageList(List<Image> deleted){
-        deleted.stream().forEach(d -> this.imageList.remove(d));
+    public void create(CreatePostRequest req, User author){
+        this.title = req.getTitle();
+        this.content = req.getContent();
+        this.cropCategory = req.getCropCategory();
+        this.setAuthor(author);
+        this.addImages(req.getImageList());
     }
 
+    public void update(UpdatePostRequest req) { // 1
+        this.title = req.getTitle();
+        this.content = req.getContent();
+        this.cropCategory = req.getCropCategory();
+        ImageUpdateResult result = new ImageUpdateResult(req.getAddedImages(),convertImageIdsToImages(req.getDeletedImages()));
+        addImages(result.getAddedImageList());
+        deleteImageList(result.getDeletedImageList());
+    }
+
+    private List<Image> convertImageIdsToImages(List<Long> imageIds) {
+        return imageIds.stream()
+                .map(this::convertImageIdToImage)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList();
+    }
+
+    private Optional<Image> convertImageIdToImage(Long id) {
+        return this.imageList.stream().filter(i -> i.getId().equals(id)).findAny();
+    }
+
+    private void deleteImageList(List<Image> deleted) {
+        deleted.stream().forEach(di -> this.imageList.remove(di));
+    }
 
     public void setAuthor(User author){
         this.author = author;
         author.getPostList().add(this);
     }
 
-    public void viewCountUp(Post post){
-        post.viewCount++;
-    }
-
-    @Getter
-    @AllArgsConstructor
-    public static class ImageUpdatedResult { // 4
-        private List<MultipartFile> addedImageFiles;
-        private List<Image> addedImages;
-        private List<Image> deletedImages;
-    }
 }

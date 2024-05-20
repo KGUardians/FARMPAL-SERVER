@@ -1,13 +1,10 @@
 package com.example.farmeasyserver.service.post;
 
-import com.example.farmeasyserver.dto.post.community.CommentRequest;
-import com.example.farmeasyserver.dto.post.community.ListCommunityDto;
+import com.example.farmeasyserver.dto.post.community.*;
 import com.example.farmeasyserver.dto.post.experience.*;
 import com.example.farmeasyserver.dto.post.market.ListMarketDto;
 import com.example.farmeasyserver.dto.post.CreatePostResponse;
-import com.example.farmeasyserver.dto.post.community.CommunityPostDto;
 import com.example.farmeasyserver.dto.post.market.MarketPostDto;
-import com.example.farmeasyserver.dto.post.community.CommunityPostRequest;
 import com.example.farmeasyserver.dto.post.market.MarketPostRequest;
 import com.example.farmeasyserver.entity.board.community.CommunityType;
 import com.example.farmeasyserver.entity.user.User;
@@ -36,6 +33,8 @@ public interface PostService {
     MarketPostDto readMarketPost(Long postId);
     ExperiencePostDto readExperiencePost(Long postId);
 
+    CommunityPostDto updateCommunityPost(Long postId, UpdateComPostReq req, User user);
+
 
     Slice<ListCommunityDto> getCommunityPostList(CommunityFilter filter, Pageable pageable);
     Slice<ListMarketDto> getMarketPostList(MarketFilter filter, Pageable pageable);
@@ -45,8 +44,5 @@ public interface PostService {
     ExpApplicationRequest requestExperience(ExpApplicationRequest req) throws Exception;
 
     CommentRequest requestComment(Long postId, CommentRequest req, User user);
-
-
-
 
 }

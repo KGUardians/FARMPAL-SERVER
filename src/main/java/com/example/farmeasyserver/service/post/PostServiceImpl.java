@@ -1,16 +1,13 @@
 package com.example.farmeasyserver.service.post;
 
 import com.example.farmeasyserver.dto.ImageDto;
-import com.example.farmeasyserver.dto.post.community.CommentRequest;
-import com.example.farmeasyserver.dto.post.community.ListCommunityDto;
+import com.example.farmeasyserver.dto.post.community.*;
 import com.example.farmeasyserver.dto.post.experience.*;
 import com.example.farmeasyserver.dto.post.market.ListMarketDto;
 import com.example.farmeasyserver.dto.post.CreatePostRequest;
 import com.example.farmeasyserver.dto.post.CreatePostResponse;
 import com.example.farmeasyserver.dto.mainpage.ListPostDto;
-import com.example.farmeasyserver.dto.post.community.CommunityPostDto;
 import com.example.farmeasyserver.dto.post.market.MarketPostDto;
-import com.example.farmeasyserver.dto.post.community.CommunityPostRequest;
 import com.example.farmeasyserver.dto.post.market.MarketPostRequest;
 import com.example.farmeasyserver.entity.board.Image;
 import com.example.farmeasyserver.entity.board.Post;
@@ -184,6 +181,14 @@ public class PostServiceImpl implements PostService{
         return ExperiencePostDto.toDto(expJpaRepo.findByIdWithUser(postId).orElseThrow());
     }
 
+    @Override
+    public CommunityPostDto updateCommunityPost(Long postId, UpdateComPostReq req, User user) {
+        CommunityPost post = communityJpaRepo.findByIdWithUser(postId).orElseThrow();
+        post.update(req);
+        communityJpaRepo.save(post);
+        return CommunityPostDto.toDto(post);
+    }
+
     /*
 
     각 게시판 게시글 리스트 조회 메소드
@@ -277,9 +282,7 @@ public class PostServiceImpl implements PostService{
     */
     public <T extends Post> T createPost(T p, CreatePostRequest req, User user) {
         User author = userJpaRepo.findById(user.getId()).orElseThrow();
-        p.setTitle(req.getTitle()); p.setContent(req.getContent());
-        p.setCropCategory(req.getCropCategory());
-        p.setAuthor(author); p.addImages(req.getImageList());
+        p.create(req, author);
 
         uploadImages(p.getImageList(),req.getImageList());
         return p;
