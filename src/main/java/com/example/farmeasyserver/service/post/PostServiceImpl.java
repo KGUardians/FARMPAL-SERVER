@@ -1,6 +1,8 @@
 package com.example.farmeasyserver.service.post;
 
 import com.example.farmeasyserver.dto.ImageDto;
+import com.example.farmeasyserver.dto.post.ImageUpdateResult;
+import com.example.farmeasyserver.dto.post.UpdatePostRequest;
 import com.example.farmeasyserver.dto.post.community.*;
 import com.example.farmeasyserver.dto.post.experience.*;
 import com.example.farmeasyserver.dto.post.market.ListMarketDto;
@@ -9,6 +11,7 @@ import com.example.farmeasyserver.dto.post.CreatePostResponse;
 import com.example.farmeasyserver.dto.mainpage.ListPostDto;
 import com.example.farmeasyserver.dto.post.market.MarketPostDto;
 import com.example.farmeasyserver.dto.post.market.MarketPostRequest;
+import com.example.farmeasyserver.dto.post.market.UpdateMarPostReq;
 import com.example.farmeasyserver.entity.board.Image;
 import com.example.farmeasyserver.entity.board.Post;
 import com.example.farmeasyserver.entity.board.PostType;
@@ -189,6 +192,25 @@ public class PostServiceImpl implements PostService{
         return CommunityPostDto.toDto(post);
     }
 
+    @Override
+    public ExperiencePostDto updateExperiencePost(Long postId, UpdateExpPostReq req, User user) {
+        ExperiencePost post = expJpaRepo.findByIdWithUser(postId).orElseThrow();
+        post.update(req);
+        post.setRecruitment(new Recruitment(req));
+        expJpaRepo.save(post);
+        return ExperiencePostDto.toDto(post);
+    }
+
+    @Override
+    public MarketPostDto updateMarketPost(Long postId, UpdateMarPostReq req, User user) {
+        MarketPost post = marketJpaRepo.findByIdWithUser(postId).orElseThrow();
+        updatePost(user,post,req);
+        post.setItem(new Item(req));
+        marketJpaRepo.save(post);
+        return MarketPostDto.toDto(post);
+
+    }
+
     /*
 
     각 게시판 게시글 리스트 조회 메소드
@@ -263,7 +285,7 @@ public class PostServiceImpl implements PostService{
     리스트 이미지 매핑
 
     */
-    public <T extends ListPostDto> void imageMapping(List<T> mainPageDto){
+    private <T extends ListPostDto> void imageMapping(List<T> mainPageDto){
         List<Long> postIdList = mainPageDto.stream()
                 .map(T::getPostId)
                 .collect(toList());
@@ -280,14 +302,20 @@ public class PostServiceImpl implements PostService{
     게시글 작성 메소드
 
     */
-    public <T extends Post> T createPost(T p, CreatePostRequest req, User user) {
-        User author = userJpaRepo.findById(user.getId()).orElseThrow();
+    private <T extends Post> T createPost(T p, CreatePostRequest req, User user) {
+        User author = userJpaRepo.findByIdWithFarm(user.getId()).orElseThrow();
         p.create(req, author);
-
         uploadImages(p.getImageList(),req.getImageList());
         return p;
     }
 
+    private void updatePost(User user, Post post, UpdatePostRequest req){
+        if(checkUser(user,post.getAuthor().getId())){
+            ImageUpdateResult result = post.update(req);
+            deleteImages(result.getDeletedImageList());
+            uploadImages(result.getAddedImageList(),result.getAddedImageFileList());
+        }else throw new UserException("삭제할 권한이 없습니다.", HttpStatus.BAD_REQUEST);
+    }
     /*
 
     각 게시글 이미지 매핑

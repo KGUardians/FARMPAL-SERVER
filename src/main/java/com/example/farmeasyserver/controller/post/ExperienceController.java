@@ -2,6 +2,7 @@ package com.example.farmeasyserver.controller.post;
 
 import com.example.farmeasyserver.dto.post.experience.ExpApplicationRequest;
 import com.example.farmeasyserver.dto.post.experience.ExperiencePostRequest;
+import com.example.farmeasyserver.dto.post.experience.UpdateExpPostReq;
 import com.example.farmeasyserver.dto.response.Response;
 import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.post.experience.ExpFilter;
@@ -46,6 +47,12 @@ public class ExperienceController {
         return Response.success(postService.readExperiencePost(postId));
     }
 
+    @PutMapping("/post/update/{postId}")
+    public Response update(@PathVariable Long postId, @Valid @ModelAttribute UpdateExpPostReq req,
+                           @AuthenticationPrincipal User user){
+        return Response.success(postService.updateExperiencePost(postId,req,user));
+    }
+
     @GetMapping("/application/{postId}")
     public Response applicationPage(@PathVariable Long postId){
         return Response.success(postService.experiencePage(postId));
@@ -56,4 +63,5 @@ public class ExperienceController {
         req.setPostId(postId);
         return Response.success(postService.requestExperience(req));
     }
+
 }

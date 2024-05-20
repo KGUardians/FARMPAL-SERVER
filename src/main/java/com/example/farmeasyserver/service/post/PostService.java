@@ -6,6 +6,7 @@ import com.example.farmeasyserver.dto.post.market.ListMarketDto;
 import com.example.farmeasyserver.dto.post.CreatePostResponse;
 import com.example.farmeasyserver.dto.post.market.MarketPostDto;
 import com.example.farmeasyserver.dto.post.market.MarketPostRequest;
+import com.example.farmeasyserver.dto.post.market.UpdateMarPostReq;
 import com.example.farmeasyserver.entity.board.community.CommunityType;
 import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.post.community.CommunityFilter;
@@ -34,6 +35,8 @@ public interface PostService {
     ExperiencePostDto readExperiencePost(Long postId);
 
     CommunityPostDto updateCommunityPost(Long postId, UpdateComPostReq req, User user);
+    ExperiencePostDto updateExperiencePost(Long postId, UpdateExpPostReq req, User user);
+    MarketPostDto updateMarketPost(Long postId, UpdateMarPostReq req, User user);
 
 
     Slice<ListCommunityDto> getCommunityPostList(CommunityFilter filter, Pageable pageable);

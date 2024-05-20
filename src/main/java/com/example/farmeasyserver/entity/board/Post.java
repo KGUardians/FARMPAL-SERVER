@@ -50,10 +50,12 @@ public abstract class Post {
         updatedTime = LocalDateTime.now();
     }
 
-    public void addImages(List<MultipartFile> imageFileList) {
-        List<Image> i_list = imageFileList.stream().map(i -> new Image(i.getOriginalFilename())).toList();
-        i_list.stream().forEach(i -> {
-            imageList.add(i);
+    private List<Image> convertImageFileToImage(List<MultipartFile> imageFileList){
+        return imageFileList.stream().map(i -> new Image(i.getOriginalFilename())).toList();
+    }
+    private void addImages(List<Image> imageList) {
+        imageList.stream().forEach(i -> {
+            this.imageList.add(i);
             i.setPost(this);
         });
     }
@@ -62,16 +64,19 @@ public abstract class Post {
         this.content = req.getContent();
         this.cropCategory = req.getCropCategory();
         this.setAuthor(author);
-        this.addImages(req.getImageList());
+        this.addImages(convertImageFileToImage(req.getImageList()));
     }
 
-    public void update(UpdatePostRequest req) { // 1
+    public ImageUpdateResult update(UpdatePostRequest req) { // 1
         this.title = req.getTitle();
         this.content = req.getContent();
         this.cropCategory = req.getCropCategory();
-        ImageUpdateResult result = new ImageUpdateResult(req.getAddedImages(),convertImageIdsToImages(req.getDeletedImages()));
+        ImageUpdateResult result = new ImageUpdateResult(req.getAddedImages(),
+                convertImageFileToImage(req.getAddedImages()),
+                convertImageIdsToImages(req.getDeletedImages()));
         addImages(result.getAddedImageList());
         deleteImageList(result.getDeletedImageList());
+        return result;
     }
 
     private List<Image> convertImageIdsToImages(List<Long> imageIds) {
@@ -90,7 +95,7 @@ public abstract class Post {
         deleted.stream().forEach(di -> this.imageList.remove(di));
     }
 
-    public void setAuthor(User author){
+    private void setAuthor(User author){
         this.author = author;
         author.getPostList().add(this);
     }

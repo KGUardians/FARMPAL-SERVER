@@ -1,6 +1,7 @@
 package com.example.farmeasyserver.controller.post;
 
 import com.example.farmeasyserver.dto.post.market.MarketPostRequest;
+import com.example.farmeasyserver.dto.post.market.UpdateMarPostReq;
 import com.example.farmeasyserver.dto.response.Response;
 import com.example.farmeasyserver.entity.board.CropCategory;
 import com.example.farmeasyserver.entity.user.User;
@@ -38,6 +39,12 @@ public class MarketController {
     @DeleteMapping("/post/{postId}")
     public Response delete(@PathVariable Long postId, @AuthenticationPrincipal User user){
         return Response.success(postService.deleteMarketPost(postId,user));
+    }
+
+    @PutMapping("/post/update/{postId}")
+    public Response update(@PathVariable Long postId, @Valid @ModelAttribute UpdateMarPostReq req,
+                           @AuthenticationPrincipal User user){
+        return Response.success(postService.updateMarketPost(postId,req,user));
     }
 
     @ApiOperation(value = "커뮤니티 게시글 조회", notes = "게시글을 조회한다.")
