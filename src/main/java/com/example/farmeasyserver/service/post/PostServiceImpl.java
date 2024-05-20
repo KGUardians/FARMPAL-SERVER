@@ -187,7 +187,7 @@ public class PostServiceImpl implements PostService{
     @Override
     public CommunityPostDto updateCommunityPost(Long postId, UpdateComPostReq req, User user) {
         CommunityPost post = communityJpaRepo.findByIdWithUser(postId).orElseThrow();
-        post.update(req);
+        updatePost(user, post, req);
         communityJpaRepo.save(post);
         return CommunityPostDto.toDto(post);
     }
@@ -195,7 +195,7 @@ public class PostServiceImpl implements PostService{
     @Override
     public ExperiencePostDto updateExperiencePost(Long postId, UpdateExpPostReq req, User user) {
         ExperiencePost post = expJpaRepo.findByIdWithUser(postId).orElseThrow();
-        post.update(req);
+        updatePost(user, post, req);
         post.setRecruitment(new Recruitment(req));
         expJpaRepo.save(post);
         return ExperiencePostDto.toDto(post);
@@ -204,7 +204,7 @@ public class PostServiceImpl implements PostService{
     @Override
     public MarketPostDto updateMarketPost(Long postId, UpdateMarPostReq req, User user) {
         MarketPost post = marketJpaRepo.findByIdWithUser(postId).orElseThrow();
-        updatePost(user,post,req);
+        updatePost(user, post, req);
         post.setItem(new Item(req));
         marketJpaRepo.save(post);
         return MarketPostDto.toDto(post);
