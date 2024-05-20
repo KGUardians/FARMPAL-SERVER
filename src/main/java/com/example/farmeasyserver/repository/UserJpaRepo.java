@@ -9,7 +9,8 @@ import java.util.Optional;
 
 public interface UserJpaRepo extends JpaRepository<User,Long> {
 
-
+    @Query("select u from User u join fetch u.farm where u.id = :userId")
+    Optional<User> findByIdWithFarm(Long userId);
     Optional<User> findByUsername(String username);
     @Query("select u from User u where u.username = :userName and u.phoneNumber = :phoneNumber")
     Optional<User> findByUsernameAndPhoneNumber(String userName, String phoneNumber);
