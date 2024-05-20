@@ -296,9 +296,7 @@ public class PostServiceImpl implements PostService{
         return postImages.stream()
                 .collect(Collectors.groupingBy(ImageDto::getPostId));
     }
-
-
-
+    
     private void uploadImages(List<Image> images, List<MultipartFile> fileImages) {
         IntStream.range(0, images.size()).forEach(i -> {
             try {
@@ -307,6 +305,10 @@ public class PostServiceImpl implements PostService{
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    private void deleteImages(List<Image> images){
+        images.stream().forEach(i -> fileService.delete(i.getUniqueName()));
     }
 
     private void deletePost(Post post, User user){
@@ -318,10 +320,6 @@ public class PostServiceImpl implements PostService{
 
     private boolean checkUser(User user, Long authorId){
         return user.getRole().equals(Role.ADMIN) || user.getId().equals(authorId);
-    }
-
-    private void deleteImages(List<Image> images){
-        images.stream().forEach(i -> fileService.delete(i.getUniqueName()));
     }
 
 }
