@@ -135,6 +135,11 @@ public class PostServiceImpl implements PostService{
         return new CreatePostResponse(experiencePost.getId(),"experience");
     }
 
+    /*
+
+    게시글 작성 메소드
+
+    */
     @Override
     @Transactional
     public Long deleteCommunityPost(Long postId, User user) {
