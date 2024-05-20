@@ -1,6 +1,5 @@
 package com.example.farmeasyserver.entity.board.market;
 
-import com.example.farmeasyserver.entity.board.CropCategory;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

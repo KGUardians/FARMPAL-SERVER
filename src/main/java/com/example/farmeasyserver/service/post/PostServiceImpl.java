@@ -279,8 +279,8 @@ public class PostServiceImpl implements PostService{
         User author = userJpaRepo.findById(user.getId()).orElseThrow();
         List<Image> imageList = req.getImageList().stream().map(i -> new Image(i.getOriginalFilename())).toList();
 
-        p.setPostLike(req.getPostLike()); p.setTitle(req.getTitle());
-        p.setContent(req.getContent());  p.setCropCategory(req.getCropCategory());
+        p.setTitle(req.getTitle()); p.setContent(req.getContent());
+        p.setCropCategory(req.getCropCategory());
         p.setAuthor(author); p.addImages(imageList);
 
         uploadImages(p.getImageList(),req.getImageList());
@@ -296,7 +296,7 @@ public class PostServiceImpl implements PostService{
         return postImages.stream()
                 .collect(Collectors.groupingBy(ImageDto::getPostId));
     }
-    
+
     private void uploadImages(List<Image> images, List<MultipartFile> fileImages) {
         IntStream.range(0, images.size()).forEach(i -> {
             try {

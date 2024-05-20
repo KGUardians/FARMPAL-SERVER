@@ -18,27 +18,21 @@ public abstract class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User author;
-
     @Column(name = "post_title",nullable = false)
     private String title;
-
     @Enumerated(EnumType.STRING)
     private CropCategory cropCategory;
-
     @Lob
     private String content;
-
     private LocalDateTime postedTime;
     private LocalDateTime updatedTime;
     private int postLike;
     @Enumerated(EnumType.STRING)
     private PostType postType;
     private int viewCount;
-
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> imageList = new ArrayList<>();
 
