@@ -277,11 +277,9 @@ public class PostServiceImpl implements PostService{
     */
     public <T extends Post> T createPost(T p, CreatePostRequest req, User user) {
         User author = userJpaRepo.findById(user.getId()).orElseThrow();
-        List<Image> imageList = req.getImageList().stream().map(i -> new Image(i.getOriginalFilename())).toList();
-
         p.setTitle(req.getTitle()); p.setContent(req.getContent());
         p.setCropCategory(req.getCropCategory());
-        p.setAuthor(author); p.addImages(imageList);
+        p.setAuthor(author); p.addImages(req.getImageList());
 
         uploadImages(p.getImageList(),req.getImageList());
         return p;

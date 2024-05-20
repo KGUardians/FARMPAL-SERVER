@@ -4,6 +4,7 @@ import com.example.farmeasyserver.entity.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -45,12 +46,16 @@ public abstract class Post {
         updatedTime = LocalDateTime.now();
     }
 
-    public void addImages(List<Image> added) {
-        added.stream().forEach(i -> {
+    public void addImages(List<MultipartFile> list) {
+        List<Image> i_list = list.stream().map(i -> new Image(i.getOriginalFilename())).toList();
+        i_list.stream().forEach(i -> {
             imageList.add(i);
             i.setPost(this);
         });
     }
+
+    
+
 
     public void setAuthor(User author){
         this.author = author;
