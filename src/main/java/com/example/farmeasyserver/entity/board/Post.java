@@ -1,5 +1,6 @@
 package com.example.farmeasyserver.entity.board;
 
+import com.example.farmeasyserver.dto.post.ImageUpdateResult;
 import com.example.farmeasyserver.entity.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -55,8 +56,9 @@ public abstract class Post {
             i.setPost(this);
         });
     }
-
-    private ImageUpdatedResult findImage
+    private void deleteImageList(List<Image> deleted){
+        deleted.stream().forEach(d -> this.imageList.remove(d));
+    }
 
 
     public void setAuthor(User author){
