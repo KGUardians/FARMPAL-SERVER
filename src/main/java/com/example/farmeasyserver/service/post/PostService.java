@@ -1,22 +1,17 @@
 package com.example.farmeasyserver.service.post;
 
-import com.example.farmeasyserver.dto.post.community.CommentRequest;
-import com.example.farmeasyserver.dto.post.community.ListCommunityDto;
-import com.example.farmeasyserver.dto.post.experience.ListExperienceDto;
+import com.example.farmeasyserver.dto.post.community.*;
+import com.example.farmeasyserver.dto.post.experience.*;
 import com.example.farmeasyserver.dto.post.market.ListMarketDto;
 import com.example.farmeasyserver.dto.post.CreatePostResponse;
-import com.example.farmeasyserver.dto.post.community.CommunityPostDto;
-import com.example.farmeasyserver.dto.post.experience.ExpApplicationRequest;
 import com.example.farmeasyserver.dto.post.market.MarketPostDto;
-import com.example.farmeasyserver.dto.post.experience.ExperiencePostDto;
-import com.example.farmeasyserver.dto.post.community.CommunityPostRequest;
 import com.example.farmeasyserver.dto.post.market.MarketPostRequest;
-import com.example.farmeasyserver.dto.post.experience.ExperiencePostRequest;
+import com.example.farmeasyserver.dto.post.market.UpdateMarPostReq;
 import com.example.farmeasyserver.entity.board.community.CommunityType;
+import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.post.community.CommunityFilter;
 import com.example.farmeasyserver.repository.post.experience.ExpFilter;
 import com.example.farmeasyserver.repository.post.market.MarketFilter;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
@@ -27,20 +22,30 @@ public interface PostService {
     List<ListMarketDto> getMainMarketPosts();
     List<ListExperienceDto> getMainExperiencePosts();
 
-    CreatePostResponse createCommunityPost(CommunityPostRequest req, CommunityType type) throws ChangeSetPersister.NotFoundException;
-    CreatePostResponse createMarketPost(MarketPostRequest req) throws ChangeSetPersister.NotFoundException;
-    CreatePostResponse createExperiencePost(ExperiencePostRequest req) throws ChangeSetPersister.NotFoundException;
+    CreatePostResponse createCommunityPost(CommunityPostRequest req, CommunityType type, User author);
+    CreatePostResponse createMarketPost(MarketPostRequest req,User user);
+    CreatePostResponse createExperiencePost(ExperiencePostRequest req, User user);
 
-    CommunityPostDto readCommunityPost(Long postId) throws ChangeSetPersister.NotFoundException;
-    MarketPostDto readMarketPost(Long postId) throws ChangeSetPersister.NotFoundException;
-    ExperiencePostDto readExperiencePost(Long postId) throws ChangeSetPersister.NotFoundException;
+    Long deleteCommunityPost(Long postId, User user);
+    Long deleteMarketPost(Long postId, User user);
+    Long deleteExperiencePost(Long postId, User user);
+
+    CommunityPostDto readCommunityPost(Long postId);
+    MarketPostDto readMarketPost(Long postId);
+    ExperiencePostDto readExperiencePost(Long postId);
+
+    CommunityPostDto updateCommunityPost(Long postId, UpdateComPostReq req, User user);
+    ExperiencePostDto updateExperiencePost(Long postId, UpdateExpPostReq req, User user);
+    MarketPostDto updateMarketPost(Long postId, UpdateMarPostReq req, User user);
 
 
     Slice<ListCommunityDto> getCommunityPostList(CommunityFilter filter, Pageable pageable);
     Slice<ListMarketDto> getMarketPostList(MarketFilter filter, Pageable pageable);
     Slice<ListExperienceDto> getExperiencePostList(ExpFilter filter, Pageable pageable);
 
+    ExpApplicationPageDto experiencePage(Long postId);
     ExpApplicationRequest requestExperience(ExpApplicationRequest req) throws Exception;
 
-    CommentRequest requestComment(Long postId, CommentRequest req) throws ChangeSetPersister.NotFoundException;
+    CommentRequest requestComment(Long postId, CommentRequest req, User user);
+
 }

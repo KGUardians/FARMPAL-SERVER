@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -34,6 +36,17 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    //권한 계층 설정
+    @Bean
+    public RoleHierarchy roleHierarchy(){
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+
+        roleHierarchy.setHierarchy("ROLE_FARMER > ROLE_USER\n");
+        roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_FARMER\n");
+
+        return roleHierarchy;
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         return http
@@ -45,7 +58,7 @@ public class SecurityConfig {
                 ->authorize
                         .requestMatchers("/","/community/**",
                                 "/experience","/market","/user/**").permitAll()
-                        .requestMatchers("/v3/**","/swagger-ui/**","/swagger").permitAll()
+                        .requestMatchers("/swagger","/swagger-ui/**","/v3/**").permitAll()
                         .requestMatchers(HttpMethod.POST,"/experience/post","/market/post").hasRole("FARMER")
                         .requestMatchers(HttpMethod.POST,"/community/NOTICE").hasRole("ADMIN")
                         .anyRequest().authenticated())

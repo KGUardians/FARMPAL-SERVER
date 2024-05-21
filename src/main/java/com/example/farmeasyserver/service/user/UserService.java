@@ -1,14 +1,14 @@
 package com.example.farmeasyserver.service.user;
 
-import com.example.farmeasyserver.dto.user.JoinUserForm;
-import com.example.farmeasyserver.dto.user.LoginRequest;
-import com.example.farmeasyserver.dto.user.UserDto;
-import com.example.farmeasyserver.dto.user.UserTokenDto;
+import com.example.farmeasyserver.dto.user.*;
+import com.example.farmeasyserver.entity.user.User;
 
 
 public interface UserService {
-    UserDto join (JoinUserForm user);
+    UserDto join (JoinUserReq user);
 
-    UserTokenDto signIn(LoginRequest req);
+    UserTokenDto signIn(LoginReq req);
+
+    RegisterFarmReq createFarm(RegisterFarmReq req, User user);
 
 }

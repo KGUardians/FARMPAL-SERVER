@@ -1,13 +1,12 @@
 package com.example.farmeasyserver.service.user;
 
+import com.example.farmeasyserver.config.login.auth.CustomUserDetailsService;
 import com.example.farmeasyserver.config.login.jwt.JwtProperties;
-import com.example.farmeasyserver.dto.user.JoinUserForm;
-import com.example.farmeasyserver.dto.user.LoginRequest;
-import com.example.farmeasyserver.dto.user.UserDto;
-import com.example.farmeasyserver.dto.user.UserTokenDto;
+import com.example.farmeasyserver.dto.user.*;
+import com.example.farmeasyserver.entity.user.Farm;
+import com.example.farmeasyserver.repository.FarmJpaRepo;
 import com.example.farmeasyserver.repository.UserJpaRepo;
 import com.example.farmeasyserver.entity.user.User;
-import com.example.farmeasyserver.util.exception.ResourceNotFoundException;
 import com.example.farmeasyserver.util.exception.user.UserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,8 +14,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,38 +22,45 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final AuthenticationManager authenticationManager;
-    private final UserDetailsService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
     private final UserJpaRepo userJpaRepo;
+    private final FarmJpaRepo farmJpaRepo;
     private final PasswordEncoder passwordEncoder;
     private final JwtProperties jwtProperties;
 
     @Override
     @Transactional
-    public UserDto join(JoinUserForm form) {
+    public UserDto join(JoinUserReq form) {
         isExistUsername(form.getUsername());
         checkPassword(form.getPassword(), form.getCheckPassword());
 
         String encodePwd = passwordEncoder.encode(form.getPassword());
         form.setPassword(encodePwd);
 
-        User user = JoinUserForm.toEntity(form);
+        User user = JoinUserReq.toEntity(form);
         userJpaRepo.save(user);
 
         return new UserDto(user.getId(), user.getName(), user.getAddress(),user.getBirthday());
     }
 
     @Override
-    public UserTokenDto signIn(LoginRequest req) {
+    public UserTokenDto signIn(LoginReq req) {
         authenticate(req.getUsername(), req.getPassword());
-        UserDetails userDetails = userDetailsService.loadUserByUsername(req.getUsername());
-        checkEncodePassword(req.getPassword(),userDetails.getPassword());
+        User user = (User) userDetailsService.loadUserByUsername(req.getUsername());
+        checkEncodePassword(req.getPassword(),user.getPassword());
 
-        User user = userJpaRepo.findByUsername(req.getUsername()).orElseThrow(
-                () -> new ResourceNotFoundException("User","User Email",req.getUsername())
-        );
+        String token = jwtProperties.generateToken(user);
+        return UserTokenDto.toDto(user,token);
+    }
 
-        String token = jwtProperties.generateToken(userDetails);
-        return UserTokenDto.fromEntity(user,token);
+    @Override
+    @Transactional
+    public RegisterFarmReq createFarm(RegisterFarmReq req,User user) {
+        Farm farm = RegisterFarmReq.toEntity(req);
+        farm.setUser(user);
+        farmJpaRepo.save(farm);
+        userJpaRepo.save(user);
+        return req;
     }
 
     private void authenticate(String username, String pwd) {

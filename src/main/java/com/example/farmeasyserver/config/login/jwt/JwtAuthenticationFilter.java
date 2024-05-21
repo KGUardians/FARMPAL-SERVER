@@ -1,5 +1,6 @@
 package com.example.farmeasyserver.config.login.jwt;
 
+import com.example.farmeasyserver.config.login.auth.CustomUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -27,7 +27,7 @@ import java.io.IOException;
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final UserDetailsService userDetailsService; // 사용자 정보를 제공하는 서비스
+    private final CustomUserDetailsService userDetailsService; // 사용자 정보를 제공하는 서비스
     private final JwtProperties jwtProperties; // JWT 관련 속성 클래스
 
     @Value("${jwt.header}") private String HEADER_STRING; // HTTP 요청 헤더에서 JWT를 찾을 헤더 이름 -> "Authorization"

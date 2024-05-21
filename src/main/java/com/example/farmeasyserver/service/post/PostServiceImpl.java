@@ -1,20 +1,17 @@
 package com.example.farmeasyserver.service.post;
 
 import com.example.farmeasyserver.dto.ImageDto;
-import com.example.farmeasyserver.dto.post.community.CommentRequest;
-import com.example.farmeasyserver.dto.post.community.ListCommunityDto;
-import com.example.farmeasyserver.dto.post.experience.ListExperienceDto;
+import com.example.farmeasyserver.dto.post.ImageUpdateResult;
+import com.example.farmeasyserver.dto.post.UpdatePostRequest;
+import com.example.farmeasyserver.dto.post.community.*;
+import com.example.farmeasyserver.dto.post.experience.*;
 import com.example.farmeasyserver.dto.post.market.ListMarketDto;
 import com.example.farmeasyserver.dto.post.CreatePostRequest;
 import com.example.farmeasyserver.dto.post.CreatePostResponse;
 import com.example.farmeasyserver.dto.mainpage.ListPostDto;
-import com.example.farmeasyserver.dto.post.community.CommunityPostDto;
-import com.example.farmeasyserver.dto.post.experience.ExpApplicationRequest;
 import com.example.farmeasyserver.dto.post.market.MarketPostDto;
-import com.example.farmeasyserver.dto.post.experience.ExperiencePostDto;
-import com.example.farmeasyserver.dto.post.community.CommunityPostRequest;
 import com.example.farmeasyserver.dto.post.market.MarketPostRequest;
-import com.example.farmeasyserver.dto.post.experience.ExperiencePostRequest;
+import com.example.farmeasyserver.dto.post.market.UpdateMarPostReq;
 import com.example.farmeasyserver.entity.board.Image;
 import com.example.farmeasyserver.entity.board.Post;
 import com.example.farmeasyserver.entity.board.PostType;
@@ -26,6 +23,7 @@ import com.example.farmeasyserver.entity.board.exprience.ExperiencePost;
 import com.example.farmeasyserver.entity.board.exprience.Recruitment;
 import com.example.farmeasyserver.entity.board.market.Item;
 import com.example.farmeasyserver.entity.board.market.MarketPost;
+import com.example.farmeasyserver.entity.user.Role;
 import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.UserJpaRepo;
 import com.example.farmeasyserver.repository.post.*;
@@ -41,10 +39,12 @@ import com.example.farmeasyserver.repository.post.market.MarketFilter;
 import com.example.farmeasyserver.repository.post.market.MarketRepo;
 import com.example.farmeasyserver.repository.post.market.MarketJpaRepo;
 import com.example.farmeasyserver.service.file.FileService;
+import com.example.farmeasyserver.util.exception.user.UserException;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -105,19 +105,18 @@ public class PostServiceImpl implements PostService{
     */
     @Override
     @Transactional
-    public CreatePostResponse createCommunityPost(CommunityPostRequest req, CommunityType type) throws ChangeSetPersister.NotFoundException {
-        CommunityPost communityPost = createPost(new CommunityPost(type),req);
+    public CreatePostResponse createCommunityPost(CommunityPostRequest req, CommunityType type, User author) {
+        CommunityPost communityPost = createPost(new CommunityPost(type),req, author);
         communityPost.setPostType(PostType.COMMUNITY);
         communityJpaRepo.save(communityPost);
         return new CreatePostResponse(communityPost.getId(),"community");
     }
 
-
     @Override
     @Transactional
-    public CreatePostResponse createMarketPost(MarketPostRequest req) throws ChangeSetPersister.NotFoundException {
+    public CreatePostResponse createMarketPost(MarketPostRequest req, User author) {
         Item item = new Item(req.getItemName(),req.getPrice(), req.getGram());
-        MarketPost marketPost = createPost(new MarketPost(req.getContent(),item),req);
+        MarketPost marketPost = createPost(new MarketPost(req.getContent(), item), req, author);
         marketPost.setPostType(PostType.MARKET);
         marketJpaRepo.save(marketPost);
         return new CreatePostResponse(marketPost.getId(),"market");
@@ -125,16 +124,44 @@ public class PostServiceImpl implements PostService{
 
     @Override
     @Transactional
-    public CreatePostResponse createExperiencePost(ExperiencePostRequest req) throws ChangeSetPersister.NotFoundException {
+    public CreatePostResponse createExperiencePost(ExperiencePostRequest req,User author) {
         Recruitment recruitment = new Recruitment(
-                req.getFarmName(),
-                req.getStartTime(), req.getRecruitmentNum(),
+                req.getStartDate(), req.getStartTime(), req.getRecruitmentNum(),
                 req.getDetailedRecruitmentCondition()
         );
-        ExperiencePost experiencePost = createPost(new ExperiencePost(recruitment),req);
+        ExperiencePost experiencePost = createPost(new ExperiencePost(recruitment),req, author);
         experiencePost.setPostType(PostType.EXPERIENCE);
         expJpaRepo.save(experiencePost);
         return new CreatePostResponse(experiencePost.getId(),"experience");
+    }
+
+    /*
+
+    게시글 작성 메소드
+
+    */
+    @Override
+    @Transactional
+    public Long deleteCommunityPost(Long postId, User user) {
+        CommunityPost post = communityJpaRepo.findByIdWithUser(postId).orElseThrow();
+        deletePost(post,user);
+        return postId;
+    }
+
+    @Override
+    @Transactional
+    public Long deleteMarketPost(Long postId, User user) {
+        MarketPost post = marketJpaRepo.findByIdWithUser(postId).orElseThrow();
+        deletePost(post,user);
+        return postId;
+    }
+
+    @Override
+    @Transactional
+    public Long deleteExperiencePost(Long postId, User user) {
+        ExperiencePost post = expJpaRepo.findById(postId).orElseThrow();
+        deletePost(post,user);
+        return postId;
     }
 
     /*
@@ -143,21 +170,44 @@ public class PostServiceImpl implements PostService{
 
     */
     @Override
-    public CommunityPostDto readCommunityPost(Long postId) throws ChangeSetPersister.NotFoundException {
-        return CommunityPostDto.toDto(communityJpaRepo.findByIdWithUser(postId)
-                .orElseThrow(ChangeSetPersister.NotFoundException::new));
+    public CommunityPostDto readCommunityPost(Long postId){
+        return CommunityPostDto.toDto(communityJpaRepo.findByIdWithUser(postId).orElseThrow());
     }
 
     @Override
-    public MarketPostDto readMarketPost(Long postId) throws ChangeSetPersister.NotFoundException {
-        return MarketPostDto.toDto(marketJpaRepo.findByIdWithUser(postId)
-                .orElseThrow(ChangeSetPersister.NotFoundException::new));
+    public MarketPostDto readMarketPost(Long postId){
+        return MarketPostDto.toDto(marketJpaRepo.findByIdWithUser(postId).orElseThrow());
     }
 
     @Override
-    public ExperiencePostDto readExperiencePost(Long postId) throws ChangeSetPersister.NotFoundException {
-        return ExperiencePostDto.toDto(expJpaRepo.findByIdWithUser(postId)
-                .orElseThrow(ChangeSetPersister.NotFoundException::new));
+    public ExperiencePostDto readExperiencePost(Long postId){
+        return ExperiencePostDto.toDto(expJpaRepo.findByIdWithUser(postId).orElseThrow());
+    }
+
+    @Override
+    public CommunityPostDto updateCommunityPost(Long postId, UpdateComPostReq req, User user) {
+        CommunityPost post = communityJpaRepo.findByIdWithUser(postId).orElseThrow();
+        updatePost(user, post, req);
+        communityJpaRepo.save(post);
+        return CommunityPostDto.toDto(post);
+    }
+
+    @Override
+    public ExperiencePostDto updateExperiencePost(Long postId, UpdateExpPostReq req, User user) {
+        ExperiencePost post = expJpaRepo.findByIdWithUser(postId).orElseThrow();
+        updatePost(user, post, req);
+        post.setRecruitment(new Recruitment(req));
+        expJpaRepo.save(post);
+        return ExperiencePostDto.toDto(post);
+    }
+
+    @Override
+    public MarketPostDto updateMarketPost(Long postId, UpdateMarPostReq req, User user) {
+        MarketPost post = marketJpaRepo.findByIdWithUser(postId).orElseThrow();
+        updatePost(user, post, req);
+        post.setItem(new Item(req));
+        marketJpaRepo.save(post);
+        return MarketPostDto.toDto(post);
     }
 
     /*
@@ -183,12 +233,20 @@ public class PostServiceImpl implements PostService{
         imageMapping(listResponse.stream().toList()); return listResponse;
     }
 
+
     /*
 
     농촌체험 신청
 
     */
+
     @Override
+    public ExpApplicationPageDto experiencePage(Long postId) {
+        ExperiencePost post = expJpaRepo.findByIdWithUser(postId).orElseThrow();
+        return ExpApplicationPageDto.toDto(post);
+    }
+    @Override
+    @Transactional
     public ExpApplicationRequest requestExperience(ExpApplicationRequest req) throws Exception {
         ExperiencePost experiencePost = expJpaRepo.findById(req.getPostId())
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
@@ -210,9 +268,10 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public CommentRequest requestComment(Long postId, CommentRequest req) throws ChangeSetPersister.NotFoundException {
-        CommunityPost post = communityJpaRepo.findById(postId).orElseThrow(ChangeSetPersister.NotFoundException::new);
-        User author = userJpaRepo.findById(req.getAuthorId()).orElseThrow(ChangeSetPersister.NotFoundException::new);
+    @Transactional
+    public CommentRequest requestComment(Long postId, CommentRequest req, User user) {
+        CommunityPost post = communityJpaRepo.findById(postId).orElseThrow();
+        User author = userJpaRepo.findById(user.getId()).orElseThrow();
         Comment comment = new Comment(req.getComment());
         comment.setPost(post);
         comment.setAuthor(author);
@@ -225,7 +284,7 @@ public class PostServiceImpl implements PostService{
     리스트 이미지 매핑
 
     */
-    public <T extends ListPostDto> void imageMapping(List<T> mainPageDto){
+    private <T extends ListPostDto> void imageMapping(List<T> mainPageDto){
         List<Long> postIdList = mainPageDto.stream()
                 .map(T::getPostId)
                 .collect(toList());
@@ -242,18 +301,20 @@ public class PostServiceImpl implements PostService{
     게시글 작성 메소드
 
     */
-    public <T extends Post> T createPost(T p, CreatePostRequest req) throws ChangeSetPersister.NotFoundException{
-        User author = userJpaRepo.findById(req.getUserId()).orElseThrow(ChangeSetPersister.NotFoundException::new);
-        List<Image> imageList = req.getImageList().stream().map(i -> new Image(i.getOriginalFilename())).toList();
-
-        p.setPostLike(req.getPostLike()); p.setTitle(req.getTitle());
-        p.setContent(req.getContent());  p.setCropCategory(req.getCropCategory());
-        p.setAuthor(author); p.addImages(imageList);
-
+    private <T extends Post> T createPost(T p, CreatePostRequest req, User user) {
+        User author = userJpaRepo.findByIdWithFarm(user.getId()).orElseThrow();
+        p.create(req, author);
         uploadImages(p.getImageList(),req.getImageList());
         return p;
     }
 
+    private void updatePost(User user, Post post, UpdatePostRequest req){
+        if(checkUser(user,post.getAuthor().getId())){
+            ImageUpdateResult result = post.update(req);
+            deleteImages(result.getDeletedImageList());
+            uploadImages(result.getAddedImageList(),result.getAddedImageFileList());
+        }else throw new UserException("삭제할 권한이 없습니다.", HttpStatus.BAD_REQUEST);
+    }
     /*
 
     각 게시글 이미지 매핑
@@ -264,8 +325,6 @@ public class PostServiceImpl implements PostService{
                 .collect(Collectors.groupingBy(ImageDto::getPostId));
     }
 
-
-
     private void uploadImages(List<Image> images, List<MultipartFile> fileImages) {
         IntStream.range(0, images.size()).forEach(i -> {
             try {
@@ -274,6 +333,21 @@ public class PostServiceImpl implements PostService{
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    private void deleteImages(List<Image> images){
+        images.stream().forEach(i -> fileService.delete(i.getUniqueName()));
+    }
+
+    private void deletePost(Post post, User user){
+        if(checkUser(user,post.getAuthor().getId())){
+            deleteImages(post.getImageList());
+            postJpaRepo.delete(post);
+        }else throw new UserException("삭제할 권한이 없습니다.", HttpStatus.BAD_REQUEST);
+    }
+
+    private boolean checkUser(User user, Long authorId){
+        return user.getRole().equals(Role.ADMIN) || user.getId().equals(authorId);
     }
 
 }

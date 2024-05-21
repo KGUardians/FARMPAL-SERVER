@@ -34,6 +34,6 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public void delete(String fileName) {
-
+        new File(location + fileName).delete();
     }
 }

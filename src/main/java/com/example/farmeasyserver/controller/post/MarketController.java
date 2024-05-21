@@ -1,8 +1,10 @@
 package com.example.farmeasyserver.controller.post;
 
 import com.example.farmeasyserver.dto.post.market.MarketPostRequest;
+import com.example.farmeasyserver.dto.post.market.UpdateMarPostReq;
 import com.example.farmeasyserver.dto.response.Response;
 import com.example.farmeasyserver.entity.board.CropCategory;
+import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.post.market.MarketFilter;
 import com.example.farmeasyserver.service.post.PostService;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,8 +32,19 @@ public class MarketController {
     }
 
     @PostMapping("/post")
-    public Response create(@Valid @ModelAttribute MarketPostRequest req) throws ChangeSetPersister.NotFoundException {
-        return Response.success(postService.createMarketPost(req));
+    public Response create(@Valid @ModelAttribute MarketPostRequest req, @AuthenticationPrincipal User author) {
+        return Response.success(postService.createMarketPost(req, author));
+    }
+
+    @DeleteMapping("/post/{postId}")
+    public Response delete(@PathVariable Long postId, @AuthenticationPrincipal User user){
+        return Response.success(postService.deleteMarketPost(postId,user));
+    }
+
+    @PutMapping("/post/update/{postId}")
+    public Response update(@PathVariable Long postId, @Valid @ModelAttribute UpdateMarPostReq req,
+                           @AuthenticationPrincipal User user){
+        return Response.success(postService.updateMarketPost(postId,req,user));
     }
 
     @ApiOperation(value = "커뮤니티 게시글 조회", notes = "게시글을 조회한다.")
