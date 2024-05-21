@@ -208,7 +208,6 @@ public class PostServiceImpl implements PostService{
         post.setItem(new Item(req));
         marketJpaRepo.save(post);
         return MarketPostDto.toDto(post);
-
     }
 
     /*
