@@ -11,7 +11,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -50,7 +49,7 @@ public class MarketController {
     @ApiOperation(value = "커뮤니티 게시글 조회", notes = "게시글을 조회한다.")
     @GetMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
-    public Response read(@ApiParam(value = "게시글 id", required = true) @PathVariable Long postId) throws ChangeSetPersister.NotFoundException {
+    public Response read(@ApiParam(value = "게시글 id", required = true) @PathVariable Long postId) {
         return Response.success(postService.readMarketPost(postId));
     }
 }
