@@ -167,7 +167,7 @@ public class PostServiceImpl implements PostService{
     public ExperiencePostDto updateExperiencePost(Long postId, UpdateExpPostReq req, User user) {
         ExperiencePost post = expJpaRepo.findByIdWithUser(postId).orElseThrow();
         updatePost(user, post, req);
-        post.setRecruitment(Recruitment.toEntity(req));
+        post.setRecruitment(UpdateExpPostReq.reqToRecruitment(req));
         expJpaRepo.save(post);
         return ExperiencePostDto.toDto(post);
     }
@@ -176,7 +176,7 @@ public class PostServiceImpl implements PostService{
     public MarketPostDto updateMarketPost(Long postId, UpdateMarPostReq req, User user) {
         MarketPost post = marketJpaRepo.findByIdWithUser(postId).orElseThrow();
         updatePost(user, post, req);
-        post.setItem(UpdateMarPostReq.itemToEntity(req));
+        post.setItem(UpdateMarPostReq.reqToItem(req));
         marketJpaRepo.save(post);
         return MarketPostDto.toDto(post);
     }

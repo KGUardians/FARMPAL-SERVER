@@ -11,7 +11,7 @@ public class UpdateMarPostReq extends UpdatePostRequest {
     private int price;
     private int gram;
 
-    public static Item itemToEntity(UpdateMarPostReq req){
+    public static Item reqToItem(UpdateMarPostReq req){
         return new Item(
                 req.getItemName(),
                 req.getPrice(),
