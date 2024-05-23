@@ -53,28 +53,28 @@ public abstract class Post {
     private List<Image> convertImageFileToImage(List<MultipartFile> imageFileList){
         return imageFileList.stream().map(i -> new Image(i.getOriginalFilename())).toList();
     }
-    private void addImages(List<Image> imageList) {
+    private void addImageList(List<Image> imageList) {
         imageList.stream().forEach(i -> {
             this.imageList.add(i);
             i.setPost(this);
         });
     }
-    public void create(CreatePostRequest req, User author){
+    public void createPostFromReq(CreatePostRequest req, User author){
         this.title = req.getTitle();
         this.content = req.getContent();
         this.cropCategory = req.getCropCategory();
         this.setAuthor(author);
-        this.addImages(convertImageFileToImage(req.getImageList()));
+        this.addImageList(convertImageFileToImage(req.getImageList()));
     }
 
-    public ImageUpdateResult update(UpdatePostRequest req) { // 1
+    public ImageUpdateResult updatePostFromReq(UpdatePostRequest req) { // 1
         this.title = req.getTitle();
         this.content = req.getContent();
         this.cropCategory = req.getCropCategory();
         ImageUpdateResult result = new ImageUpdateResult(req.getAddedImages(),
                 convertImageFileToImage(req.getAddedImages()),
                 convertImageIdsToImages(req.getDeletedImages()));
-        addImages(result.getAddedImageList());
+        addImageList(result.getAddedImageList());
         deleteImageList(result.getDeletedImageList());
         return result;
     }

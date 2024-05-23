@@ -295,6 +295,7 @@ public class PostServiceImpl implements PostService{
                 p.setImage(imageDtos.get(0));
         });
     }
+    
 
     /*
 
@@ -303,14 +304,14 @@ public class PostServiceImpl implements PostService{
     */
     private <T extends Post> T createPost(T p, CreatePostRequest req, User user) {
         User author = userJpaRepo.findByIdWithFarm(user.getId()).orElseThrow();
-        p.create(req, author);
+        p.createPostFromReq(req, author);
         uploadImages(p.getImageList(),req.getImageList());
         return p;
     }
 
     private void updatePost(User user, Post post, UpdatePostRequest req){
         if(checkUser(user,post.getAuthor().getId())){
-            ImageUpdateResult result = post.update(req);
+            ImageUpdateResult result = post.updatePostFromReq(req);
             deleteImages(result.getDeletedImageList());
             uploadImages(result.getAddedImageList(),result.getAddedImageFileList());
         }else throw new UserException("삭제할 권한이 없습니다.", HttpStatus.BAD_REQUEST);
