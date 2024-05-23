@@ -22,9 +22,11 @@ public class Item {
         this.gram = gram;
     }
 
-    public Item(UpdateMarPostReq req){
-        this.itemName = req.getItemName();
-        this.price = req.getPrice();
-        this.gram = req.getGram();
+    public static Item toEntity(UpdateMarPostReq req){
+        return new Item(
+                req.getItemName(),
+                req.getPrice(),
+                req.getGram()
+        );
     }
 }

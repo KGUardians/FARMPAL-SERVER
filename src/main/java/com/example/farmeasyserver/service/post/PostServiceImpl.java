@@ -196,7 +196,7 @@ public class PostServiceImpl implements PostService{
     public ExperiencePostDto updateExperiencePost(Long postId, UpdateExpPostReq req, User user) {
         ExperiencePost post = expJpaRepo.findByIdWithUser(postId).orElseThrow();
         updatePost(user, post, req);
-        post.setRecruitment(new Recruitment(req));
+        post.setRecruitment(Recruitment.toEntity(req));
         expJpaRepo.save(post);
         return ExperiencePostDto.toDto(post);
     }
@@ -205,7 +205,7 @@ public class PostServiceImpl implements PostService{
     public MarketPostDto updateMarketPost(Long postId, UpdateMarPostReq req, User user) {
         MarketPost post = marketJpaRepo.findByIdWithUser(postId).orElseThrow();
         updatePost(user, post, req);
-        post.setItem(new Item(req));
+        post.setItem(Item.toEntity(req));
         marketJpaRepo.save(post);
         return MarketPostDto.toDto(post);
     }
@@ -306,8 +306,8 @@ public class PostServiceImpl implements PostService{
             }
         });
     }
-    private Map<Long, List<ImageDto>> groupImagesByPostId(List<ImageDto> postImages) {
-        return postImages.stream()
+    private Map<Long, List<ImageDto>> groupImagesByPostId(List<ImageDto> postImageList) {
+        return postImageList.stream()
                 .collect(Collectors.groupingBy(ImageDto::getPostId));
     }
 

@@ -19,10 +19,12 @@ public class Recruitment {
     @Lob
     private String detailedRecruitmentCondition;
 
-    public Recruitment(UpdateExpPostReq req){
-        this.startDate = req.getStartDate();
-        this.startTime = req.getStartTime();
-        this.recruitmentNum = req.getRecruitmentNum();
-        this.detailedRecruitmentCondition = req.getDetailedRecruitmentCondition();
+    public static Recruitment toEntity(UpdateExpPostReq req){
+        return new Recruitment(
+                req.getStartDate(),
+                req.getStartTime(),
+                req.getRecruitmentNum(),
+                req.getDetailedRecruitmentCondition()
+        );
     }
 }
