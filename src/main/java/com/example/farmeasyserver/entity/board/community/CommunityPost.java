@@ -22,10 +22,4 @@ public class CommunityPost extends Post {
     public CommunityPost() {
         super(PostType.COMMUNITY);
     }
-
-    public void addComment(Comment comment){
-        commentList.add(comment);
-        comment.setPost(this);
-    }
-
 }

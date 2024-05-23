@@ -245,9 +245,7 @@ public class PostServiceImpl implements PostService{
     public CommentRequest requestComment(Long postId, CommentRequest req, User user) {
         CommunityPost post = findCommunityPost(postId);
         User author = findUser(user.getId());
-        Comment comment = new Comment(req.getComment());
-        comment.setPost(post);
-        comment.setAuthor(author);
+        Comment comment = new Comment(req.getComment(),post,author);
         commentJpaRepo.save(comment);
         return req;
     }
