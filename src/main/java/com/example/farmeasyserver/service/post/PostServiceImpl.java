@@ -79,7 +79,7 @@ public class PostServiceImpl implements PostService{
 
     /*
 
-    게시글 작성 메소드
+    게시글 작성
 
     */
     @Override
@@ -108,7 +108,7 @@ public class PostServiceImpl implements PostService{
 
     /*
 
-    게시글 작성 메소드
+    게시글 삭제
 
     */
     @Override
@@ -137,7 +137,7 @@ public class PostServiceImpl implements PostService{
 
     /*
 
-    게시판 게시글 조회 메소드
+    게시글 조회 메소드
 
     */
     @Override
@@ -155,6 +155,11 @@ public class PostServiceImpl implements PostService{
         return ExperiencePostDto.toDto(findExperiencePost(postId));
     }
 
+    /*
+
+    게시글 수정
+
+    */
     @Override
     public CommunityPostDto updateCommunityPost(Long postId, UpdateComPostReq req, User user) {
         CommunityPost post = findCommunityPost(postId);
@@ -183,7 +188,7 @@ public class PostServiceImpl implements PostService{
 
     /*
 
-    각 게시판 게시글 리스트 조회 메소드
+    각 게시판 게시글 리스트 조회
 
     */
     @Override
@@ -207,7 +212,7 @@ public class PostServiceImpl implements PostService{
 
     /*
 
-    농촌체험 신청
+    농촌체험 신청 관련
 
     */
 
@@ -240,6 +245,11 @@ public class PostServiceImpl implements PostService{
         expAppJpaRepo.save(expApplication);
     }
 
+    /*
+
+    커뮤니티 게시글 댓글 작성
+
+    */
     @Override
     @Transactional
     public CommentRequest requestComment(Long postId, CommentRequest req, User user) {
@@ -283,27 +293,27 @@ public class PostServiceImpl implements PostService{
     }
 
 
-    /*
-
-    게시글 작성 메소드
-
-    */
     private <T extends Post> T createPost(T p, CreatePostRequest req, User user) {
         User author = userJpaRepo.findByIdWithFarm(user.getId()).orElseThrow();
         p.createPostFromReq(req, author);
-        uploadImages(p.getImageList(),req.getImageList());
+        uploadImageList(p.getImageList(),req.getImageList());
         return p;
     }
 
-    private void updatePost(User user, Post post, UpdatePostRequest req){
-        if(checkUser(user,post.getAuthor().getId())){
-            ImageUpdateResult result = post.updatePostFromReq(req);
-            deleteImages(result.getDeletedImageList());
-            uploadImages(result.getAddedImageList(),result.getAddedImageFileList());
-        }else throw new UserException("삭제할 권한이 없습니다.", HttpStatus.BAD_REQUEST);
+    private void deletePost(Post post, User user){
+        checkUser(user,post.getAuthor().getId());
+        deleteImageList(post.getImageList());
+        postJpaRepo.delete(post);
     }
 
-    private void uploadImages(List<Image> images, List<MultipartFile> fileImages) {
+    private void updatePost(User user, Post post, UpdatePostRequest req){
+        checkUser(user,post.getAuthor().getId());
+        ImageUpdateResult result = post.updatePostFromReq(req);
+        deleteImageList(result.getDeletedImageList());
+        uploadImageList(result.getAddedImageList(),result.getAddedImageFileList());
+    }
+
+    private void uploadImageList(List<Image> images, List<MultipartFile> fileImages) {
         IntStream.range(0, images.size()).forEach(i -> {
             try {
                 fileService.upload(fileImages.get(i), images.get(i).getUniqueName());
@@ -313,20 +323,18 @@ public class PostServiceImpl implements PostService{
         });
     }
 
-    private void deleteImages(List<Image> images){
+    private void deleteImageList(List<Image> images){
         images.stream().forEach(i -> fileService.delete(i.getUniqueName()));
     }
 
-    private void deletePost(Post post, User user){
-        if(checkUser(user,post.getAuthor().getId())){
-            deleteImages(post.getImageList());
-            postJpaRepo.delete(post);
-        }else throw new UserException("삭제할 권한이 없습니다.", HttpStatus.BAD_REQUEST);
-    }
-
-    private boolean checkUser(User user, Long authorId){
+    private boolean isAuthorized(User user, Long authorId){
         return user.getRole().equals(Role.ADMIN) || user.getId().equals(authorId);
     }
+
+    private void checkUser(User user, Long authorId){
+        if(!isAuthorized(user,authorId)) throw new UserException("해당 권한이 없습니다.", HttpStatus.BAD_REQUEST);
+    }
+
 
     private CommunityPost findCommunityPost(Long postId){
         return communityJpaRepo.findByIdWithUser(postId).orElseThrow();
