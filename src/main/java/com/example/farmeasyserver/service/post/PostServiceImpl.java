@@ -213,29 +213,35 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public ExpApplicationPageDto experiencePage(Long postId) {
-        ExperiencePost post = expJpaRepo.findByIdWithUser(postId).orElseThrow();
+        ExperiencePost post = findExperiencePost(postId);
         return ExpApplicationPageDto.toDto(post);
     }
     @Override
     @Transactional
-    public ExpApplicationRequest requestExperience(ExpApplicationRequest req) throws Exception {
-        ExperiencePost experiencePost = expJpaRepo.findById(req.getPostId())
-                .orElseThrow(ChangeSetPersister.NotFoundException::new);
-        // 신청 가능한 인원 확인
-        int num = experiencePost.getRecruitment().getRecruitmentNum();
-        if (num < req.getParticipants()) {
-            throw new Exception("인원이 충분하지 않습니다.");
-        }
-        // 사용자 확인
-        User applicant = userJpaRepo.findByUsernameAndPhoneNumber(req.getName(), req.getPhoneNumber())
-                .orElseThrow(CharacterCodingException::new);
+    public ExpApplicationRequest requestExperience(ExpApplicationRequest req, User applicants) throws Exception {
+        ExperiencePost experiencePost = findExperiencePost(req.getPostId());
+        validateParticipants(experiencePost, req.getParticipants());
+        processApplication(experiencePost, applicants, req.getParticipants());
+        return req;
+    }
+    private ExperiencePost findExperiencePost(Long postId){
+        return expJpaRepo.findByIdWithUser(postId).orElseThrow();
+    }
 
+    private void validateParticipants(ExperiencePost post, int participants) throws Exception {
+        int availableNum = post.getRecruitment().getRecruitmentNum();
+        if(availableNum < participants){
+            throw new Exception("인원이 초과되었습니다.");
+        }
+    }
+
+    private void processApplication(ExperiencePost post, User applicant, int participants){
         ExpApplication expApplication = new ExpApplication();
         expApplication.setApplicants(applicant);
-        expApplication.setPost(experiencePost);
-        experiencePost.getRecruitment().setRecruitmentNum(num - req.getParticipants());
+        expApplication.setPost(post);
+        int remainingNum = post.getRecruitment().getRecruitmentNum() - participants;
+        post.getRecruitment().setRecruitmentNum(remainingNum);
         expAppJpaRepo.save(expApplication);
-        return req;
     }
 
     @Override

@@ -44,7 +44,7 @@ public interface PostService {
     Slice<ListExperienceDto> getExperiencePostList(ExpFilter filter, Pageable pageable);
 
     ExpApplicationPageDto experiencePage(Long postId);
-    ExpApplicationRequest requestExperience(ExpApplicationRequest req) throws Exception;
+    ExpApplicationRequest requestExperience(ExpApplicationRequest req, User applicants) throws Exception;
 
     CommentRequest requestComment(Long postId, CommentRequest req, User user);
 

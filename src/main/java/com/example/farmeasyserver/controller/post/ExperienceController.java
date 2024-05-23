@@ -59,9 +59,9 @@ public class ExperienceController {
     }
 
     @PostMapping("/application/{postId}")
-    public Response applicationRequest(@PathVariable Long postId, @RequestBody ExpApplicationRequest req) throws Exception {
+    public Response applicationRequest(@PathVariable Long postId, @RequestBody ExpApplicationRequest req, @AuthenticationPrincipal User user) throws Exception {
         req.setPostId(postId);
-        return Response.success(postService.requestExperience(req));
+        return Response.success(postService.requestExperience(req,user));
     }
 
 }
