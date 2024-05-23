@@ -1,6 +1,8 @@
 package com.example.farmeasyserver.dto.post.community;
 
 import com.example.farmeasyserver.dto.post.CreatePostRequest;
+import com.example.farmeasyserver.entity.board.community.CommunityPost;
+import com.example.farmeasyserver.entity.board.community.CommunityType;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,4 +12,8 @@ import lombok.NoArgsConstructor;
 @Data
 public class CommunityPostRequest extends CreatePostRequest {
 
+
+    public static CommunityPost toEntity(CommunityType type){
+        return new CommunityPost();
+    }
 }

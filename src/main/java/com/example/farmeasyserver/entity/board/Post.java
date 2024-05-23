@@ -41,6 +41,10 @@ public abstract class Post {
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> imageList = new ArrayList<>();
 
+    public Post(PostType postType){
+        this.postType = postType;
+    }
+
     @PrePersist
     protected void onCreate(){
         postedTime = LocalDateTime.now();
