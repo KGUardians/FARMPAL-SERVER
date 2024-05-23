@@ -54,13 +54,13 @@ public class ExperienceController {
     }
 
     @GetMapping("/application/{postId}")
-    public Response applicationPage(@PathVariable Long postId){
-        return Response.success(postService.experiencePage(postId));
+    public Response getExpAppPage(@PathVariable Long postId){
+        return Response.success(postService.getExpAppPage(postId));
     }
 
     @PostMapping("/application/{postId}")
-    public Response applicationRequest(@PathVariable Long postId, @RequestBody ExpApplicationRequest req, @AuthenticationPrincipal User user) throws Exception {
-        return Response.success(postService.requestExperience(postId,req,user));
+    public Response requestExpApp(@PathVariable Long postId, @RequestBody ExpApplicationRequest req, @AuthenticationPrincipal User user) throws Exception {
+        return Response.success(postService.requestExpApp(postId,req,user));
     }
 
 }

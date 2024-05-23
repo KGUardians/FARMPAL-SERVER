@@ -218,10 +218,11 @@ public class PostServiceImpl implements PostService{
     }
     @Override
     @Transactional
-    public ExpApplicationRequest requestExpApp(ExpApplicationRequest req, User applicants) throws Exception {
-        ExperiencePost experiencePost = findExperiencePost(req.getPostId());
+    public ExpApplicationRequest requestExpApp(Long postId, ExpApplicationRequest req, User user) throws Exception {
+        ExperiencePost experiencePost = findExperiencePost(postId);
         validateParticipants(experiencePost, req.getParticipants());
-        processApplication(experiencePost, applicants, req.getParticipants());
+        User applicant = findUser(user.getId());
+        processApplication(experiencePost, applicant, req.getParticipants());
         return req;
     }
 
@@ -232,11 +233,8 @@ public class PostServiceImpl implements PostService{
         }
     }
 
-    private void processApplication(ExperiencePost post, User user, int participants){
-        ExpApplication expApplication = new ExpApplication();
-        User applicant = findUser(user.getId());
-        expApplication.setApplicants(applicant);
-        expApplication.setPost(post);
+    private void processApplication(ExperiencePost post, User applicant, int participants){
+        ExpApplication expApplication = new ExpApplication(participants,applicant,post);
         int remainingNum = post.getRecruitment().getRecruitmentNum() - participants;
         post.getRecruitment().setRecruitmentNum(remainingNum);
         expAppJpaRepo.save(expApplication);
@@ -341,7 +339,6 @@ public class PostServiceImpl implements PostService{
     private MarketPost findMarketPost(Long postId){
         return marketJpaRepo.findByIdWithUser(postId).orElseThrow();
     }
-
     private User findUser(Long userId){
         return userJpaRepo.findById(userId).orElseThrow();
     }
