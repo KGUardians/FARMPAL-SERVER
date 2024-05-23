@@ -42,25 +42,25 @@ public class CommunityController {
         return Response.success(postService.createCommunityPost(req, type, author));
     }
 
-    @DeleteMapping("/post/{postId}")
+    @DeleteMapping("/{postId}")
     public Response delete(@PathVariable Long postId, @AuthenticationPrincipal User user){
         return Response.success(postService.deleteCommunityPost(postId,user));
     }
 
     @ApiOperation(value = "커뮤니티 게시글 조회", notes = "게시글을 조회한다.")
-    @GetMapping("/post/{postId}")
+    @GetMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
     public Response read(@ApiParam(value = "게시글 id", required = true) @PathVariable Long postId) throws ChangeSetPersister.NotFoundException {
         return Response.success(postService.readCommunityPost(postId));
     }
 
-    @PutMapping("/post/update/{postId}")
+    @PutMapping("/update/{postId}")
     private Response update(@PathVariable Long postId, @Valid @ModelAttribute UpdateComPostReq req,
                             @AuthenticationPrincipal User user){
         return Response.success(postService.updateCommunityPost(postId,req,user));
     }
 
-    @PostMapping("/post/comment/{postId}")
+    @PostMapping("/comment/{postId}")
     public Response comment(@PathVariable Long postId, @RequestBody CommentRequest req, @AuthenticationPrincipal User user) throws ChangeSetPersister.NotFoundException {
         return Response.success(postService.requestComment(postId, req, user));
     }

@@ -36,19 +36,19 @@ public class MarketController {
         return Response.success(postService.createMarketPost(req, author));
     }
 
-    @DeleteMapping("/post/{postId}")
+    @DeleteMapping("/{postId}")
     public Response delete(@PathVariable Long postId, @AuthenticationPrincipal User user){
         return Response.success(postService.deleteMarketPost(postId,user));
     }
 
-    @PutMapping("/post/update/{postId}")
+    @PutMapping("/update/{postId}")
     public Response update(@PathVariable Long postId, @Valid @ModelAttribute UpdateMarPostReq req,
                            @AuthenticationPrincipal User user){
         return Response.success(postService.updateMarketPost(postId,req,user));
     }
 
     @ApiOperation(value = "커뮤니티 게시글 조회", notes = "게시글을 조회한다.")
-    @GetMapping("/post/{postId}")
+    @GetMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
     public Response read(@ApiParam(value = "게시글 id", required = true) @PathVariable Long postId) throws ChangeSetPersister.NotFoundException {
         return Response.success(postService.readMarketPost(postId));

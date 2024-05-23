@@ -35,19 +35,19 @@ public class ExperienceController {
         return Response.success(postService.createExperiencePost(req, author));
     }
 
-    @DeleteMapping("/post/{postId}")
+    @DeleteMapping("/{postId}")
     public Response delete(@PathVariable Long postId, @AuthenticationPrincipal User user){
         return Response.success(postService.deleteExperiencePost(postId,user));
     }
 
     @ApiOperation(value = "농촌체험 해당 게시글 조회", notes = "게시글을 조회한다.")
-    @GetMapping("/post/{postId}")
+    @GetMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
     public Response read(@ApiParam(value = "게시글 id", required = true) @PathVariable Long postId) {
         return Response.success(postService.readExperiencePost(postId));
     }
 
-    @PutMapping("/post/update/{postId}")
+    @PutMapping("/update/{postId}")
     public Response update(@PathVariable Long postId, @Valid @ModelAttribute UpdateExpPostReq req,
                            @AuthenticationPrincipal User user){
         return Response.success(postService.updateExperiencePost(postId,req,user));
