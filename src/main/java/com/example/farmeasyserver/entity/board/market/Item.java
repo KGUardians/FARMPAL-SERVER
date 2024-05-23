@@ -1,6 +1,5 @@
 package com.example.farmeasyserver.entity.board.market;
 
-import com.example.farmeasyserver.dto.post.market.UpdateMarPostReq;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,11 +21,7 @@ public class Item {
         this.gram = gram;
     }
 
-    public static Item toEntity(UpdateMarPostReq req){
-        return new Item(
-                req.getItemName(),
-                req.getPrice(),
-                req.getGram()
-        );
-    }
+
+
+
 }
