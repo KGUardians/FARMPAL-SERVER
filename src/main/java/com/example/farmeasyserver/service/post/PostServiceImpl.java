@@ -22,14 +22,12 @@ import com.example.farmeasyserver.service.file.FileService;
 import com.example.farmeasyserver.util.exception.user.UserException;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.charset.CharacterCodingException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -57,22 +55,24 @@ public class PostServiceImpl implements PostService{
 
     */
     @Override
-    public List<ListCommunityDto> getMainCommunityPosts() {
-        List<CommunityPost> communityPosts = communityJpaRepo.findTop5OrderByIdDesc();
-
-        return communityPosts.stream()
+    public List<ListCommunityDto> getMainCommunityPostList() {
+        List<CommunityPost> communityPostList = communityJpaRepo.findTop5OrderByIdDesc();
+        return convertToCommunityDtoList(communityPostList);
+    }
+    private List<ListCommunityDto> convertToCommunityDtoList(List<CommunityPost> postList){
+        return postList.stream()
                 .map(ListCommunityDto::toDto)
                 .toList();
     }
 
     @Override
-    public List<ListMarketDto> getMainMarketPosts() {
+    public List<ListMarketDto> getMainMarketPostList() {
         List<ListMarketDto> mainMarketPosts = marketRepo.findTop4OrderByIdDesc();
         imageMapping(mainMarketPosts); return mainMarketPosts;
     }
 
     @Override
-    public List<ListExperienceDto> getMainExperiencePosts() {
+    public List<ListExperienceDto> getMainExperiencePostList() {
         List<ListExperienceDto> mainExperiencePosts = expRepo.findTop4OrderByIdDesc();
         imageMapping(mainExperiencePosts); return mainExperiencePosts;
     }
@@ -114,7 +114,7 @@ public class PostServiceImpl implements PostService{
     @Override
     @Transactional
     public Long deleteCommunityPost(Long postId, User user) {
-        CommunityPost post = communityJpaRepo.findByIdWithUser(postId).orElseThrow();
+        CommunityPost post = findCommunityPost(postId);
         deletePost(post,user);
         return postId;
     }
@@ -122,7 +122,7 @@ public class PostServiceImpl implements PostService{
     @Override
     @Transactional
     public Long deleteMarketPost(Long postId, User user) {
-        MarketPost post = marketJpaRepo.findByIdWithUser(postId).orElseThrow();
+        MarketPost post = findMarketPost(postId);
         deletePost(post,user);
         return postId;
     }
@@ -130,7 +130,7 @@ public class PostServiceImpl implements PostService{
     @Override
     @Transactional
     public Long deleteExperiencePost(Long postId, User user) {
-        ExperiencePost post = expJpaRepo.findById(postId).orElseThrow();
+        ExperiencePost post = findExperiencePost(postId);
         deletePost(post,user);
         return postId;
     }
@@ -142,22 +142,22 @@ public class PostServiceImpl implements PostService{
     */
     @Override
     public CommunityPostDto readCommunityPost(Long postId){
-        return CommunityPostDto.toDto(communityJpaRepo.findByIdWithUser(postId).orElseThrow());
+        return CommunityPostDto.toDto(findCommunityPost(postId));
     }
 
     @Override
     public MarketPostDto readMarketPost(Long postId){
-        return MarketPostDto.toDto(marketJpaRepo.findByIdWithUser(postId).orElseThrow());
+        return MarketPostDto.toDto(findMarketPost(postId));
     }
 
     @Override
     public ExperiencePostDto readExperiencePost(Long postId){
-        return ExperiencePostDto.toDto(expJpaRepo.findByIdWithUser(postId).orElseThrow());
+        return ExperiencePostDto.toDto(findExperiencePost(postId));
     }
 
     @Override
     public CommunityPostDto updateCommunityPost(Long postId, UpdateComPostReq req, User user) {
-        CommunityPost post = communityJpaRepo.findByIdWithUser(postId).orElseThrow();
+        CommunityPost post = findCommunityPost(postId);
         updatePost(user, post, req);
         communityJpaRepo.save(post);
         return CommunityPostDto.toDto(post);
@@ -165,7 +165,7 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public ExperiencePostDto updateExperiencePost(Long postId, UpdateExpPostReq req, User user) {
-        ExperiencePost post = expJpaRepo.findByIdWithUser(postId).orElseThrow();
+        ExperiencePost post = findExperiencePost(postId);
         updatePost(user, post, req);
         post.setRecruitment(UpdateExpPostReq.reqToRecruitment(req));
         expJpaRepo.save(post);
@@ -174,7 +174,7 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public MarketPostDto updateMarketPost(Long postId, UpdateMarPostReq req, User user) {
-        MarketPost post = marketJpaRepo.findByIdWithUser(postId).orElseThrow();
+        MarketPost post = findMarketPost(postId);
         updatePost(user, post, req);
         post.setItem(UpdateMarPostReq.reqToItem(req));
         marketJpaRepo.save(post);
@@ -212,20 +212,17 @@ public class PostServiceImpl implements PostService{
     */
 
     @Override
-    public ExpApplicationPageDto experiencePage(Long postId) {
+    public ExpApplicationPageDto getExpAppPage(Long postId) {
         ExperiencePost post = findExperiencePost(postId);
         return ExpApplicationPageDto.toDto(post);
     }
     @Override
     @Transactional
-    public ExpApplicationRequest requestExperience(ExpApplicationRequest req, User applicants) throws Exception {
+    public ExpApplicationRequest requestExpApp(ExpApplicationRequest req, User applicants) throws Exception {
         ExperiencePost experiencePost = findExperiencePost(req.getPostId());
         validateParticipants(experiencePost, req.getParticipants());
         processApplication(experiencePost, applicants, req.getParticipants());
         return req;
-    }
-    private ExperiencePost findExperiencePost(Long postId){
-        return expJpaRepo.findByIdWithUser(postId).orElseThrow();
     }
 
     private void validateParticipants(ExperiencePost post, int participants) throws Exception {
@@ -235,8 +232,9 @@ public class PostServiceImpl implements PostService{
         }
     }
 
-    private void processApplication(ExperiencePost post, User applicant, int participants){
+    private void processApplication(ExperiencePost post, User user, int participants){
         ExpApplication expApplication = new ExpApplication();
+        User applicant = findUser(user.getId());
         expApplication.setApplicants(applicant);
         expApplication.setPost(post);
         int remainingNum = post.getRecruitment().getRecruitmentNum() - participants;
@@ -247,8 +245,8 @@ public class PostServiceImpl implements PostService{
     @Override
     @Transactional
     public CommentRequest requestComment(Long postId, CommentRequest req, User user) {
-        CommunityPost post = communityJpaRepo.findById(postId).orElseThrow();
-        User author = userJpaRepo.findById(user.getId()).orElseThrow();
+        CommunityPost post = findCommunityPost(postId);
+        User author = findUser(user.getId());
         Comment comment = new Comment(req.getComment());
         comment.setPost(post);
         comment.setAuthor(author);
@@ -332,6 +330,20 @@ public class PostServiceImpl implements PostService{
 
     private boolean checkUser(User user, Long authorId){
         return user.getRole().equals(Role.ADMIN) || user.getId().equals(authorId);
+    }
+
+    private CommunityPost findCommunityPost(Long postId){
+        return communityJpaRepo.findByIdWithUser(postId).orElseThrow();
+    }
+    private ExperiencePost findExperiencePost(Long postId){
+        return expJpaRepo.findByIdWithUser(postId).orElseThrow();
+    }
+    private MarketPost findMarketPost(Long postId){
+        return marketJpaRepo.findByIdWithUser(postId).orElseThrow();
+    }
+
+    private User findUser(Long userId){
+        return userJpaRepo.findById(userId).orElseThrow();
     }
 
 }
