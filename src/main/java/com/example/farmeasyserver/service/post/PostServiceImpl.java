@@ -1,43 +1,23 @@
 package com.example.farmeasyserver.service.post;
 
 import com.example.farmeasyserver.dto.ImageDto;
-import com.example.farmeasyserver.dto.post.ImageUpdateResult;
-import com.example.farmeasyserver.dto.post.UpdatePostRequest;
+import com.example.farmeasyserver.dto.post.*;
 import com.example.farmeasyserver.dto.post.community.*;
 import com.example.farmeasyserver.dto.post.experience.*;
-import com.example.farmeasyserver.dto.post.market.ListMarketDto;
-import com.example.farmeasyserver.dto.post.CreatePostRequest;
-import com.example.farmeasyserver.dto.post.CreatePostResponse;
 import com.example.farmeasyserver.dto.mainpage.ListPostDto;
-import com.example.farmeasyserver.dto.post.market.MarketPostDto;
-import com.example.farmeasyserver.dto.post.market.MarketPostRequest;
-import com.example.farmeasyserver.dto.post.market.UpdateMarPostReq;
+import com.example.farmeasyserver.dto.post.market.*;
 import com.example.farmeasyserver.entity.board.Image;
 import com.example.farmeasyserver.entity.board.Post;
-import com.example.farmeasyserver.entity.board.PostType;
-import com.example.farmeasyserver.entity.board.community.Comment;
-import com.example.farmeasyserver.entity.board.community.CommunityPost;
-import com.example.farmeasyserver.entity.board.community.CommunityType;
-import com.example.farmeasyserver.entity.board.exprience.ExpApplication;
-import com.example.farmeasyserver.entity.board.exprience.ExperiencePost;
-import com.example.farmeasyserver.entity.board.exprience.Recruitment;
-import com.example.farmeasyserver.entity.board.market.Item;
+import com.example.farmeasyserver.entity.board.community.*;
+import com.example.farmeasyserver.entity.board.exprience.*;
 import com.example.farmeasyserver.entity.board.market.MarketPost;
 import com.example.farmeasyserver.entity.user.Role;
 import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.UserJpaRepo;
-import com.example.farmeasyserver.repository.post.*;
-import com.example.farmeasyserver.repository.post.community.CommentJpaRepo;
-import com.example.farmeasyserver.repository.post.community.CommunityFilter;
-import com.example.farmeasyserver.repository.post.community.CommunityRepo;
-import com.example.farmeasyserver.repository.post.community.CommunityJpaRepo;
-import com.example.farmeasyserver.repository.post.experience.ExpAppJpaRepo;
-import com.example.farmeasyserver.repository.post.experience.ExpFilter;
-import com.example.farmeasyserver.repository.post.experience.ExpRepo;
-import com.example.farmeasyserver.repository.post.experience.ExpJpaRepo;
-import com.example.farmeasyserver.repository.post.market.MarketFilter;
-import com.example.farmeasyserver.repository.post.market.MarketRepo;
-import com.example.farmeasyserver.repository.post.market.MarketJpaRepo;
+import com.example.farmeasyserver.repository.post.PostJpaRepo;
+import com.example.farmeasyserver.repository.post.community.*;
+import com.example.farmeasyserver.repository.post.experience.*;
+import com.example.farmeasyserver.repository.post.market.*;
 import com.example.farmeasyserver.service.file.FileService;
 import com.example.farmeasyserver.util.exception.user.UserException;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +35,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -106,33 +85,25 @@ public class PostServiceImpl implements PostService{
     @Override
     @Transactional
     public CreatePostResponse createCommunityPost(CommunityPostRequest req, CommunityType type, User author) {
-        CommunityPost communityPost = createPost(new CommunityPost(type),req, author);
-        communityPost.setPostType(PostType.COMMUNITY);
+        CommunityPost communityPost = createPost(CommunityPostRequest.toEntity(type),req, author);
         communityJpaRepo.save(communityPost);
-        return new CreatePostResponse(communityPost.getId(),"community");
+        return new CreatePostResponse(communityPost.getId(),communityPost.getPostType());
     }
 
     @Override
     @Transactional
     public CreatePostResponse createMarketPost(MarketPostRequest req, User author) {
-        Item item = new Item(req.getItemName(),req.getPrice(), req.getGram());
-        MarketPost marketPost = createPost(new MarketPost(req.getContent(), item), req, author);
-        marketPost.setPostType(PostType.MARKET);
+        MarketPost marketPost = createPost(MarketPostRequest.toEntity(req), req, author);
         marketJpaRepo.save(marketPost);
-        return new CreatePostResponse(marketPost.getId(),"market");
+        return new CreatePostResponse(marketPost.getId(),marketPost.getPostType());
     }
 
     @Override
     @Transactional
     public CreatePostResponse createExperiencePost(ExperiencePostRequest req,User author) {
-        Recruitment recruitment = new Recruitment(
-                req.getStartDate(), req.getStartTime(), req.getRecruitmentNum(),
-                req.getDetailedRecruitmentCondition()
-        );
-        ExperiencePost experiencePost = createPost(new ExperiencePost(recruitment),req, author);
-        experiencePost.setPostType(PostType.EXPERIENCE);
+        ExperiencePost experiencePost = createPost(ExperiencePostRequest.toEntity(req),req, author);
         expJpaRepo.save(experiencePost);
-        return new CreatePostResponse(experiencePost.getId(),"experience");
+        return new CreatePostResponse(experiencePost.getId(),experiencePost.getPostType());
     }
 
     /*
@@ -205,7 +176,7 @@ public class PostServiceImpl implements PostService{
     public MarketPostDto updateMarketPost(Long postId, UpdateMarPostReq req, User user) {
         MarketPost post = marketJpaRepo.findByIdWithUser(postId).orElseThrow();
         updatePost(user, post, req);
-        post.setItem(Item.toEntity(req));
+        post.setItem(UpdateMarPostReq.itemToEntity(req));
         marketJpaRepo.save(post);
         return MarketPostDto.toDto(post);
     }

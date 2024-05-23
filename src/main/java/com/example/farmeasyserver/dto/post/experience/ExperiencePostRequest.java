@@ -1,6 +1,8 @@
 package com.example.farmeasyserver.dto.post.experience;
 
 import com.example.farmeasyserver.dto.post.CreatePostRequest;
+import com.example.farmeasyserver.entity.board.exprience.ExperiencePost;
+import com.example.farmeasyserver.entity.board.exprience.Recruitment;
 import io.swagger.annotations.ApiModelProperty;
 import jakarta.persistence.Lob;
 import jakarta.validation.constraints.NotNull;
@@ -22,5 +24,18 @@ public class ExperiencePostRequest extends CreatePostRequest {
     @NotNull(message = "상세 모집 조건을 입력해주세요.")
     @Lob
     private String detailedRecruitmentCondition;
+    private static Recruitment reqToRecruitment(ExperiencePostRequest req){
+        return new Recruitment(
+                req.getStartDate(),
+                req.getStartTime(),
+                req.getRecruitmentNum(),
+                req.getDetailedRecruitmentCondition()
+        );
+    }
+    public static ExperiencePost toEntity(ExperiencePostRequest req){
+        return new ExperiencePost(
+            ExperiencePostRequest.reqToRecruitment(req)
+        );
+    }
 
 }
