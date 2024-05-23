@@ -285,17 +285,32 @@ public class PostServiceImpl implements PostService{
 
     */
     private <T extends ListPostDto> void imageMapping(List<T> mainPageDto){
-        List<Long> postIdList = mainPageDto.stream()
+        List<Long> postIdList = extractPostIdList(mainPageDto);
+        List<ImageDto> postImages = fetchPostImageList(postIdList);
+        mapImageToPostList(mainPageDto,postImages);
+    }
+    private <T extends ListPostDto> List<Long> extractPostIdList(List<T> pageDto){
+        return pageDto.stream()
                 .map(T::getPostId)
-                .collect(toList());
-        List<ImageDto> postImages = postJpaRepo.findImagesDtoByPostIds(postIdList);
-        mainPageDto.forEach(p -> {
-            List<ImageDto> imageDtos = groupImagesByPostId(postImages).get(p.getPostId());
-            if (imageDtos != null && !imageDtos.isEmpty())
+                .toList();
+    }
+    private List<ImageDto> fetchPostImageList(List<Long> postIdList){
+        return postJpaRepo.findImagesDtoByPostIds(postIdList);
+    }
+    private <T extends ListPostDto> void mapImageToPostList(List<T> postListDto, List<ImageDto> postImageList){
+        Map<Long, List<ImageDto>> imagesByPostId = groupImagesByPostId(postImageList);
+        postListDto.forEach(p -> {
+            List<ImageDto> imageDtos = imagesByPostId.get(p.getPostId());
+            if (imageDtos != null && !imageDtos.isEmpty()) {
                 p.setImage(imageDtos.get(0));
+            }
         });
     }
-    
+    private Map<Long, List<ImageDto>> groupImagesByPostId(List<ImageDto> postImages) {
+        return postImages.stream()
+                .collect(Collectors.groupingBy(ImageDto::getPostId));
+    }
+
 
     /*
 
@@ -315,15 +330,6 @@ public class PostServiceImpl implements PostService{
             deleteImages(result.getDeletedImageList());
             uploadImages(result.getAddedImageList(),result.getAddedImageFileList());
         }else throw new UserException("삭제할 권한이 없습니다.", HttpStatus.BAD_REQUEST);
-    }
-    /*
-
-    각 게시글 이미지 매핑
-
-    */
-    private Map<Long, List<ImageDto>> groupImagesByPostId(List<ImageDto> postImages) {
-        return postImages.stream()
-                .collect(Collectors.groupingBy(ImageDto::getPostId));
     }
 
     private void uploadImages(List<Image> images, List<MultipartFile> fileImages) {
