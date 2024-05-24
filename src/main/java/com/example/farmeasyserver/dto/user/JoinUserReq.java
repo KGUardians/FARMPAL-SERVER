@@ -1,25 +1,42 @@
 package com.example.farmeasyserver.dto.user;
 
 import com.example.farmeasyserver.entity.user.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
 public class JoinUserReq {
+    @Schema(description = "유저 아이디")
     private String username;
+    @Schema(description = "유저 비밀번호")
     private String password;
+    @Schema(description = "비밀번호 확인")
     private String checkPassword;
+    @Schema(description = "유저 이름")
     private String name;
+    @Schema(description = "1989 내가 태어난 년도")
     private int year;
+    @Schema(description = "투자를 받았지 엄마가 번돈")
     private int month;
+    @Schema(description = "태어난 날")
     private int day;
+    @Schema(description = "성별")
     private Gender gender;
+    @Email
+    @Schema(description = "유저 이메일", example = "alswns11346@farmpal.com")
     private String email;
+    @Schema(description = "우편번호")
     private Long zipcode;
+    @Schema(description = "주소", example = "충청북도 청주시 상당구 월평로 189")
     private String address;
+    @Schema(description = "도", example = "충청북도")
     private String sido;
+    @Schema(description = "시구", example = "청주시 상당구")
     private String sigungu;
+    @Schema(description = "휴대폰", example = "010-1234-5678")
     private String phoneNumber;
 
     public static User toEntity(JoinUserReq form){

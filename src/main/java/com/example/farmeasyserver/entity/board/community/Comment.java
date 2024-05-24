@@ -26,8 +26,10 @@ public class Comment {
     private LocalDateTime postedTime;
     private LocalDateTime updatedTime;
 
-    public Comment(String comment){
+    public Comment(String comment,CommunityPost post, User author){
         this.comment = comment;
+        setPost(post);
+        setAuthor(author);
     }
 
     @PrePersist
@@ -39,12 +41,12 @@ public class Comment {
         updatedTime = LocalDateTime.now();
     }
 
-    public void setPost(CommunityPost post){
+    private void setPost(CommunityPost post){
         this.post = post;
         post.getCommentList().add(this);
     }
 
-    public void setAuthor(User author){
+    private void setAuthor(User author){
         this.author = author;
         author.getComments().add(this);
     }

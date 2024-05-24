@@ -9,9 +9,10 @@ import com.example.farmeasyserver.repository.post.market.MarketFilter;
 import com.example.farmeasyserver.service.post.PostService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,32 +26,36 @@ public class MarketController {
     private final PostService postService;
 
     @GetMapping
-    public Response readMarketPostList(@RequestParam(value = "crop",required = false) CropCategory crop,
+    @Operation(summary = "마켓 리스트 목록 조회")
+    public Response getMarketPostList(@RequestParam(value = "crop",required = false) CropCategory crop,
                                        Pageable pageable){
         MarketFilter filter = new MarketFilter(crop);
         return Response.success(postService.getMarketPostList(filter,pageable));
     }
 
     @PostMapping("/post")
-    public Response create(@Valid @ModelAttribute MarketPostRequest req, @AuthenticationPrincipal User author) {
+    @Operation(summary = "마켓 게시글 작성")
+    public Response createPost(@Valid @ModelAttribute MarketPostRequest req, @AuthenticationPrincipal User author) {
         return Response.success(postService.createMarketPost(req, author));
     }
 
-    @DeleteMapping("/post/{postId}")
-    public Response delete(@PathVariable Long postId, @AuthenticationPrincipal User user){
+    @DeleteMapping("/{postId}")
+    @Operation(summary = "마켓 게시글 삭제")
+    public Response deletePost(@PathVariable Long postId, @AuthenticationPrincipal User user){
         return Response.success(postService.deleteMarketPost(postId,user));
     }
 
-    @PutMapping("/post/update/{postId}")
-    public Response update(@PathVariable Long postId, @Valid @ModelAttribute UpdateMarPostReq req,
+    @PutMapping("/update/{postId}")
+    @Operation(summary = "마켓 게시글 수정")
+    public Response updatePost(@PathVariable Long postId, @Valid @ModelAttribute UpdateMarPostReq req,
                            @AuthenticationPrincipal User user){
         return Response.success(postService.updateMarketPost(postId,req,user));
     }
 
     @ApiOperation(value = "커뮤니티 게시글 조회", notes = "게시글을 조회한다.")
-    @GetMapping("/post/{postId}")
-    @ResponseStatus(HttpStatus.OK)
-    public Response read(@ApiParam(value = "게시글 id", required = true) @PathVariable Long postId) throws ChangeSetPersister.NotFoundException {
+    @GetMapping("/{postId}")
+    @Operation(summary = "마켓 게시글 조회")
+    public Response readPost(@ApiParam(value = "게시글 id", required = true) @PathVariable Long postId) {
         return Response.success(postService.readMarketPost(postId));
     }
 }

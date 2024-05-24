@@ -76,7 +76,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 아이디(이메일) 중복 체크
-     * @param username
      */
     private void isExistUsername(String username) {
         if (userJpaRepo.findByUsername(username).isPresent()) {
@@ -87,8 +86,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 비밀번호와 비밀번호 확인이 같은지 체크
-     * @param password
-     * @param passwordCheck
      */
     private void checkPassword(String password, String passwordCheck) {
         if (!password.equals(passwordCheck)) {
@@ -100,8 +97,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 사용자가 입력한 비번과 DB에 저장된 비번이 같은지 체크 : 인코딩 확인
-     * @param rawPassword
-     * @param encodedPassword
      */
     private void checkEncodePassword(String rawPassword, String encodedPassword) {
         if (!passwordEncoder.matches(rawPassword, encodedPassword)) {

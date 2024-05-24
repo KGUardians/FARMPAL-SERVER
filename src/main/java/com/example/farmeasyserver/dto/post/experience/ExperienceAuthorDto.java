@@ -1,7 +1,6 @@
 package com.example.farmeasyserver.dto.post.experience;
 
 import com.example.farmeasyserver.dto.user.FarmDto;
-import com.example.farmeasyserver.entity.user.Farm;
 import com.example.farmeasyserver.entity.user.Role;
 import com.example.farmeasyserver.entity.user.User;
 import lombok.AllArgsConstructor;
