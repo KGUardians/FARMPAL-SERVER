@@ -19,10 +19,18 @@ public class Farm {
     @Embedded
     private Address farmAddress;
 
+    private Address reqToAddress(RegisterFarmReq req){
+        return new Address(
+                req.getZipcode(),
+                req.getAddress(),
+                req.getSido(),
+                req.getSigungu()
+        );
+    }
 
     public Farm(RegisterFarmReq req) {
         this.farmName = req.getFarmName();
-        this.farmAddress = req.getFarmAddress();
+        this.farmAddress = reqToAddress(req);
     }
 
     public void setUser(User user){

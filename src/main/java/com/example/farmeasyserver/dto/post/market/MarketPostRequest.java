@@ -4,6 +4,7 @@ import com.example.farmeasyserver.dto.post.CreatePostRequest;
 import com.example.farmeasyserver.entity.board.market.Item;
 import com.example.farmeasyserver.entity.board.market.MarketPost;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -12,16 +13,16 @@ import lombok.Data;
 @Data
 public class MarketPostRequest extends CreatePostRequest {
 
-    @ApiModelProperty(value = "물건 이름", notes = "물건 이름을 입력해주세요", required = true, example = "item")
+    @Schema(description = "상품 이름", example = "item")
     @NotBlank(message = "물건 이름을 입력해주세요.")
     private String itemName;
 
-    @ApiModelProperty(value = "가격", notes = "가격을 입력해주세요", required = true, example = "50000")
+    @Schema(description = "상품 가격", example = "50000")
     @NotNull(message = "가격을 입력해주세요.")
     @PositiveOrZero(message = "0원 이상을 입력해주세요")
     private int price;
 
-    @ApiModelProperty(value = "무게", notes = "무게를 입력해주세요", required = true, example = "50000")
+    @Schema(description = "상품 무게", example = "50000")
     @NotNull(message = "작물 무게를 입력해주세요.")
     @PositiveOrZero(message = "0 이상을 입력해주세요")
     private int gram;

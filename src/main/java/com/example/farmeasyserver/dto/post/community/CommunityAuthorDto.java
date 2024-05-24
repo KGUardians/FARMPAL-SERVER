@@ -2,6 +2,7 @@ package com.example.farmeasyserver.dto.post.community;
 
 import com.example.farmeasyserver.entity.user.Role;
 import com.example.farmeasyserver.entity.user.User;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
