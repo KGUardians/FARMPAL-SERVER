@@ -84,8 +84,8 @@ public class PostServiceImpl implements PostService{
     */
     @Override
     @Transactional
-    public CreatePostResponse createCommunityPost(CommunityPostRequest req, CommunityType type, User author) {
-        CommunityPost communityPost = createPost(CommunityPostRequest.toEntity(type),req, author);
+    public CreatePostResponse createCommunityPost(CommunityPostRequest req, CommunityType communityType, User author) {
+        CommunityPost communityPost = createPost(CommunityPostRequest.toEntity(communityType),req, author);
         communityJpaRepo.save(communityPost);
         return new CreatePostResponse(communityPost.getId(),communityPost.getPostType());
     }
@@ -281,9 +281,9 @@ public class PostServiceImpl implements PostService{
     private <T extends ListPostDto> void mapImageToPostList(List<T> postListDto, List<ImageDto> postImageList){
         Map<Long, List<ImageDto>> imagesByPostId = groupImagesByPostId(postImageList);
         postListDto.forEach(p -> {
-            List<ImageDto> imageDtos = imagesByPostId.get(p.getPostId());
-            if (imageDtos != null && !imageDtos.isEmpty()) {
-                p.setImage(imageDtos.get(0));
+            List<ImageDto> imageDtoList = imagesByPostId.get(p.getPostId());
+            if (imageDtoList != null && !imageDtoList.isEmpty()) {
+                p.setImage(imageDtoList.get(0));
             }
         });
     }

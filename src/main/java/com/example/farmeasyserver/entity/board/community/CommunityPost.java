@@ -4,7 +4,6 @@ import com.example.farmeasyserver.entity.board.Post;
 import com.example.farmeasyserver.entity.board.PostType;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,5 +20,10 @@ public class CommunityPost extends Post {
 
     public CommunityPost() {
         super(PostType.COMMUNITY);
+    }
+
+    public CommunityPost(CommunityType communityType){
+        super(PostType.COMMUNITY);
+        this.communityType = communityType;
     }
 }

@@ -24,24 +24,24 @@ public class MarketController {
     private final PostService postService;
 
     @GetMapping
-    public Response readMarketPostList(@RequestParam(value = "crop",required = false) CropCategory crop,
+    public Response getMarketPostList(@RequestParam(value = "crop",required = false) CropCategory crop,
                                        Pageable pageable){
         MarketFilter filter = new MarketFilter(crop);
         return Response.success(postService.getMarketPostList(filter,pageable));
     }
 
     @PostMapping("/post")
-    public Response create(@Valid @ModelAttribute MarketPostRequest req, @AuthenticationPrincipal User author) {
+    public Response createPost(@Valid @ModelAttribute MarketPostRequest req, @AuthenticationPrincipal User author) {
         return Response.success(postService.createMarketPost(req, author));
     }
 
     @DeleteMapping("/{postId}")
-    public Response delete(@PathVariable Long postId, @AuthenticationPrincipal User user){
+    public Response deletePost(@PathVariable Long postId, @AuthenticationPrincipal User user){
         return Response.success(postService.deleteMarketPost(postId,user));
     }
 
     @PutMapping("/update/{postId}")
-    public Response update(@PathVariable Long postId, @Valid @ModelAttribute UpdateMarPostReq req,
+    public Response updatePost(@PathVariable Long postId, @Valid @ModelAttribute UpdateMarPostReq req,
                            @AuthenticationPrincipal User user){
         return Response.success(postService.updateMarketPost(postId,req,user));
     }
@@ -49,7 +49,7 @@ public class MarketController {
     @ApiOperation(value = "커뮤니티 게시글 조회", notes = "게시글을 조회한다.")
     @GetMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
-    public Response read(@ApiParam(value = "게시글 id", required = true) @PathVariable Long postId) {
+    public Response readPost(@ApiParam(value = "게시글 id", required = true) @PathVariable Long postId) {
         return Response.success(postService.readMarketPost(postId));
     }
 }

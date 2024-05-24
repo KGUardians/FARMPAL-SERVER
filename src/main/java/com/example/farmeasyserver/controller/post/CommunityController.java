@@ -28,7 +28,7 @@ public class CommunityController {
     private final PostService postService;
 
     @GetMapping("/{type}")
-    public Response readCommunityPostList(@PathVariable(value = "type") CommunityType type,
+    public Response getCommunityPostList(@PathVariable(value = "type") CommunityType type,
                                           @RequestParam(value = "crop", required = false) CropCategory crop,
                                           @RequestParam(value = "search", required = false) String search,
                                           Pageable pageable){
@@ -37,25 +37,25 @@ public class CommunityController {
     }
 
     @PostMapping("/post")
-    public Response create(@RequestParam(value = "type") CommunityType type,
+    public Response createPost(@RequestParam(value = "type") CommunityType communityType,
             @Valid @ModelAttribute CommunityPostRequest req, @AuthenticationPrincipal User author) {
-        return Response.success(postService.createCommunityPost(req, type, author));
+        return Response.success(postService.createCommunityPost(req, communityType, author));
     }
 
     @DeleteMapping("/{postId}")
-    public Response delete(@PathVariable Long postId, @AuthenticationPrincipal User user){
+    public Response deletePost(@PathVariable Long postId, @AuthenticationPrincipal User user){
         return Response.success(postService.deleteCommunityPost(postId,user));
     }
 
     @ApiOperation(value = "커뮤니티 게시글 조회", notes = "게시글을 조회한다.")
     @GetMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
-    public Response read(@ApiParam(value = "게시글 id", required = true) @PathVariable Long postId) {
+    public Response readPost(@ApiParam(value = "게시글 id", required = true) @PathVariable Long postId) {
         return Response.success(postService.readCommunityPost(postId));
     }
 
     @PutMapping("/update/{postId}")
-    private Response update(@PathVariable Long postId, @Valid @ModelAttribute UpdateComPostReq req,
+    private Response updatePost(@PathVariable Long postId, @Valid @ModelAttribute UpdateComPostReq req,
                             @AuthenticationPrincipal User user){
         return Response.success(postService.updateCommunityPost(postId,req,user));
     }

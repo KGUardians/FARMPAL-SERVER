@@ -23,7 +23,7 @@ public class ExperienceController {
     private final PostService postService;
 
     @GetMapping
-    public Response readExperiencePostList(@RequestParam(value = "sido", required = false) String sido,
+    public Response getExperiencePostList(@RequestParam(value = "sido", required = false) String sido,
                                            @RequestParam(value = "sigungu", required = false) String sigungu,
                                            Pageable pageable){
         ExpFilter filter = new ExpFilter(sido,sigungu);
@@ -31,24 +31,24 @@ public class ExperienceController {
     }
 
     @PostMapping("/post")
-    public Response create(@Valid @ModelAttribute ExperiencePostRequest req, @AuthenticationPrincipal User author) {
+    public Response createPost(@Valid @ModelAttribute ExperiencePostRequest req, @AuthenticationPrincipal User author) {
         return Response.success(postService.createExperiencePost(req, author));
     }
 
     @DeleteMapping("/{postId}")
-    public Response delete(@PathVariable Long postId, @AuthenticationPrincipal User user){
+    public Response deletePost(@PathVariable Long postId, @AuthenticationPrincipal User user){
         return Response.success(postService.deleteExperiencePost(postId,user));
     }
 
     @ApiOperation(value = "농촌체험 해당 게시글 조회", notes = "게시글을 조회한다.")
     @GetMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
-    public Response read(@ApiParam(value = "게시글 id", required = true) @PathVariable Long postId) {
+    public Response readPost(@ApiParam(value = "게시글 id", required = true) @PathVariable Long postId) {
         return Response.success(postService.readExperiencePost(postId));
     }
 
     @PutMapping("/update/{postId}")
-    public Response update(@PathVariable Long postId, @Valid @ModelAttribute UpdateExpPostReq req,
+    public Response updatePost(@PathVariable Long postId, @Valid @ModelAttribute UpdateExpPostReq req,
                            @AuthenticationPrincipal User user){
         return Response.success(postService.updateExperiencePost(postId,req,user));
     }
