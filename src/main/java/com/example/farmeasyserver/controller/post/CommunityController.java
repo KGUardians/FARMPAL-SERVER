@@ -52,7 +52,7 @@ public class CommunityController {
     }
 
     @Operation(summary = "커뮤니티 게시글 조회")
-    @GetMapping("/{postId}")
+    @GetMapping("/post/{postId}")
     @ResponseStatus(HttpStatus.OK)
     public Response readPost(@ApiParam(value = "게시글 id", required = true) @PathVariable Long postId) {
         return Response.success(postService.readCommunityPost(postId));
