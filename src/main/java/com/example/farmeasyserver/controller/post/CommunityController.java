@@ -1,6 +1,6 @@
 package com.example.farmeasyserver.controller.post;
 
-import com.example.farmeasyserver.dto.post.community.CommentRequest;
+import com.example.farmeasyserver.dto.post.community.comment.CommentRequest;
 import com.example.farmeasyserver.dto.post.community.CommunityPostRequest;
 import com.example.farmeasyserver.dto.post.community.UpdateComPostReq;
 import com.example.farmeasyserver.dto.response.Response;

@@ -1,4 +1,4 @@
-package com.example.farmeasyserver.dto.post.experience;
+package com.example.farmeasyserver.dto.post.experience.expapplication;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.example.farmeasyserver.dto.post.experience;
+package com.example.farmeasyserver.dto.post.experience.expapplication;
 
 import com.example.farmeasyserver.entity.board.exprience.ExperiencePost;
 import lombok.AllArgsConstructor;

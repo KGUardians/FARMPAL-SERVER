@@ -1,4 +1,4 @@
-package com.example.farmeasyserver.dto.post.community;
+package com.example.farmeasyserver.dto.post.community.comment;
 
 import lombok.Data;
 

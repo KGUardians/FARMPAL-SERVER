@@ -1,7 +1,10 @@
 package com.example.farmeasyserver.service.post;
 
 import com.example.farmeasyserver.dto.post.community.*;
+import com.example.farmeasyserver.dto.post.community.comment.CommentRequest;
 import com.example.farmeasyserver.dto.post.experience.*;
+import com.example.farmeasyserver.dto.post.experience.expapplication.ExpApplicationPageDto;
+import com.example.farmeasyserver.dto.post.experience.expapplication.ExpApplicationRequest;
 import com.example.farmeasyserver.dto.post.market.ListMarketDto;
 import com.example.farmeasyserver.dto.post.CreatePostResponse;
 import com.example.farmeasyserver.dto.post.market.MarketPostDto;

@@ -1,6 +1,6 @@
 package com.example.farmeasyserver.controller.post;
 
-import com.example.farmeasyserver.dto.post.experience.ExpApplicationRequest;
+import com.example.farmeasyserver.dto.post.experience.expapplication.ExpApplicationRequest;
 import com.example.farmeasyserver.dto.post.experience.ExperiencePostRequest;
 import com.example.farmeasyserver.dto.post.experience.UpdateExpPostReq;
 import com.example.farmeasyserver.dto.response.Response;
