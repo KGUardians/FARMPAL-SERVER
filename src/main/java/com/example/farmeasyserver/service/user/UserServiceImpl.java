@@ -14,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,10 +46,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserTokenDto signIn(LoginReq req) {
-        authenticate(req.getUsername(), req.getPassword());
-        User user = (User) userDetailsService.loadUserByUsername(req.getUsername());
+        User user = authenticate(req.getUsername(), req.getPassword());
         checkEncodePassword(req.getPassword(),user.getPassword());
-
         String token = jwtProperties.generateToken(user);
         return UserTokenDto.toDto(user,token);
     }
@@ -63,9 +62,10 @@ public class UserServiceImpl implements UserService {
         return req;
     }
 
-    private void authenticate(String username, String pwd) {
+    private User authenticate(String username, String pwd) {
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, pwd));
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, pwd));
+            return (User) authentication.getPrincipal();
         } catch (DisabledException e) {
             throw new UserException("인증되지 않은 아이디입니다.", HttpStatus.BAD_REQUEST);
         } catch (BadCredentialsException e) {
