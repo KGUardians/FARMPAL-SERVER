@@ -32,13 +32,6 @@ public class JwtProperties implements Serializable {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    // JWT에서 이메일 추출
-    public String getEmailFromJwt(String jwt) {
-        String token = jwt.substring(7);
-        String subject = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody().getSubject();
-        return subject;
-    }
-
     // JWT 토큰에서 사용자 이름 추출
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);

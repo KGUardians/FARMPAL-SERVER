@@ -52,17 +52,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 username = this.jwtProperties.getUsernameFromToken(authToken);
             } catch (IllegalArgumentException ex) {
                 log.info("사용자 ID 가져오기 실패");
-                ex.printStackTrace();
             } catch (ExpiredJwtException ex) {
                 log.info("토큰 만료");
-                ex.printStackTrace();
             } catch (MalformedJwtException ex) {
                 log.info("잘못된 JWT !!");
-                System.out.println();
-                ex.printStackTrace();
             } catch (Exception e) {
                 log.info("JWT 토큰 가져오기 실패 !!");
-                e.getStackTrace();
             }
         }
         // 2. JWT 토큰이 없는 경우,  "인증 실패" 로그를 남긴다.
