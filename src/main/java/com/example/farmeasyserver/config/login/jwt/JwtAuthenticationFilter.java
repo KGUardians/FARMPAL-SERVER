@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * JWT 토큰의 유효성을 검사하고, 인증
@@ -34,6 +35,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Value("${jwt.prefix}") private String TOKEN_PREFIX; // JWT가 시작하는 접두사 -> "Bearer"
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String[] excludePath = {"/","/community/**",
+                "/experience","/market","/user/**","/swagger","/swagger-ui/**","/v3/**",};
+        // 제외할 url 설정
+        String path = request.getRequestURI();
+        return Arrays.stream(excludePath).anyMatch(path::startsWith);
+    }
+
+    @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         Thread currentThread = Thread.currentThread();
@@ -44,7 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String username = null;
         String authToken = null;
 
-        // 1. JWT 토큰을 가지고 있는 경우, 토큰을 추출한다.
+        // JWT 토큰을 가지고 있는 경우, 토큰을 추출한다.
         if (header != null && header.startsWith(TOKEN_PREFIX)) {
             authToken = header.replace(TOKEN_PREFIX," ");
             try {
