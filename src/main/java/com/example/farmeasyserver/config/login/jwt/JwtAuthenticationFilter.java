@@ -36,11 +36,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String[] excludePath = {"/","/community/**",
+        String[] excludePath = {"/","/community/FREE","/community/NOTICE",
                 "/experience","/market","/user/**","/swagger","/swagger-ui/**","/v3/**",};
         // 제외할 url 설정
         String path = request.getRequestURI();
-        return Arrays.stream(excludePath).anyMatch(path::startsWith);
+        return Arrays.stream(excludePath).anyMatch(path::equals);
     }
 
     @Override
@@ -49,58 +49,69 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         Thread currentThread = Thread.currentThread();
         log.info("현재 실행 중인 스레드: " + currentThread.getName());
 
-        // 토큰을 가져와 저장할 변수 선언
+        // 토큰을 가져와 저장할 변수
         String header = request.getHeader(HEADER_STRING);
-        String username = null;
-        String authToken = null;
+        String authToken = extractTokenFromHeader(header);
 
-        // JWT 토큰을 가지고 있는 경우, 토큰을 추출한다.
-        if (header != null && header.startsWith(TOKEN_PREFIX)) {
-            authToken = header.replace(TOKEN_PREFIX," ");
-            try {
-                // JWT에서 사용자 이름 추출
-                username = this.jwtProperties.getUsernameFromToken(authToken);
-            } catch (IllegalArgumentException ex) {
-                log.info("사용자 ID 가져오기 실패");
-            } catch (ExpiredJwtException ex) {
-                log.info("토큰 만료");
-            } catch (MalformedJwtException ex) {
-                log.info("잘못된 JWT !!");
-            } catch (Exception e) {
-                log.info("JWT 토큰 가져오기 실패 !!");
+        // JWT 토큰을 가지고 있는 경우, 토큰을 추출.
+        if (authToken != null) {
+            String username = getUsernameFromToken(authToken);
+            if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
+                //토큰 검사
+                authenticateUser(request,username,authToken);
+            } else {
+                log.info("사용지 이름이 null이거나 컨텍스트가 null입니다");
             }
         }
-        // 2. JWT 토큰이 없는 경우,  "인증 실패" 로그를 남긴다.
+        //JWT 토큰이 없는 경우
         else {
-            log.info("JWT가 Bearer로 시작하지 않습니다 !!");
+            log.info("JWT가 Bearer로 시작하지 않습니다");
         }
-
-        //3. 요청에는 사용자의 식별 정보가 포함되어 있으면서, 현재 요청이 인증되지 않았을 때
-        // -> (사용자가 인증되지 않은 상태에서 인증된 상태로 전환하는 과정이다.)
-        if ((username != null) && (SecurityContextHolder.getContext().getAuthentication() == null)) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-            // JWT 토큰 유효성 검사
-            if (this.jwtProperties.validateToken(authToken, userDetails)) {
-                // 인증 정보 생성
-                UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
-                // 인증된 사용자 정보 설정
-                authenticationToken
-                        .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                log.info("인증된 사용자 " + username + ", 보안 컨텍스트 설정");
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            }
-            //  4. 인증되지 않은 JWT 토큰임을 로그로 알린다.
-            else {
-                log.info("잘못된 JWT 토큰 !!");
-            }
-        }
-        // "요청 정보가 없다."
-        else {
-            log.info("사용자 이름이 null이거나 컨텍스트가 null입니다 !!");
-        }
-        //  5. 다음 필터로 요청 전달
         filterChain.doFilter(request, response);
     }
+
+    private String extractTokenFromHeader(String header) {
+        if (header != null && header.startsWith(TOKEN_PREFIX)) {
+            return header.replace(TOKEN_PREFIX, " ");
+        }
+        return null;
+    }
+
+    private String getUsernameFromToken(String authToken){
+        try {
+            return this.jwtProperties.getUsernameFromToken(authToken);
+        } catch (IllegalArgumentException ex) {
+            log.info("사용자 ID 가져오기 실패");
+        } catch (ExpiredJwtException ex) {
+            log.info("토큰 만료");
+        } catch (MalformedJwtException ex) {
+            log.info("잘못된 JWT !!");
+        } catch (Exception e) {
+            log.info("JWT 토큰 가져오기 실패 !!");
+        }
+        return null;
+    }
+
+    private void authenticateUser(HttpServletRequest req, String username, String authToken){
+        UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+        // JWT 토큰 유효성 검사
+        if (this.jwtProperties.validateToken(authToken, userDetails)) {
+            // 인증 정보 생성
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
+            // 인증된 사용자 정보 설정
+            authenticationToken
+                    .setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
+            log.info("인증된 사용자 " + username + ", 보안 컨텍스트 설정");
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        }
+        else {
+            log.info("잘못된 JWT 토큰 !!");
+        }
+    }
+
+
+
+
 }
