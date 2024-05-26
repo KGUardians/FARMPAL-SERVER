@@ -35,12 +35,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Value("${jwt.prefix}") private String TOKEN_PREFIX; // JWT가 시작하는 접두사 -> "Bearer"
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(HttpServletRequest request) {
         String[] excludePath = {"/","/community/FREE","/community/NOTICE",
                 "/experience","/market","/user/**","/swagger","/swagger-ui/**","/v3/**",};
         // 제외할 url 설정
         String path = request.getRequestURI();
-        return Arrays.stream(excludePath).anyMatch(path::equals);
+        return Arrays.asList(excludePath).contains(path);
     }
 
     @Override
