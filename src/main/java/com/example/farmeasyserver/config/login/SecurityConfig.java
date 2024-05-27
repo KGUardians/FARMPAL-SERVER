@@ -56,15 +56,15 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize
                 ->authorize
-                        .requestMatchers("/","/community/FREE","/community/NOTICE",
-                                "/experience","/market","/user/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/", "/community/**", "/experience/**", "/market/*+").permitAll()
+                        .requestMatchers("/auth/sign-in","/auth/sign-up").permitAll()
                         .requestMatchers("/swagger","/swagger-ui/**","/v3/**").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/experience/post","/market/post").hasRole("FARMER")
-                        .requestMatchers(HttpMethod.POST,"/community/NOTICE").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST,"/experience","/market").hasRole("FARMER")
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
 }
