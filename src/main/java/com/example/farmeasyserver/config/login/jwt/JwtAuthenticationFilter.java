@@ -18,9 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -37,7 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Value("${jwt.header}") private String HEADER_STRING; // HTTP 요청 헤더에서 JWT를 찾을 헤더 이름 -> "Authorization"
     @Value("${jwt.prefix}") private String TOKEN_PREFIX; // JWT가 시작하는 접두사 -> "Bearer"
 
-    private static final Set<String> FILTERED_PATHS = Set.of("/experience", "/market");
+    private static final Set<String> FILTERED_PATHS = Set.of("/market","/experience");
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
@@ -130,9 +128,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String method = request.getMethod();
 
         if (isFilteredPath(requestURI)) {
-            if ("GET".equals(method)) {
-                return true;
-            }
+            return "GET".equals(method);
         }
         return false;
     }

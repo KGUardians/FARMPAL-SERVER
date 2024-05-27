@@ -56,7 +56,7 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize
                 ->authorize
-                        .requestMatchers(HttpMethod.GET,"/", "/community/**", "/experience/**", "/market/*+").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/", "/community/**", "/experience/**", "/market/**").permitAll()
                         .requestMatchers("/auth/sign-in","/auth/sign-up").permitAll()
                         .requestMatchers("/swagger","/swagger-ui/**","/v3/**").permitAll()
                         .requestMatchers(HttpMethod.POST,"/experience","/market").hasRole("FARMER")
