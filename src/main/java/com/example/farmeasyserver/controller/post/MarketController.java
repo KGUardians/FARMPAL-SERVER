@@ -10,11 +10,9 @@ import com.example.farmeasyserver.service.post.PostService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +31,7 @@ public class MarketController {
         return Response.success(postService.getMarketPostList(filter,pageable));
     }
 
-    @PostMapping("/post")
+    @PostMapping
     @Operation(summary = "마켓 게시글 작성")
     public Response createPost(@Valid @ModelAttribute MarketPostRequest req, @AuthenticationPrincipal User author) {
         return Response.success(postService.createMarketPost(req, author));
@@ -45,7 +43,7 @@ public class MarketController {
         return Response.success(postService.deleteMarketPost(postId,user));
     }
 
-    @PutMapping("/update/{postId}")
+    @PatchMapping("/{postId}")
     @Operation(summary = "마켓 게시글 수정")
     public Response updatePost(@PathVariable Long postId, @Valid @ModelAttribute UpdateMarPostReq req,
                            @AuthenticationPrincipal User user){

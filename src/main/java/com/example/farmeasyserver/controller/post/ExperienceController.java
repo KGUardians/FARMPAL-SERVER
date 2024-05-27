@@ -30,7 +30,7 @@ public class ExperienceController {
         return Response.success(postService.getExperiencePostList(filter, pageable));
     }
 
-    @PostMapping("/post")
+    @PostMapping
     @Operation(summary = "농촌체험 게시글 작성")
     public Response createPost(@Valid @ModelAttribute ExperiencePostRequest req, @AuthenticationPrincipal User author) {
         return Response.success(postService.createExperiencePost(req, author));
@@ -48,20 +48,20 @@ public class ExperienceController {
         return Response.success(postService.readExperiencePost(postId));
     }
 
-    @PutMapping("/update/{postId}")
+    @PatchMapping("/{postId}")
     @Operation(summary = "농촌체험 게시글 수정")
     public Response updatePost(@PathVariable Long postId, @Valid @ModelAttribute UpdateExpPostReq req,
                            @AuthenticationPrincipal User user){
         return Response.success(postService.updateExperiencePost(postId,req,user));
     }
 
-    @GetMapping("/application/{postId}")
+    @GetMapping("/{postId}/application")
     @Operation(summary = "해당 체험 게시글 신청 폼")
     public Response getExpAppPage(@PathVariable Long postId){
         return Response.success(postService.getExpAppPage(postId));
     }
 
-    @PostMapping("/application/{postId}")
+    @PostMapping("/{postId}/application")
     @Operation(summary = "해당 체험 게시글 신청 요청")
     public Response requestExpApp(@PathVariable Long postId, @RequestBody ExpApplicationRequest req, @AuthenticationPrincipal User user) throws Exception {
         return Response.success(postService.requestExpApp(postId,req,user));

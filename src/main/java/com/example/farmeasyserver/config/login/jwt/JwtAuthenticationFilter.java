@@ -19,6 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Set;
 
 /**
  * JWT 토큰의 유효성을 검사하고, 인증
@@ -34,10 +35,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Value("${jwt.header}") private String HEADER_STRING; // HTTP 요청 헤더에서 JWT를 찾을 헤더 이름 -> "Authorization"
     @Value("${jwt.prefix}") private String TOKEN_PREFIX; // JWT가 시작하는 접두사 -> "Bearer"
 
+    private static final Set<String> FILTERED_PATHS = Set.of("/market","/experience");
+
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        String[] excludePath = {"/","/community/FREE","/community/NOTICE",
-                "/experience","/market","/user/**","/swagger","/swagger-ui/**","/v3/**",};
+        String[] excludePath = {"/", "/community/list",
+                "/auth/sign-in", "/auth/sign-up",
+                "/swagger", "/swagger-ui/**", "/v3/**"};
         // 제외할 url 설정
         String path = request.getRequestURI();
         return Arrays.asList(excludePath).contains(path);
@@ -46,28 +50,36 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        Thread currentThread = Thread.currentThread();
-        log.info("현재 실행 중인 스레드: " + currentThread.getName());
 
-        // 토큰을 가져와 저장할 변수
-        String header = request.getHeader(HEADER_STRING);
-        String authToken = extractTokenFromHeader(header);
+        if(filterHttpGetRequestByPath(request)){
+            filterChain.doFilter(request,response);
+        }
+        else{
+            Thread currentThread = Thread.currentThread();
+            log.info("현재 실행 중인 스레드: " + currentThread.getName());
 
-        // JWT 토큰을 가지고 있는 경우, 토큰을 추출.
-        if (authToken != null) {
-            String username = getUsernameFromToken(authToken);
-            if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
-                //토큰 검사
-                authenticateUser(request,username,authToken);
-            } else {
-                log.info("사용지 이름이 null이거나 컨텍스트가 null입니다");
+            // 토큰을 가져와 저장할 변수
+            String header = request.getHeader(HEADER_STRING);
+            String authToken = extractTokenFromHeader(header);
+
+            // JWT 토큰을 가지고 있는 경우, 토큰을 추출.
+            if (authToken != null) {
+                String username = getUsernameFromToken(authToken);
+                if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
+                    //토큰 검사
+                    authenticateUser(request,username,authToken);
+                } else {
+                    log.info("사용지 이름이 null이거나 컨텍스트가 null입니다");
+                }
             }
+            //JWT 토큰이 없는 경우
+            else {
+                log.info("JWT가 Bearer로 시작하지 않습니다");
+            }
+            filterChain.doFilter(request, response);
         }
-        //JWT 토큰이 없는 경우
-        else {
-            log.info("JWT가 Bearer로 시작하지 않습니다");
-        }
-        filterChain.doFilter(request, response);
+
+
     }
 
     private String extractTokenFromHeader(String header) {
@@ -111,7 +123,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
+    private boolean filterHttpGetRequestByPath(HttpServletRequest request){
+        String requestURI = request.getRequestURI();
+        String method = request.getMethod();
 
+        if (isFilteredPath(requestURI)) {
+            return "GET".equals(method);
+        }
+        return false;
+    }
 
-
+    private boolean isFilteredPath(String requestURI) {
+        return FILTERED_PATHS.stream().anyMatch(requestURI::startsWith);
+    }
 }

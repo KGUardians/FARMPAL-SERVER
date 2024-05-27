@@ -10,7 +10,6 @@ import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.post.community.CommunityFilter;
 import com.example.farmeasyserver.service.post.PostService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -28,21 +27,21 @@ import org.springframework.web.bind.annotation.*;
 public class CommunityController {
     private final PostService postService;
 
-    @GetMapping("/{type}")
+    @GetMapping("/list")
     @Operation(summary = "커뮤니티 게시글 리스트 불러오기")
-    public Response getCommunityPostList(@PathVariable(value = "type") CommunityType type,
-                                          @RequestParam(value = "crop", required = false) CropCategory crop,
+    public Response getCommunityPostList(@RequestParam(value = "type", defaultValue = "QUESTION") CommunityType type,
+                                         @RequestParam(value = "crop", required = false) CropCategory crop,
                                           @RequestParam(value = "search", required = false) String search,
                                           Pageable pageable){
         CommunityFilter filter = new CommunityFilter(type,crop,search);
         return Response.success(postService.getCommunityPostList(filter,pageable));
     }
 
-    @PostMapping("/post")
+    @PostMapping
     @Operation(summary = "커뮤니티 게시글 등록")
-    public Response createPost(@RequestParam(value = "type") CommunityType communityType,
+    public Response createPost(
             @Valid @ModelAttribute CommunityPostRequest req, @AuthenticationPrincipal User author) {
-        return Response.success(postService.createCommunityPost(req, communityType, author));
+        return Response.success(postService.createCommunityPost(req, author));
     }
 
     @DeleteMapping("/{postId}")
@@ -52,20 +51,20 @@ public class CommunityController {
     }
 
     @Operation(summary = "커뮤니티 게시글 조회")
-    @GetMapping("/post/{postId}")
+    @GetMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
     public Response readPost(@ApiParam(value = "게시글 id", required = true) @PathVariable Long postId) {
         return Response.success(postService.readCommunityPost(postId));
     }
 
-    @PutMapping("/update/{postId}")
+    @PatchMapping("/{postId}")
     @Operation(summary = "커뮤니티 게시글 수정")
     private Response updatePost(@PathVariable Long postId, @Valid @ModelAttribute UpdateComPostReq req,
                             @AuthenticationPrincipal User user){
         return Response.success(postService.updateCommunityPost(postId,req,user));
     }
 
-    @PostMapping("/comment/{postId}")
+    @PostMapping("/{postId}/comments")
     @Operation(summary = "커뮤니티 게시글 댓글 작성")
     public Response comment(@PathVariable Long postId, @RequestBody CommentRequest req, @AuthenticationPrincipal User user) throws ChangeSetPersister.NotFoundException {
         return Response.success(postService.requestComment(postId, req, user));

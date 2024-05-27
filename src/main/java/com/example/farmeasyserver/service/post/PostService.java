@@ -25,7 +25,7 @@ public interface PostService {
     List<ListMarketDto> getMainMarketPostList();
     List<ListExperienceDto> getMainExperiencePostList();
 
-    CreatePostResponse createCommunityPost(CommunityPostRequest req, CommunityType type, User author);
+    CreatePostResponse createCommunityPost(CommunityPostRequest req, User author);
     CreatePostResponse createMarketPost(MarketPostRequest req,User user);
     CreatePostResponse createExperiencePost(ExperiencePostRequest req, User user);
 
