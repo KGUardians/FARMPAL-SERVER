@@ -90,8 +90,8 @@ public class PostServiceImpl implements PostService{
     */
     @Override
     @Transactional
-    public CreatePostResponse createCommunityPost(CommunityPostRequest req, CommunityType communityType, User author) {
-        CommunityPost communityPost = createPost(CommunityPostRequest.toEntity(communityType),req, author);
+    public CreatePostResponse createCommunityPost(CommunityPostRequest req, User author) {
+        CommunityPost communityPost = createPost(CommunityPostRequest.toEntity(req.getType()),req, author);
         communityJpaRepo.save(communityPost);
         return new CreatePostResponse(communityPost.getId(),communityPost.getPostType());
     }
@@ -171,6 +171,7 @@ public class PostServiceImpl implements PostService{
     public CommunityPostDto updateCommunityPost(Long postId, UpdateComPostReq req, User user) {
         CommunityPost post = findCommunityPost(postId);
         updatePost(user, post, req);
+        post.setCommunityType(req.getType());
         communityJpaRepo.save(post);
         return CommunityPostDto.toDto(post);
     }
