@@ -13,12 +13,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
-public class UserController {
+public class AuthController {
     private final UserService userService;
 
-    @PostMapping("/join")
+    @PostMapping("/sign-up")
     @Operation(summary = "유저 회원가입 요청")
     public Response joinUser(@RequestBody @Valid JoinUserReq form){
         return Response.success(userService.join(form));
@@ -30,7 +30,7 @@ public class UserController {
         return Response.success(userService.signIn(req));
     }
 
-    @PostMapping("/farm/register")
+    @PostMapping("/farm")
     @Operation(summary = "농장 등록 요청")
     public Response registerFarm(@RequestBody RegisterFarmReq req, @AuthenticationPrincipal User user){
         return Response.success(userService.createFarm(req, user));
