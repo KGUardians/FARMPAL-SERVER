@@ -171,6 +171,7 @@ public class PostServiceImpl implements PostService{
     public CommunityPostDto updateCommunityPost(Long postId, UpdateComPostReq req, User user) {
         CommunityPost post = findCommunityPost(postId);
         updatePost(user, post, req);
+        post.setCommunityType(req.getType());
         communityJpaRepo.save(post);
         return CommunityPostDto.toDto(post);
     }

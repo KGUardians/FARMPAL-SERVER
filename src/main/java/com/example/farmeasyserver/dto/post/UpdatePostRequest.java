@@ -1,7 +1,6 @@
 package com.example.farmeasyserver.dto.post;
 
 import com.example.farmeasyserver.entity.board.CropCategory;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;

@@ -10,7 +10,6 @@ import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.post.community.CommunityFilter;
 import com.example.farmeasyserver.service.post.PostService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -27,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CommunityController {
     private final PostService postService;
+
 
     @GetMapping
     @Operation(summary = "커뮤니티 게시글 리스트 불러오기")
@@ -65,7 +65,7 @@ public class CommunityController {
         return Response.success(postService.updateCommunityPost(postId,req,user));
     }
 
-    @PostMapping("/{postId}/comment")
+    @PostMapping("/{postId}/comments")
     @Operation(summary = "커뮤니티 게시글 댓글 작성")
     public Response comment(@PathVariable Long postId, @RequestBody CommentRequest req, @AuthenticationPrincipal User user) throws ChangeSetPersister.NotFoundException {
         return Response.success(postService.requestComment(postId, req, user));

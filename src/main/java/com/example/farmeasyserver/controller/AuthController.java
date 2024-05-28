@@ -30,7 +30,7 @@ public class AuthController {
         return Response.success(userService.signIn(req));
     }
 
-    @PostMapping("/farm/register")
+    @PostMapping("/farm")
     @Operation(summary = "농장 등록 요청")
     public Response registerFarm(@RequestBody RegisterFarmReq req, @AuthenticationPrincipal User user){
         return Response.success(userService.createFarm(req, user));

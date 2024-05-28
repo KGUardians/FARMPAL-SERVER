@@ -19,6 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -31,9 +32,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Value("${jwt.header}") private String HEADER_STRING; // HTTP 요청 헤더에서 JWT를 찾을 헤더 이름 -> "Authorization"
     @Value("${jwt.prefix}") private String TOKEN_PREFIX; // JWT가 시작하는 접두사 -> "Bearer"
 
+    private static final Set<String> FILTERED_PATHS = Set.of("/market","/experience");
+
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
+
         String[] excludePath = {"/auth/sign-up","/swagger","/swagger-ui","/v3","/api-docs"};
+
         // 제외할 url 설정
         String path = request.getRequestURI();
         return Arrays.stream(excludePath).anyMatch(path::startsWith);
@@ -42,6 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+
         // 토큰을 가져와 저장할 변수
         String header = request.getHeader(HEADER_STRING);
         String authToken = extractTokenFromHeader(header);
@@ -55,56 +61,64 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             } else {
                 log.info("사용지 이름이 null이거나 컨텍스트가 null입니다");
             }
-        }
-        //JWT 토큰이 없는 경우
-        else {
-            log.info("JWT가 Bearer로 시작하지 않습니다");
-        }
-        filterChain.doFilter(request, response);
-    }
-
-    private String extractTokenFromHeader(String header) {
-        if (header != null && header.startsWith(TOKEN_PREFIX)) {
-            return header.replace(TOKEN_PREFIX, " ");
-        }
-        return null;
-    }
-
-    private String getUsernameFromToken(String authToken){
-        try {
-            return this.jwtProperties.getUsernameFromToken(authToken);
-        } catch (IllegalArgumentException ex) {
-            log.info("사용자 ID 가져오기 실패");
-        } catch (ExpiredJwtException ex) {
-            log.info("토큰 만료");
-        } catch (MalformedJwtException ex) {
-            log.info("잘못된 JWT !!");
-        } catch (Exception e) {
-            log.info("JWT 토큰 가져오기 실패 !!");
-        }
-        return null;
-    }
-
-    private void authenticateUser(HttpServletRequest req, String username, String authToken){
-        UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-        // JWT 토큰 유효성 검사
-        if (this.jwtProperties.validateToken(authToken, userDetails)) {
-            // 인증 정보 생성
-            UsernamePasswordAuthenticationToken authenticationToken =
-                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
-            // 인증된 사용자 정보 설정
-            authenticationToken
-                    .setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
-            log.info("인증된 사용자 " + username + ", 보안 컨텍스트 설정");
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        }
-        else {
-            log.info("잘못된 JWT 토큰 !!");
+            filterChain.doFilter(request, response);
         }
     }
+        private boolean isUserExists (String username){
+            return username != null;
+        }
 
+        private String extractTokenFromHeader (String header){
+            if (header != null && header.startsWith(TOKEN_PREFIX)) {
+                return header.replace(TOKEN_PREFIX, " ");
+            }
+            return null;
+        }
 
+        private String getUsernameFromToken (String authToken){
+            try {
+                return this.jwtProperties.getUsernameFromToken(authToken);
+            } catch (IllegalArgumentException ex) {
+                log.info("사용자 정보를 가져올 수 없습니다.");
+            } catch (ExpiredJwtException ex) {
+                log.info("토큰이 만료되었습니다");
+            } catch (MalformedJwtException ex) {
+                log.info("JWT 형식이 잘못되었습니다.");
+            } catch (Exception e) {
+                log.info("JWT 토큰을 가져올 수 없습니다.");
+            }
+            return null;
+        }
 
+        private void authenticateUser (HttpServletRequest req, String username, String authToken){
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+            // JWT 토큰 유효성 검사
+            if (this.jwtProperties.validateToken(authToken, userDetails)) {
+                // 인증 정보 생성
+                UsernamePasswordAuthenticationToken authenticationToken =
+                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
+                // 인증된 사용자 정보 설정
+                authenticationToken
+                        .setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
+                log.info("인증된 사용자 " + username + ", 보안 컨텍스트 설정");
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            } else {
+                log.info("잘못된 JWT 토큰 !!");
+            }
+        }
+
+        private boolean filterHttpGetRequestByPath (HttpServletRequest request){
+            String requestURI = request.getRequestURI();
+            String method = request.getMethod();
+
+            if (isFilteredPath(requestURI)) {
+                return "GET".equals(method);
+            }
+            return false;
+        }
+
+        private boolean isFilteredPath(String requestURI){
+            return FILTERED_PATHS.stream().anyMatch(requestURI::startsWith);
+        }
 }
