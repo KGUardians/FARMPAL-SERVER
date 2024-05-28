@@ -37,7 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
 
-        String[] excludePath = {"/auth/sign-up","/swagger","/swagger-ui","/v3","/api-docs"};
+        String[] excludePath = {"/auth/sign", "/swagger", "/swagger-ui", "/v3","/api-docs"};
 
         // 제외할 url 설정
         String path = request.getRequestURI();
@@ -55,27 +55,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // JWT 토큰을 가지고 있는 경우, 토큰을 추출.
         if (authToken != null) {
             String username = getUsernameFromToken(authToken);
-            if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
+            if(isUserExists(username)){
                 //토큰 검사
                 authenticateUser(request,username,authToken);
             } else {
-                log.info("사용지 이름이 null이거나 컨텍스트가 null입니다");
+                log.info("사용자가 존재하지 않습니다.");
             }
-            filterChain.doFilter(request, response);
         }
+        filterChain.doFilter(request, response);
     }
-        private boolean isUserExists (String username){
+        private boolean isUserExists(String username){
             return username != null;
         }
 
-        private String extractTokenFromHeader (String header){
+        private String extractTokenFromHeader(String header){
             if (header != null && header.startsWith(TOKEN_PREFIX)) {
                 return header.replace(TOKEN_PREFIX, " ");
             }
             return null;
         }
 
-        private String getUsernameFromToken (String authToken){
+        private String getUsernameFromToken(String authToken){
             try {
                 return this.jwtProperties.getUsernameFromToken(authToken);
             } catch (IllegalArgumentException ex) {
@@ -90,7 +90,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return null;
         }
 
-        private void authenticateUser (HttpServletRequest req, String username, String authToken){
+        private void authenticateUser(HttpServletRequest req, String username, String authToken){
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
             // JWT 토큰 유효성 검사
             if (this.jwtProperties.validateToken(authToken, userDetails)) {
@@ -108,7 +108,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
 
-        private boolean filterHttpGetRequestByPath (HttpServletRequest request){
+        private boolean filterHttpGetRequestByPath(HttpServletRequest request){
             String requestURI = request.getRequestURI();
             String method = request.getMethod();
 
