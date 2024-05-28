@@ -28,9 +28,9 @@ import org.springframework.web.bind.annotation.*;
 public class CommunityController {
     private final PostService postService;
 
-    @GetMapping("/{type}")
+    @GetMapping
     @Operation(summary = "커뮤니티 게시글 리스트 불러오기")
-    public Response getCommunityPostList(@PathVariable(value = "type") CommunityType type,
+    public Response getCommunityPostList(@RequestParam(value = "type",defaultValue = "QUESTION") CommunityType type,
                                           @RequestParam(value = "crop", required = false) CropCategory crop,
                                           @RequestParam(value = "search", required = false) String search,
                                           Pageable pageable){
@@ -38,7 +38,7 @@ public class CommunityController {
         return Response.success(postService.getCommunityPostList(filter,pageable));
     }
 
-    @PostMapping("/post")
+    @PostMapping
     @Operation(summary = "커뮤니티 게시글 등록")
     public Response createPost(@RequestParam(value = "type") CommunityType communityType,
             @Valid @ModelAttribute CommunityPostRequest req, @AuthenticationPrincipal User author) {
@@ -52,20 +52,20 @@ public class CommunityController {
     }
 
     @Operation(summary = "커뮤니티 게시글 조회")
-    @GetMapping("/post/{postId}")
+    @GetMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
     public Response readPost(@ApiParam(value = "게시글 id", required = true) @PathVariable Long postId) {
         return Response.success(postService.readCommunityPost(postId));
     }
 
-    @PutMapping("/update/{postId}")
+    @PatchMapping("/{postId}")
     @Operation(summary = "커뮤니티 게시글 수정")
     private Response updatePost(@PathVariable Long postId, @Valid @ModelAttribute UpdateComPostReq req,
                             @AuthenticationPrincipal User user){
         return Response.success(postService.updateCommunityPost(postId,req,user));
     }
 
-    @PostMapping("/comment/{postId}")
+    @PostMapping("/{postId}/comment")
     @Operation(summary = "커뮤니티 게시글 댓글 작성")
     public Response comment(@PathVariable Long postId, @RequestBody CommentRequest req, @AuthenticationPrincipal User user) throws ChangeSetPersister.NotFoundException {
         return Response.success(postService.requestComment(postId, req, user));
