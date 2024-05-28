@@ -40,9 +40,9 @@ public class CommunityController {
 
     @PostMapping
     @Operation(summary = "커뮤니티 게시글 등록")
-    public Response createPost(@RequestParam(value = "type") CommunityType communityType,
+    public Response createPost(
             @Valid @ModelAttribute CommunityPostRequest req, @AuthenticationPrincipal User author) {
-        return Response.success(postService.createCommunityPost(req, communityType, author));
+        return Response.success(postService.createCommunityPost(req, author));
     }
 
     @DeleteMapping("/{postId}")
