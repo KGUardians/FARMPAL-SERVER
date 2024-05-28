@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MainController {
 
     private final PostService postService;
-    @GetMapping("/")
+    @GetMapping
     public Response mainPage(){
         MainPageDto mainPageDto = new MainPageDto(
                 postService.getMainCommunityPostList(),
