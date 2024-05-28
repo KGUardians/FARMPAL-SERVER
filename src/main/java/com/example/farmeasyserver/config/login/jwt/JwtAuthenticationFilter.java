@@ -20,9 +20,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Arrays;
 
-/**
- * JWT 토큰의 유효성을 검사하고, 인증
- */
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -36,8 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        String[] excludePath = {"/","/community/FREE","/community/NOTICE",
-                "/experience","/market","/user/**","/swagger","/swagger-ui/**","/v3/**",};
+        String[] excludePath = {"/auth/sign-up","/swagger","/swagger-ui/**","/v3/**","/api-docs/**"};
         // 제외할 url 설정
         String path = request.getRequestURI();
         return Arrays.asList(excludePath).contains(path);
@@ -46,9 +42,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        Thread currentThread = Thread.currentThread();
-        log.info("현재 실행 중인 스레드: " + currentThread.getName());
-
         // 토큰을 가져와 저장할 변수
         String header = request.getHeader(HEADER_STRING);
         String authToken = extractTokenFromHeader(header);
