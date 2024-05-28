@@ -33,10 +33,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        String[] excludePath = {"/auth/sign-up","/swagger","/swagger-ui/**","/v3/**","/api-docs/**"};
+        String[] excludePath = {"/auth/sign-up","/swagger","/swagger-ui","/v3","/api-docs"};
         // 제외할 url 설정
         String path = request.getRequestURI();
-        return Arrays.asList(excludePath).contains(path);
+        return Arrays.stream(excludePath).anyMatch(path::startsWith);
     }
 
     @Override
