@@ -27,10 +27,11 @@ import org.springframework.web.bind.annotation.*;
 public class CommunityController {
     private final PostService postService;
 
-    @GetMapping("/list")
+
+    @GetMapping
     @Operation(summary = "커뮤니티 게시글 리스트 불러오기")
-    public Response getCommunityPostList(@RequestParam(value = "type", defaultValue = "QUESTION") CommunityType type,
-                                         @RequestParam(value = "crop", required = false) CropCategory crop,
+    public Response getCommunityPostList(@RequestParam(value = "type",defaultValue = "QUESTION") CommunityType type,
+                                          @RequestParam(value = "crop", required = false) CropCategory crop,
                                           @RequestParam(value = "search", required = false) String search,
                                           Pageable pageable){
         CommunityFilter filter = new CommunityFilter(type,crop,search);

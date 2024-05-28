@@ -10,8 +10,9 @@ import lombok.Data;
 @Data
 public class CommunityPostRequest extends CreatePostRequest {
 
-    private CommunityType type;
 
+    private CommunityType communityType;
+  
     public static CommunityPost toEntity(CommunityType communityType){
         return new CommunityPost(communityType);
     }

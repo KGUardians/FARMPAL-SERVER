@@ -21,9 +21,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Set;
 
-/**
- * JWT 토큰의 유효성을 검사하고, 인증
- */
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -39,39 +36,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        String[] excludePath = {"/", "/community/list",
-                "/auth/sign-in", "/auth/sign-up",
-                "/swagger", "/swagger-ui/**", "/v3/**"};
+
+        String[] excludePath = {"/auth/sign-up","/swagger","/swagger-ui","/v3","/api-docs"};
+
         // 제외할 url 설정
         String path = request.getRequestURI();
-        return Arrays.asList(excludePath).contains(path);
+        return Arrays.stream(excludePath).anyMatch(path::startsWith);
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        if (filterHttpGetRequestByPath(request)) {
-            filterChain.doFilter(request, response);
-        } else {
-            Thread currentThread = Thread.currentThread();
-            log.info("현재 실행 중인 스레드: " + currentThread.getName());
+        // 토큰을 가져와 저장할 변수
+        String header = request.getHeader(HEADER_STRING);
+        String authToken = extractTokenFromHeader(header);
 
-            // 토큰을 가져와 저장할 변수
-            String header = request.getHeader(HEADER_STRING);
-            String authToken = extractTokenFromHeader(header);
-
-            // JWT 토큰을 가지고 있는 경우, 토큰을 추출.
-            if (authToken != null) {
-                String username = getUsernameFromToken(authToken);
-                if (isUserExists(username)) {
-                    //토큰 검사
-                    authenticateUser(request, username, authToken);
-                } else {
-                    log.info("사용자가 없습니다.");
-                }
-                filterChain.doFilter(request, response);
+        // JWT 토큰을 가지고 있는 경우, 토큰을 추출.
+        if (authToken != null) {
+            String username = getUsernameFromToken(authToken);
+            if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
+                //토큰 검사
+                authenticateUser(request,username,authToken);
+            } else {
+                log.info("사용지 이름이 null이거나 컨텍스트가 null입니다");
             }
+            filterChain.doFilter(request, response);
         }
     }
         private boolean isUserExists (String username){
