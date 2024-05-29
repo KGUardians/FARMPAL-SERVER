@@ -4,12 +4,14 @@ import com.example.farmeasyserver.entity.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Data
 @NoArgsConstructor
+@ToString(exclude = {"author","post"})
 public class Comment {
     @Id
     @Column(name = "comment_id")
