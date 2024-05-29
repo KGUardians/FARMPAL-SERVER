@@ -1,6 +1,5 @@
 package com.example.farmeasyserver.service.user;
 
-import com.example.farmeasyserver.config.login.auth.CustomUserDetailsService;
 import com.example.farmeasyserver.config.login.jwt.JwtProperties;
 import com.example.farmeasyserver.dto.user.*;
 import com.example.farmeasyserver.entity.user.Farm;
@@ -23,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final AuthenticationManager authenticationManager;
-    private final CustomUserDetailsService userDetailsService;
     private final UserJpaRepo userJpaRepo;
     private final FarmJpaRepo farmJpaRepo;
     private final PasswordEncoder passwordEncoder;
