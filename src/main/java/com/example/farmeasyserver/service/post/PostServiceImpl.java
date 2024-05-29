@@ -148,7 +148,6 @@ public class PostServiceImpl implements PostService{
     */
     @Override
     public CommunityPostDto readCommunityPost(Long postId){
-
         return CommunityPostDto.toDto(findCommunityPost(postId));
     }
 
