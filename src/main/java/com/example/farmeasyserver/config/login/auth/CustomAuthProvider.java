@@ -1,6 +1,7 @@
 package com.example.farmeasyserver.config.login.auth;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -32,6 +33,6 @@ public class CustomAuthProvider implements AuthenticationProvider {
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return true;
+        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
     }
 }
