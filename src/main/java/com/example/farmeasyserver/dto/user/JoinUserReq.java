@@ -17,12 +17,8 @@ public class JoinUserReq {
     private String checkPassword;
     @Schema(description = "유저 이름")
     private String name;
-    @Schema(description = "1989 내가 태어난 년도")
-    private int year;
-    @Schema(description = "투자를 받았지 엄마가 번돈")
-    private int month;
-    @Schema(description = "태어난 날")
-    private int day;
+    @Schema(description = "생년월일")
+    private String birthDay;
     @Schema(description = "성별")
     private Gender gender;
     @Email
@@ -47,7 +43,7 @@ public class JoinUserReq {
                 form.getGender(),
                 form.getPhoneNumber(),
                 form.getEmail(),
-                new Day(form.getYear(), form.getMonth(), form.getDay()),
+                form.getBirthDay(),
                 new Address(form.getZipcode(), form.getAddress(), form.getSido(), form.getSigungu()),
                 Role.USER
         );

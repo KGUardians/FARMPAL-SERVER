@@ -31,8 +31,7 @@ public class User implements UserDetails {
     private Gender gender;
     private String phoneNumber;
     private String email;
-    @Embedded
-    private Day birthday;
+    private String birthday;
     @Enumerated(EnumType.STRING)
     private Role role;
     @Embedded
@@ -46,7 +45,15 @@ public class User implements UserDetails {
     private List<Comment> comments = new ArrayList<>();
     @OneToMany(mappedBy = "applicants", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ExpApplication> expApplications = new ArrayList<>();
-    public User(String username, String password, String name, Gender gender, String phoneNumber, String email, Day birthday, Address address,Role role) {
+    public User(String username,
+                String password,
+                String name,
+                Gender gender,
+                String phoneNumber,
+                String email,
+                String birthday,
+                Address address,
+                Role role) {
         this.username = username;
         this.password = password;
         this.name = name;
