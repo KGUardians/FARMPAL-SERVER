@@ -61,11 +61,14 @@ public class SecurityConfig {
         http
                 .authenticationManager(authenticationManager())
                 .authenticationProvider(customAuthProvider());
-        return http
+        
+        http
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable);
+
+        http
                 .authorizeHttpRequests(authorize
                 ->authorize
                         .requestMatchers("/","/auth/sign-in","/auth/sign-up","/image/**").permitAll()
@@ -73,11 +76,14 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/experience/**","/market/**","/community/**").permitAll()
                         .requestMatchers(HttpMethod.POST,"/experience","/market").hasRole("FARMER")
                         .requestMatchers(HttpMethod.POST,"/community?type=NOTICE").hasRole("ADMIN")
-                        .anyRequest().authenticated())
+                        .anyRequest().authenticated());
+
+        http
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
 
 }
