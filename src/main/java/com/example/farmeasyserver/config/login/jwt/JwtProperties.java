@@ -50,7 +50,11 @@ public class JwtProperties implements Serializable {
 
     // JWT 토큰에서 모든 클레임 추출
     private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     // JWT 토큰 만료 여부 확인
@@ -70,7 +74,8 @@ public class JwtProperties implements Serializable {
         return Jwts.builder().setClaims(claims).setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + tokenExpirationTime * 1000))
-                .signWith(SignatureAlgorithm.HS512, secret).compact();
+                .signWith(key,SignatureAlgorithm.HS512)
+                .compact();
     }
 
     // JWT 토큰 유효성 검사
