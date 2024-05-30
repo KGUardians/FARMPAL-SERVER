@@ -11,4 +11,6 @@ public interface UserService {
 
     RegisterFarmReq createFarm(RegisterFarmReq req, User user);
 
+    User findByUsername();
+
 }

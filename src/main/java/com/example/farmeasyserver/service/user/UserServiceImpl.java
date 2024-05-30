@@ -14,6 +14,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,6 +59,16 @@ public class UserServiceImpl implements UserService {
         farmJpaRepo.save(farm);
         userJpaRepo.save(user);
         return req;
+    }
+
+    @Override
+    public User findByUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new SecurityException("인증 정보에 유저가 없습니다.");
+        }
+        String username = authentication.getName();
+        return userJpaRepo.findByUsername(username).orElseThrow();
     }
 
     private User authenticate(String username, String pwd) {
