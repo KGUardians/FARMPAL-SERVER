@@ -61,7 +61,7 @@ public class SecurityConfig {
         http
                 .authenticationManager(authenticationManager())
                 .authenticationProvider(customAuthProvider());
-        
+
         http
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)

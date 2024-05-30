@@ -365,7 +365,6 @@ public class PostServiceImpl implements PostService{
         if(!isAuthorized(user,authorId)) throw new UserException("해당 권한이 없습니다.", HttpStatus.BAD_REQUEST);
     }
 
-
     private CommunityPost findCommunityPost(Long postId){
         return communityJpaRepo.findByIdWithUser(postId).orElseThrow();
     }
