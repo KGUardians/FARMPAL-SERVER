@@ -32,7 +32,8 @@ public class AuthController {
 
     @PostMapping("/farm")
     @Operation(summary = "농장 등록 요청")
-    public Response registerFarm(@RequestBody RegisterFarmReq req, @AuthenticationPrincipal User user){
+    public Response registerFarm(@RequestBody RegisterFarmReq req){
+        User user = userService.findByUsername();
         return Response.success(userService.createFarm(req, user));
     }
 

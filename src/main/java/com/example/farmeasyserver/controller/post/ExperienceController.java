@@ -7,12 +7,12 @@ import com.example.farmeasyserver.dto.response.Response;
 import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.post.experience.ExpFilter;
 import com.example.farmeasyserver.service.post.PostService;
+import com.example.farmeasyserver.service.user.UserService;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ExperienceController {
     private final PostService postService;
+    private final UserService userService;
 
     @GetMapping
     @Operation(summary = "농촌체험 게시글 리스트 불러오기")
@@ -32,14 +33,16 @@ public class ExperienceController {
 
     @PostMapping
     @Operation(summary = "농촌체험 게시글 작성")
-    public Response createPost(@Valid @ModelAttribute ExperiencePostRequest req, @AuthenticationPrincipal User author) {
+    public Response createPost(@Valid @ModelAttribute ExperiencePostRequest req) {
+        User author = userService.findByUsername();
         return Response.success(postService.createExperiencePost(req, author));
     }
 
     @DeleteMapping("/{postId}")
     @Operation(summary = "농촌체험 게시글 삭제")
-    public Response deletePost(@PathVariable Long postId, @AuthenticationPrincipal User user){
-        return Response.success(postService.deleteExperiencePost(postId,user));
+    public Response deletePost(@PathVariable Long postId){
+        User author = userService.findByUsername();
+        return Response.success(postService.deleteExperiencePost(postId, author));
     }
 
     @GetMapping("/{postId}")
@@ -50,9 +53,9 @@ public class ExperienceController {
 
     @PatchMapping("/{postId}")
     @Operation(summary = "농촌체험 게시글 수정")
-    public Response updatePost(@PathVariable Long postId, @Valid @ModelAttribute UpdateExpPostReq req,
-                           @AuthenticationPrincipal User user){
-        return Response.success(postService.updateExperiencePost(postId,req,user));
+    public Response updatePost(@PathVariable Long postId, @Valid @ModelAttribute UpdateExpPostReq req){
+        User author = userService.findByUsername();
+        return Response.success(postService.updateExperiencePost(postId, req, author));
     }
 
     @GetMapping("/{postId}/application")
@@ -63,8 +66,9 @@ public class ExperienceController {
 
     @PostMapping("/{postId}/application")
     @Operation(summary = "해당 체험 게시글 신청 요청")
-    public Response requestExpApp(@PathVariable Long postId, @RequestBody ExpApplicationRequest req, @AuthenticationPrincipal User user) throws Exception {
-        return Response.success(postService.requestExpApp(postId,req,user));
+    public Response requestExpApp(@PathVariable Long postId, @RequestBody ExpApplicationRequest req) throws Exception {
+        User user = userService.findByUsername();
+        return Response.success(postService.requestExpApp(postId, req, user));
     }
 
 }
