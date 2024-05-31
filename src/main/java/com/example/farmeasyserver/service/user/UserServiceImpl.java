@@ -1,6 +1,7 @@
 package com.example.farmeasyserver.service.user;
 
 import com.example.farmeasyserver.config.login.jwt.JwtProperties;
+import com.example.farmeasyserver.dto.TokenDto;
 import com.example.farmeasyserver.dto.user.*;
 import com.example.farmeasyserver.entity.user.Farm;
 import com.example.farmeasyserver.repository.FarmJpaRepo;
@@ -47,7 +48,9 @@ public class UserServiceImpl implements UserService {
     public UserTokenDto signIn(LoginReq req) {
         User user = authenticate(req.getUsername(), req.getPassword());
         checkEncodePassword(req.getPassword(),user.getPassword());
-        String token = jwtProperties.generateToken(user);
+        TokenDto token = jwtProperties.generateToken(user);
+        user.setRefreshToken(token.getRefreshToken());
+        userJpaRepo.save(user);
         return UserTokenDto.toDto(user,token);
     }
 
@@ -69,6 +72,14 @@ public class UserServiceImpl implements UserService {
         }
         String username = authentication.getName();
         return userJpaRepo.findByUsername(username).orElseThrow();
+    }
+
+    @Override
+    public TokenDto refreshToken(String refreshToken){
+        User user = findByUsername();
+        validateRefreshToken(refreshToken, user.getRefreshToken());
+        jwtProperties.validateToken(refreshToken,user);
+        return jwtProperties.generateToken(user);
     }
 
     private User authenticate(String username, String pwd) {
@@ -110,6 +121,12 @@ public class UserServiceImpl implements UserService {
     private void checkEncodePassword(String rawPassword, String encodedPassword) {
         if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
             throw new UserException("패스워드 불일치", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private void validateRefreshToken(String refreshToken, String userRefreshToken) {
+        if (!refreshToken.equals(userRefreshToken)) {
+            throw new SecurityException("Refresh token이 일치하지 않습니다.");
         }
     }
 

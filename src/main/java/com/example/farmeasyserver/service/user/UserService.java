@@ -1,5 +1,6 @@
 package com.example.farmeasyserver.service.user;
 
+import com.example.farmeasyserver.dto.TokenDto;
 import com.example.farmeasyserver.dto.user.*;
 import com.example.farmeasyserver.entity.user.User;
 
@@ -12,5 +13,7 @@ public interface UserService {
     RegisterFarmReq createFarm(RegisterFarmReq req, User user);
 
     User findByUsername();
+
+    TokenDto refreshToken(String refreshToken);
 
 }
