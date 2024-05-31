@@ -29,15 +29,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final CustomUserDetailsService userDetailsService; // 사용자 정보를 제공하는 서비스
     private final JwtProperties jwtProperties; // JWT 관련 속성 클래스
 
-    @Value("${jwt.header}") private String HEADER_STRING; // HTTP 요청 헤더에서 JWT를 찾을 헤더 이름 -> "Authorization"
-    @Value("${jwt.prefix}") private String TOKEN_PREFIX; // JWT가 시작하는 접두사 -> "Bearer"
-
     private static final Set<String> FILTERED_PATHS = Set.of("/market","/experience");
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
 
-        String[] excludePath = {"/auth/sign", "/swagger", "/swagger-ui", "/v3","/api-docs"};
+        String[] excludePath = {"/auth/sign","/auth/refresh", "/swagger", "/swagger-ui", "/v3","/api-docs"};
 
         // 제외할 url 설정
         String path = request.getRequestURI();
@@ -49,8 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         // 토큰을 가져와 저장할 변수
-        String header = request.getHeader(HEADER_STRING);
-        String authToken = extractTokenFromHeader(header);
+        String authToken = jwtProperties.extractTokenFromHeader(request);
 
         // JWT 토큰을 가지고 있는 경우, 토큰을 추출.
         if (authToken != null) {
@@ -58,21 +54,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if(isUserExists(username)){
                 //토큰 검사
                 authenticateUser(request,username,authToken);
-            } else {
-                log.info("사용자가 존재하지 않습니다.");
             }
         }
         filterChain.doFilter(request, response);
     }
         private boolean isUserExists(String username){
             return username != null;
-        }
-
-        private String extractTokenFromHeader(String header){
-            if (header != null && header.startsWith(TOKEN_PREFIX)) {
-                return header.replace(TOKEN_PREFIX, " ");
-            }
-            return null;
         }
 
         private String getUsernameFromToken(String authToken){
@@ -92,20 +79,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         private void authenticateUser(HttpServletRequest req, String username, String authToken){
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-            // JWT 토큰 유효성 검사
-            if (this.jwtProperties.validateToken(authToken, userDetails)) {
-                // 인증 정보 생성
-                UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
-                // 인증된 사용자 정보 설정
-                authenticationToken
-                        .setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
-                log.info("인증된 사용자 " + username + ", 보안 컨텍스트 설정");
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            } else {
-                log.info("잘못된 JWT 토큰 !!");
-            }
+            this.jwtProperties.validateToken(authToken, userDetails);
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
+            // 인증된 사용자 정보 설정
+            authenticationToken
+                    .setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
+            log.info("인증된 사용자 " + username + ", 보안 컨텍스트 설정");
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }
 
         private boolean filterHttpGetRequestByPath(HttpServletRequest request){

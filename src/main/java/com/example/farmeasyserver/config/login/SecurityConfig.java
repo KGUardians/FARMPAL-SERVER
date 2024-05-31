@@ -1,5 +1,7 @@
 package com.example.farmeasyserver.config.login;
 
+import com.example.farmeasyserver.config.login.auth.CustomAuthProvider;
+import com.example.farmeasyserver.config.login.auth.CustomUserDetailsService;
 import com.example.farmeasyserver.config.login.jwt.JwtAuthenticationEntryPoint;
 import com.example.farmeasyserver.config.login.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
@@ -9,12 +11,14 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -24,6 +28,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final CustomUserDetailsService userDetailsService;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -31,9 +36,13 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+    public AuthenticationManager authenticationManager() {
+        return new ProviderManager(customAuthProvider());
+    }
+
+    @Bean
+    public CustomAuthProvider customAuthProvider(){
+        return new CustomAuthProvider(userDetailsService,passwordEncoder());
     }
 
     //권한 계층 설정
@@ -49,23 +58,31 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        return http
+        http
+                .authenticationManager(authenticationManager())
+                .authenticationProvider(customAuthProvider());
+
+        http
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable);
+
+        http
                 .authorizeHttpRequests(authorize
                 ->authorize
-                        .requestMatchers("/","/auth/sign-in","/auth/sign-up").permitAll()
+                        .requestMatchers("/","/auth/sign-in","/auth/sign-up","/image/**","/auth/refresh").permitAll()
                         .requestMatchers("/swagger","/swagger-ui/**","/v3/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/experience/**","/market/**","/community/**").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/experience/post","/market/post").hasRole("FARMER")
-                        .requestMatchers(HttpMethod.POST,"/community/NOTICE").hasRole("ADMIN")
-                        .anyRequest().authenticated())
+                        .requestMatchers(HttpMethod.POST,"/experience","/market").hasRole("FARMER")
+                        .requestMatchers(HttpMethod.POST,"/community?type=NOTICE").hasRole("ADMIN")
+                        .anyRequest().authenticated());
+
+        http
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
 
 }

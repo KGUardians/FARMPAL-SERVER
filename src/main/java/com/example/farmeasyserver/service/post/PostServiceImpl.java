@@ -23,6 +23,7 @@ import com.example.farmeasyserver.repository.post.community.*;
 import com.example.farmeasyserver.repository.post.experience.*;
 import com.example.farmeasyserver.repository.post.market.*;
 import com.example.farmeasyserver.service.file.FileService;
+import com.example.farmeasyserver.util.exception.ResourceNotFoundException;
 import com.example.farmeasyserver.util.exception.user.UserException;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
@@ -34,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -119,25 +121,25 @@ public class PostServiceImpl implements PostService{
     */
     @Override
     @Transactional
-    public Long deleteCommunityPost(Long postId, User user) {
+    public Long deleteCommunityPost(Long postId, User author) {
         CommunityPost post = findCommunityPost(postId);
-        deletePost(post,user);
+        deletePost(post,author);
         return postId;
     }
 
     @Override
     @Transactional
-    public Long deleteMarketPost(Long postId, User user) {
+    public Long deleteMarketPost(Long postId, User author) {
         MarketPost post = findMarketPost(postId);
-        deletePost(post,user);
+        deletePost(post,author);
         return postId;
     }
 
     @Override
     @Transactional
-    public Long deleteExperiencePost(Long postId, User user) {
+    public Long deleteExperiencePost(Long postId, User author) {
         ExperiencePost post = findExperiencePost(postId);
-        deletePost(post,user);
+        deletePost(post,author);
         return postId;
     }
 
@@ -148,7 +150,6 @@ public class PostServiceImpl implements PostService{
     */
     @Override
     public CommunityPostDto readCommunityPost(Long postId){
-
         return CommunityPostDto.toDto(findCommunityPost(postId));
     }
 
@@ -168,27 +169,27 @@ public class PostServiceImpl implements PostService{
 
     */
     @Override
-    public CommunityPostDto updateCommunityPost(Long postId, UpdateComPostReq req, User user) {
+    public CommunityPostDto updateCommunityPost(Long postId, UpdateComPostReq req, User author) {
         CommunityPost post = findCommunityPost(postId);
-        updatePost(user, post, req);
+        updatePost(author, post, req);
         post.setCommunityType(req.getType());
         communityJpaRepo.save(post);
         return CommunityPostDto.toDto(post);
     }
 
     @Override
-    public ExperiencePostDto updateExperiencePost(Long postId, UpdateExpPostReq req, User user) {
+    public ExperiencePostDto updateExperiencePost(Long postId, UpdateExpPostReq req, User author) {
         ExperiencePost post = findExperiencePost(postId);
-        updatePost(user, post, req);
+        updatePost(author, post, req);
         post.setRecruitment(UpdateExpPostReq.reqToRecruitment(req));
         expJpaRepo.save(post);
         return ExperiencePostDto.toDto(post);
     }
 
     @Override
-    public MarketPostDto updateMarketPost(Long postId, UpdateMarPostReq req, User user) {
+    public MarketPostDto updateMarketPost(Long postId, UpdateMarPostReq req, User author) {
         MarketPost post = findMarketPost(postId);
-        updatePost(user, post, req);
+        updatePost(author, post, req);
         post.setItem(UpdateMarPostReq.reqToItem(req));
         marketJpaRepo.save(post);
         return MarketPostDto.toDto(post);
@@ -260,9 +261,8 @@ public class PostServiceImpl implements PostService{
     */
     @Override
     @Transactional
-    public CommentRequest requestComment(Long postId, CommentRequest req, User user) {
+    public CommentRequest requestComment(Long postId, CommentRequest req, User author) {
         CommunityPost post = findCommunityPost(postId);
-        User author = findUser(user.getId());
         Comment comment = new Comment(req.getComment(),post,author);
         commentJpaRepo.save(comment);
         return req;
@@ -326,21 +326,20 @@ public class PostServiceImpl implements PostService{
     }
 
 
-    private <T extends Post> T createPost(T p, CreatePostRequest req, User user) {
-        User author = userJpaRepo.findByIdWithFarm(user.getId()).orElseThrow();
+    private <T extends Post> T createPost(T p, CreatePostRequest req, User author) {
         p.createPostFromReq(req, author);
         uploadImageList(p.getImageList(),req.getImageList());
         return p;
     }
 
-    private void deletePost(Post post, User user){
-        checkUser(user,post.getAuthor().getId());
+    private void deletePost(Post post, User author){
+        checkUser(author,post.getAuthor().getId());
         deleteImageList(post.getImageList());
         postJpaRepo.delete(post);
     }
 
-    private void updatePost(User user, Post post, UpdatePostRequest req){
-        checkUser(user,post.getAuthor().getId());
+    private void updatePost(User author, Post post, UpdatePostRequest req){
+        checkUser(author,post.getAuthor().getId());
         ImageUpdateResult result = post.updatePostFromReq(req);
         deleteImageList(result.getDeletedImageList());
         uploadImageList(result.getAddedImageList(),result.getAddedImageFileList());
@@ -368,15 +367,14 @@ public class PostServiceImpl implements PostService{
         if(!isAuthorized(user,authorId)) throw new UserException("해당 권한이 없습니다.", HttpStatus.BAD_REQUEST);
     }
 
-
     private CommunityPost findCommunityPost(Long postId){
-        return communityJpaRepo.findByIdWithUser(postId).orElseThrow();
+        return communityJpaRepo.findByIdWithUser(postId).orElseThrow(()-> new ResourceNotFoundException("CommunityPost", "communityPost", null));
     }
     private ExperiencePost findExperiencePost(Long postId){
-        return expJpaRepo.findByIdWithUser(postId).orElseThrow();
+        return expJpaRepo.findByIdWithUser(postId).orElseThrow(() -> new ResourceNotFoundException("ExperiencePost", "experiencePost", null));
     }
     private MarketPost findMarketPost(Long postId){
-        return marketJpaRepo.findByIdWithUser(postId).orElseThrow();
+        return marketJpaRepo.findByIdWithUser(postId).orElseThrow(() -> new ResourceNotFoundException("MarketPost", "marketPost", null));
     }
     private User findUser(Long userId){
         return userJpaRepo.findById(userId).orElseThrow();

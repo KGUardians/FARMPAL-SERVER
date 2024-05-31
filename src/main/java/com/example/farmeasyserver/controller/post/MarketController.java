@@ -7,13 +7,13 @@ import com.example.farmeasyserver.entity.board.CropCategory;
 import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.post.market.MarketFilter;
 import com.example.farmeasyserver.service.post.PostService;
+import com.example.farmeasyserver.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,32 +22,35 @@ import org.springframework.web.bind.annotation.*;
 public class MarketController {
 
     private final PostService postService;
+    private final UserService userService;
 
     @GetMapping
     @Operation(summary = "마켓 리스트 목록 조회")
     public Response getMarketPostList(@RequestParam(value = "crop",required = false) CropCategory crop,
                                        Pageable pageable){
         MarketFilter filter = new MarketFilter(crop);
-        return Response.success(postService.getMarketPostList(filter,pageable));
+        return Response.success(postService.getMarketPostList(filter, pageable));
     }
 
     @PostMapping
     @Operation(summary = "마켓 게시글 작성")
-    public Response createPost(@Valid @ModelAttribute MarketPostRequest req, @AuthenticationPrincipal User author) {
+    public Response createPost(@Valid @ModelAttribute MarketPostRequest req) {
+        User author = userService.getByUsername();
         return Response.success(postService.createMarketPost(req, author));
     }
 
     @DeleteMapping("/{postId}")
     @Operation(summary = "마켓 게시글 삭제")
-    public Response deletePost(@PathVariable Long postId, @AuthenticationPrincipal User user){
-        return Response.success(postService.deleteMarketPost(postId,user));
+    public Response deletePost(@PathVariable Long postId){
+        User author = userService.getByUsername();
+        return Response.success(postService.deleteMarketPost(postId, author));
     }
 
     @PatchMapping("/{postId}")
     @Operation(summary = "마켓 게시글 수정")
-    public Response updatePost(@PathVariable Long postId, @Valid @ModelAttribute UpdateMarPostReq req,
-                           @AuthenticationPrincipal User user){
-        return Response.success(postService.updateMarketPost(postId,req,user));
+    public Response updatePost(@PathVariable Long postId, @Valid @ModelAttribute UpdateMarPostReq req){
+        User author = userService.getByUsername();
+        return Response.success(postService.updateMarketPost(postId,req,author));
     }
 
     @ApiOperation(value = "커뮤니티 게시글 조회", notes = "게시글을 조회한다.")
