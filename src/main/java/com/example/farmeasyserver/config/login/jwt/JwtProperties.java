@@ -87,8 +87,15 @@ public class JwtProperties implements Serializable {
     }
 
     // JWT 토큰 유효성 검사
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    public void validateToken(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        if(!username.equals(userDetails.getUsername())){
+            throw new SecurityException("토큰이 유효하지 않습니다.");
+        }
+        if(isTokenExpired(token)){
+            throw new SecurityException("토큰이 만료되었습니다.");
+        }
     }
+
+    
 }

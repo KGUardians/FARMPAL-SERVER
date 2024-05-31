@@ -58,8 +58,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if(isUserExists(username)){
                 //토큰 검사
                 authenticateUser(request,username,authToken);
-            } else {
-                log.info("사용자가 존재하지 않습니다.");
             }
         }
         filterChain.doFilter(request, response);
@@ -92,20 +90,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         private void authenticateUser(HttpServletRequest req, String username, String authToken){
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-            // JWT 토큰 유효성 검사
-            if (this.jwtProperties.validateToken(authToken, userDetails)) {
-                // 인증 정보 생성
-                UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
-                // 인증된 사용자 정보 설정
-                authenticationToken
-                        .setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
-                log.info("인증된 사용자 " + username + ", 보안 컨텍스트 설정");
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            } else {
-                log.info("잘못된 JWT 토큰 !!");
-            }
+            this.jwtProperties.validateToken(authToken, userDetails);
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
+            // 인증된 사용자 정보 설정
+            authenticationToken
+                    .setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
+            log.info("인증된 사용자 " + username + ", 보안 컨텍스트 설정");
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }
 
         private boolean filterHttpGetRequestByPath(HttpServletRequest request){
