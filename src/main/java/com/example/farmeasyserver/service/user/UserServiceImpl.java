@@ -7,6 +7,7 @@ import com.example.farmeasyserver.entity.user.Farm;
 import com.example.farmeasyserver.repository.FarmJpaRepo;
 import com.example.farmeasyserver.repository.UserJpaRepo;
 import com.example.farmeasyserver.entity.user.User;
+import com.example.farmeasyserver.util.exception.ResourceNotFoundException;
 import com.example.farmeasyserver.util.exception.user.UserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
     public User getByUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
-            throw new SecurityException("인증 정보에 유저가 없습니다.");
+            throw new UserException("인증 된 정보가 없습니다.",HttpStatus.BAD_REQUEST);
         }
         String username = authentication.getName();
         return findByUsername(username);
@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
      */
     private void checkPassword(String password, String passwordCheck) {
         if (!password.equals(passwordCheck)) {
-            throw new UserException("패스워드 불일치", HttpStatus.BAD_REQUEST);
+            throw new UserException("비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -123,7 +123,7 @@ public class UserServiceImpl implements UserService {
      */
     private void checkEncodePassword(String rawPassword, String encodedPassword) {
         if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
-            throw new UserException("패스워드 불일치", HttpStatus.BAD_REQUEST);
+            throw new UserException("비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -134,6 +134,6 @@ public class UserServiceImpl implements UserService {
     }
 
     private User findByUsername(String username){
-        return userJpaRepo.findByUsername(username).orElseThrow(() -> new NoSuchElementException("해당 유저를 찾을 수 없습니다."));
+        return userJpaRepo.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("User","username",username));
     }
 }

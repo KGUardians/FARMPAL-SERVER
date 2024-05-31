@@ -23,6 +23,7 @@ import com.example.farmeasyserver.repository.post.community.*;
 import com.example.farmeasyserver.repository.post.experience.*;
 import com.example.farmeasyserver.repository.post.market.*;
 import com.example.farmeasyserver.service.file.FileService;
+import com.example.farmeasyserver.util.exception.ResourceNotFoundException;
 import com.example.farmeasyserver.util.exception.user.UserException;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
@@ -34,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -366,13 +368,13 @@ public class PostServiceImpl implements PostService{
     }
 
     private CommunityPost findCommunityPost(Long postId){
-        return communityJpaRepo.findByIdWithUser(postId).orElseThrow();
+        return communityJpaRepo.findByIdWithUser(postId).orElseThrow(()-> new ResourceNotFoundException("CommunityPost", "communityPost", null));
     }
     private ExperiencePost findExperiencePost(Long postId){
-        return expJpaRepo.findByIdWithUser(postId).orElseThrow();
+        return expJpaRepo.findByIdWithUser(postId).orElseThrow(() -> new ResourceNotFoundException("ExperiencePost", "experiencePost", null));
     }
     private MarketPost findMarketPost(Long postId){
-        return marketJpaRepo.findByIdWithUser(postId).orElseThrow();
+        return marketJpaRepo.findByIdWithUser(postId).orElseThrow(() -> new ResourceNotFoundException("MarketPost", "marketPost", null));
     }
     private User findUser(Long userId){
         return userJpaRepo.findById(userId).orElseThrow();
