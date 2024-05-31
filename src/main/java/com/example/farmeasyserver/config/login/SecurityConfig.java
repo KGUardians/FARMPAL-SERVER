@@ -70,7 +70,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize
                 ->authorize
-                        .requestMatchers("/","/auth/sign-in","/auth/sign-up","/image/**").permitAll()
+                        .requestMatchers("/","/auth/sign-in","/auth/sign-up","/image/**","/auth/refresh").permitAll()
                         .requestMatchers("/swagger","/swagger-ui/**","/v3/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/experience/**","/market/**","/community/**").permitAll()
                         .requestMatchers(HttpMethod.POST,"/experience","/market").hasRole("FARMER")

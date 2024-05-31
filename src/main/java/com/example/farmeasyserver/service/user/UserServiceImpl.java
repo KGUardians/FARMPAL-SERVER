@@ -76,7 +76,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public TokenDto refreshToken(String refreshToken){
-        User user = findByUsername();
+        String username = jwtProperties.getUsernameFromToken(refreshToken);
+        User user = userJpaRepo.findByUsername(username).orElseThrow();
         validateRefreshToken(refreshToken, user.getRefreshToken());
         jwtProperties.validateToken(refreshToken,user);
         return jwtProperties.generateToken(user);
@@ -125,7 +126,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void validateRefreshToken(String refreshToken, String userRefreshToken) {
-        if (!refreshToken.equals(userRefreshToken)) {
+        if (!refreshToken.equals(" "+userRefreshToken)) {
             throw new SecurityException("Refresh token이 일치하지 않습니다.");
         }
     }
