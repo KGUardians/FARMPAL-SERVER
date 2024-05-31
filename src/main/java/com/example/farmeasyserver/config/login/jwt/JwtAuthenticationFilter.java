@@ -29,9 +29,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final CustomUserDetailsService userDetailsService; // 사용자 정보를 제공하는 서비스
     private final JwtProperties jwtProperties; // JWT 관련 속성 클래스
 
-    @Value("${jwt.header}") private String HEADER_STRING; // HTTP 요청 헤더에서 JWT를 찾을 헤더 이름 -> "Authorization"
-    @Value("${jwt.prefix}") private String TOKEN_PREFIX; // JWT가 시작하는 접두사 -> "Bearer"
-
     private static final Set<String> FILTERED_PATHS = Set.of("/market","/experience");
 
     @Override
@@ -49,8 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         // 토큰을 가져와 저장할 변수
-        String header = request.getHeader(HEADER_STRING);
-        String authToken = extractTokenFromHeader(header);
+        String authToken = jwtProperties.extractTokenFromHeader(request);
 
         // JWT 토큰을 가지고 있는 경우, 토큰을 추출.
         if (authToken != null) {
@@ -64,13 +60,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
         private boolean isUserExists(String username){
             return username != null;
-        }
-
-        private String extractTokenFromHeader(String header){
-            if (header != null && header.startsWith(TOKEN_PREFIX)) {
-                return header.replace(TOKEN_PREFIX, " ");
-            }
-            return null;
         }
 
         private String getUsernameFromToken(String authToken){

@@ -7,6 +7,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.swagger.models.auth.In;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,9 @@ public class JwtProperties implements Serializable {
 
     @Value("${jwt.accessTokenExpirationTime}") private Integer accessTokenExpirationTime; // access token 만료 시간
     @Value("${jwt.refreshTokenExpirationTime}") private Integer refreshTokenExpriationTime; // refresh token 만료 시간
+    @Value("${jwt.header}") private String HEADER_STRING; // HTTP 요청 헤더에서 JWT를 찾을 헤더 이름 -> "Authorization"
+    @Value("${jwt.prefix}") private String TOKEN_PREFIX; // JWT가 시작하는 접두사 -> "Bearer"
+
 
     private final Key key; // 비밀키를 Key 형태로 변환
 
@@ -71,6 +75,7 @@ public class JwtProperties implements Serializable {
         return doGenerateToken(claims, userDetails.getUsername());
     }
 
+
     // JWT 토큰 생성
     private TokenDto doGenerateToken(Map<String, Object> claims, String subject) {
         String accessToken = generateToken(claims,subject,accessTokenExpirationTime);
@@ -97,5 +102,17 @@ public class JwtProperties implements Serializable {
         }
     }
 
-    
+    //헤더에서 토큰 추출
+    public String extractTokenFromHeader(HttpServletRequest request){
+        String header = extractHeader(request);
+        if (header != null && header.startsWith(TOKEN_PREFIX)) {
+            return header.replace(TOKEN_PREFIX, " ");
+        }
+        return null;
+    }
+
+    private String extractHeader(HttpServletRequest request){
+        return request.getHeader(HEADER_STRING);
+    }
+
 }
