@@ -35,21 +35,21 @@ public class MarketController {
     @PostMapping
     @Operation(summary = "마켓 게시글 작성")
     public Response createPost(@Valid @ModelAttribute MarketPostRequest req) {
-        User author = userService.findByUsername();
+        User author = userService.getByUsername();
         return Response.success(postService.createMarketPost(req, author));
     }
 
     @DeleteMapping("/{postId}")
     @Operation(summary = "마켓 게시글 삭제")
     public Response deletePost(@PathVariable Long postId){
-        User author = userService.findByUsername();
+        User author = userService.getByUsername();
         return Response.success(postService.deleteMarketPost(postId, author));
     }
 
     @PatchMapping("/{postId}")
     @Operation(summary = "마켓 게시글 수정")
     public Response updatePost(@PathVariable Long postId, @Valid @ModelAttribute UpdateMarPostReq req){
-        User author = userService.findByUsername();
+        User author = userService.getByUsername();
         return Response.success(postService.updateMarketPost(postId,req,author));
     }
 

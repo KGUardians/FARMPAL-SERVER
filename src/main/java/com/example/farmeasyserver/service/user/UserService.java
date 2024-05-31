@@ -12,7 +12,7 @@ public interface UserService {
 
     RegisterFarmReq createFarm(RegisterFarmReq req, User user);
 
-    User findByUsername();
+    User getByUsername();
 
     TokenDto refreshToken(String refreshToken);
 

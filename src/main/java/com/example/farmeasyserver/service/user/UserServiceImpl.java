@@ -20,6 +20,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.NoSuchElementException;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -65,19 +67,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByUsername() {
+    public User getByUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new SecurityException("인증 정보에 유저가 없습니다.");
         }
         String username = authentication.getName();
-        return userJpaRepo.findByUsername(username).orElseThrow();
+        return findByUsername(username);
     }
 
     @Override
     public TokenDto refreshToken(String refreshToken){
         String username = jwtProperties.getUsernameFromToken(refreshToken);
-        User user = userJpaRepo.findByUsername(username).orElseThrow();
+        User user = findByUsername(username);
         validateRefreshToken(refreshToken, user.getRefreshToken());
         jwtProperties.validateToken(refreshToken,user);
         return jwtProperties.generateToken(user);
@@ -131,4 +133,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    private User findByUsername(String username){
+        return userJpaRepo.findByUsername(username).orElseThrow(() -> new NoSuchElementException("해당 유저를 찾을 수 없습니다."));
+    }
 }

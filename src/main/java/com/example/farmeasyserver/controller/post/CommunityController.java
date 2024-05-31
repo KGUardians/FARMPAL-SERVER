@@ -43,14 +43,14 @@ public class CommunityController {
     @Operation(summary = "커뮤니티 게시글 등록")
     public Response createPost(
             @Valid @ModelAttribute CommunityPostRequest req) {
-        User author = userService.findByUsername();
+        User author = userService.getByUsername();
         return Response.success(postService.createCommunityPost(req, author));
     }
 
     @DeleteMapping("/{postId}")
     @Operation(summary = "커뮤니티 게시글 삭제")
     public Response deletePost(@PathVariable Long postId){
-        User author = userService.findByUsername();
+        User author = userService.getByUsername();
         return Response.success(postService.deleteCommunityPost(postId, author));
     }
 
@@ -64,14 +64,14 @@ public class CommunityController {
     @PatchMapping("/{postId}")
     @Operation(summary = "커뮤니티 게시글 수정")
     private Response updatePost(@PathVariable Long postId, @Valid @ModelAttribute UpdateComPostReq req){
-        User author = userService.findByUsername();
+        User author = userService.getByUsername();
         return Response.success(postService.updateCommunityPost(postId, req, author));
     }
 
     @PostMapping("/{postId}/comments")
     @Operation(summary = "커뮤니티 게시글 댓글 작성")
     public Response comment(@PathVariable Long postId, @RequestBody CommentRequest req) throws ChangeSetPersister.NotFoundException {
-        User author = userService.findByUsername();
+        User author = userService.getByUsername();
         return Response.success(postService.requestComment(postId, req, author));
     }
 

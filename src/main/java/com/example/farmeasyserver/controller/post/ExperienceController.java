@@ -34,14 +34,14 @@ public class ExperienceController {
     @PostMapping
     @Operation(summary = "농촌체험 게시글 작성")
     public Response createPost(@Valid @ModelAttribute ExperiencePostRequest req) {
-        User author = userService.findByUsername();
+        User author = userService.getByUsername();
         return Response.success(postService.createExperiencePost(req, author));
     }
 
     @DeleteMapping("/{postId}")
     @Operation(summary = "농촌체험 게시글 삭제")
     public Response deletePost(@PathVariable Long postId){
-        User author = userService.findByUsername();
+        User author = userService.getByUsername();
         return Response.success(postService.deleteExperiencePost(postId, author));
     }
 
@@ -54,7 +54,7 @@ public class ExperienceController {
     @PatchMapping("/{postId}")
     @Operation(summary = "농촌체험 게시글 수정")
     public Response updatePost(@PathVariable Long postId, @Valid @ModelAttribute UpdateExpPostReq req){
-        User author = userService.findByUsername();
+        User author = userService.getByUsername();
         return Response.success(postService.updateExperiencePost(postId, req, author));
     }
 
@@ -67,7 +67,7 @@ public class ExperienceController {
     @PostMapping("/{postId}/application")
     @Operation(summary = "해당 체험 게시글 신청 요청")
     public Response requestExpApp(@PathVariable Long postId, @RequestBody ExpApplicationRequest req) throws Exception {
-        User user = userService.findByUsername();
+        User user = userService.getByUsername();
         return Response.success(postService.requestExpApp(postId, req, user));
     }
 
