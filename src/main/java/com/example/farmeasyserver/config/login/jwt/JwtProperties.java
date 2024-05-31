@@ -1,10 +1,12 @@
 package com.example.farmeasyserver.config.login.jwt;
 
+import com.example.farmeasyserver.dto.TokenDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -20,8 +22,8 @@ import java.security.Key;
 public class JwtProperties implements Serializable {
     private static final long serialVersionUID = -2550185165626007488L;
 
-    @Value("${jwt.tokenExpirationTime}") private Integer tokenExpirationTime; // 토큰 만료 시간
-    @Value("${jwt.secret}") private String secret; // JWT 을 위한 비밀 키
+    @Value("${jwt.accessTokenExpirationTime}") private Integer accessTokenExpirationTime; // access token 만료 시간
+    @Value("${jwt.refreshTokenExpirationTime}") private Integer refreshTokenExpriationTime; // refresh token 만료 시간
 
     private final Key key; // 비밀키를 Key 형태로 변환
 
@@ -64,16 +66,22 @@ public class JwtProperties implements Serializable {
     }
 
     // 사용자 정보를 기반으로 JWT 토큰 생성
-    public String generateToken(UserDetails userDetails) {
+    public TokenDto generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         return doGenerateToken(claims, userDetails.getUsername());
     }
 
     // JWT 토큰 생성
-    private String doGenerateToken(Map<String, Object> claims, String subject) {
+    private TokenDto doGenerateToken(Map<String, Object> claims, String subject) {
+        String accessToken = generateToken(claims,subject,accessTokenExpirationTime);
+        String refreshToken = generateToken(claims,subject,refreshTokenExpriationTime);
+        return new TokenDto(accessToken, refreshToken, subject);
+    }
+
+    private String generateToken(Map<String, Object> claims, String subject, Integer expirationTime){
         return Jwts.builder().setClaims(claims).setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + tokenExpirationTime * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTime * 1000))
                 .signWith(key,SignatureAlgorithm.HS512)
                 .compact();
     }
@@ -82,10 +90,5 @@ public class JwtProperties implements Serializable {
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-    }
-
-    // JWT 토큰 유효성 검사
-    public Boolean validateToken(String token) {
-        return !isTokenExpired(token);
     }
 }

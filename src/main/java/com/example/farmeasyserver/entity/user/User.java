@@ -36,6 +36,7 @@ public class User implements UserDetails {
     private Role role;
     @Embedded
     private Address address;
+    private String refreshToken;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Farm farm;
