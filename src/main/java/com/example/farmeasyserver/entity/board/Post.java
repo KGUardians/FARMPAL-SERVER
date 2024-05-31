@@ -26,7 +26,6 @@ public abstract class Post {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User author;
-    @Column(name = "post_title",nullable = false)
     private String title;
     @Enumerated(EnumType.STRING)
     private CropCategory cropCategory;

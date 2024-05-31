@@ -4,10 +4,12 @@ import com.example.farmeasyserver.entity.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Data
 @NoArgsConstructor
+@ToString(exclude = {"experiencePost","applicants"})
 public class ExpApplication {
 
     @Id

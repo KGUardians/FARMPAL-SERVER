@@ -1,12 +1,13 @@
 package com.example.farmeasyserver.service.user;
 
-import com.example.farmeasyserver.config.login.auth.CustomUserDetailsService;
 import com.example.farmeasyserver.config.login.jwt.JwtProperties;
+import com.example.farmeasyserver.dto.TokenDto;
 import com.example.farmeasyserver.dto.user.*;
 import com.example.farmeasyserver.entity.user.Farm;
 import com.example.farmeasyserver.repository.FarmJpaRepo;
 import com.example.farmeasyserver.repository.UserJpaRepo;
 import com.example.farmeasyserver.entity.user.User;
+import com.example.farmeasyserver.util.exception.ResourceNotFoundException;
 import com.example.farmeasyserver.util.exception.user.UserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,15 +16,16 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final AuthenticationManager authenticationManager;
-    private final CustomUserDetailsService userDetailsService;
     private final UserJpaRepo userJpaRepo;
     private final FarmJpaRepo farmJpaRepo;
     private final PasswordEncoder passwordEncoder;
@@ -48,7 +50,9 @@ public class UserServiceImpl implements UserService {
     public UserTokenDto signIn(LoginReq req) {
         User user = authenticate(req.getUsername(), req.getPassword());
         checkEncodePassword(req.getPassword(),user.getPassword());
-        String token = jwtProperties.generateToken(user);
+        TokenDto token = jwtProperties.generateToken(user);
+        user.setRefreshToken(token.getRefreshToken());
+        userJpaRepo.save(user);
         return UserTokenDto.toDto(user,token);
     }
 
@@ -60,6 +64,25 @@ public class UserServiceImpl implements UserService {
         farmJpaRepo.save(farm);
         userJpaRepo.save(user);
         return req;
+    }
+
+    @Override
+    public User getByUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new UserException("인증 된 정보가 없습니다.",HttpStatus.BAD_REQUEST);
+        }
+        String username = authentication.getName();
+        return findByUsername(username);
+    }
+
+    @Override
+    public TokenDto refreshToken(String refreshToken){
+        String username = jwtProperties.getUsernameFromToken(refreshToken);
+        User user = findByUsername(username);
+        validateRefreshToken(refreshToken, user.getRefreshToken());
+        jwtProperties.validateToken(refreshToken,user);
+        return jwtProperties.generateToken(user);
     }
 
     private User authenticate(String username, String pwd) {
@@ -89,7 +112,7 @@ public class UserServiceImpl implements UserService {
      */
     private void checkPassword(String password, String passwordCheck) {
         if (!password.equals(passwordCheck)) {
-            throw new UserException("패스워드 불일치", HttpStatus.BAD_REQUEST);
+            throw new UserException("비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -100,8 +123,17 @@ public class UserServiceImpl implements UserService {
      */
     private void checkEncodePassword(String rawPassword, String encodedPassword) {
         if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
-            throw new UserException("패스워드 불일치", HttpStatus.BAD_REQUEST);
+            throw new UserException("비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
     }
 
+    private void validateRefreshToken(String refreshToken, String userRefreshToken) {
+        if (!refreshToken.equals(" "+userRefreshToken)) {
+            throw new SecurityException("Refresh token이 일치하지 않습니다.");
+        }
+    }
+
+    private User findByUsername(String username){
+        return userJpaRepo.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("User","username",username));
+    }
 }

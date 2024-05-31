@@ -13,7 +13,7 @@ public interface CommunityJpaRepo extends JpaRepository<CommunityPost,Long> {
             "ORDER BY cp.id DESC limit 5")
     List<CommunityPost> findTop5OrderByIdDesc();
 
-    @Query("select cp from CommunityPost cp join fetch cp.author join fetch cp.author.farm where cp.id = :postId")
+    @Query("select cp from CommunityPost cp join fetch cp.author where cp.id = :postId")
     Optional<CommunityPost> findByIdWithUser(Long postId);
 
 }

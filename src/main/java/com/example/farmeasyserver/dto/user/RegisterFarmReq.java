@@ -1,6 +1,5 @@
 package com.example.farmeasyserver.dto.user;
 
-import com.example.farmeasyserver.entity.user.Address;
 import com.example.farmeasyserver.entity.user.Farm;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

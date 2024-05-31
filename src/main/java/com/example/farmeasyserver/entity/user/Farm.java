@@ -13,7 +13,7 @@ public class Farm {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "farm", fetch = FetchType.LAZY)
     private User user;
     private String farmName;
     @Embedded
