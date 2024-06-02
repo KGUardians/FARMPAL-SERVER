@@ -1,19 +1,13 @@
 package com.example.farmeasyserver.service.post;
 
 import com.example.farmeasyserver.dto.post.CreatePostResponse;
-import com.example.farmeasyserver.dto.post.community.CommunityListDto;
-import com.example.farmeasyserver.dto.post.community.CommunityPostDto;
-import com.example.farmeasyserver.dto.post.community.CreateCommPostRequest;
-import com.example.farmeasyserver.dto.post.community.UpdateCommPostReq;
+import com.example.farmeasyserver.dto.post.community.*;
 import com.example.farmeasyserver.dto.post.community.comment.CommentDto;
 import com.example.farmeasyserver.dto.post.community.comment.CommentRequest;
 import com.example.farmeasyserver.entity.board.community.Comment;
 import com.example.farmeasyserver.entity.board.community.CommunityPost;
 import com.example.farmeasyserver.entity.user.User;
-import com.example.farmeasyserver.repository.post.community.CommentJpaRepo;
-import com.example.farmeasyserver.repository.post.community.CommunityFilter;
-import com.example.farmeasyserver.repository.post.community.CommunityJpaRepo;
-import com.example.farmeasyserver.repository.post.community.CommunityRepo;
+import com.example.farmeasyserver.repository.post.community.*;
 import com.example.farmeasyserver.util.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +26,7 @@ public class CommunityPostServiceImpl implements CommunityPostService {
     private final CommunityJpaRepo communityJpaRepo;
     private final CommunityRepo communityRepo;
     private final CommentJpaRepo commentJpaRepo;
-    private final PostServiceImpl postService;
+    private final PostService postService;
 
     @Override
     public List<CommunityListDto> getRecentCommunityPostDtos() {

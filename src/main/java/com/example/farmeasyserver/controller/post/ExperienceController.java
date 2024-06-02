@@ -67,8 +67,8 @@ public class ExperienceController {
     @PostMapping("/{postId}/application")
     @Operation(summary = "해당 체험 게시글 신청 요청")
     public Response requestExpApp(@PathVariable Long postId, @RequestBody ExpApplicationRequest req) throws Exception {
-        User user = userService.getByUsername();
-        return Response.success(experiencePostService.requestExpApp(postId, req, user));
+        User applicant = userService.getByUsername();
+        return Response.success(experiencePostService.requestExpApp(postId, req, applicant));
     }
 
 }

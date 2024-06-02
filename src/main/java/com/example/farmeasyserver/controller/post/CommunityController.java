@@ -9,7 +9,6 @@ import com.example.farmeasyserver.entity.board.community.CommunityType;
 import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.post.community.CommunityFilter;
 import com.example.farmeasyserver.service.post.CommunityPostService;
-import com.example.farmeasyserver.service.post.PostService;
 import com.example.farmeasyserver.service.user.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;

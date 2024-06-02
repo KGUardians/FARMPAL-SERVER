@@ -1,15 +1,10 @@
 package com.example.farmeasyserver.service.post;
 
 import com.example.farmeasyserver.dto.post.CreatePostResponse;
-import com.example.farmeasyserver.dto.post.market.CreateMktPostRequest;
-import com.example.farmeasyserver.dto.post.market.MarketListDto;
-import com.example.farmeasyserver.dto.post.market.MarketPostDto;
-import com.example.farmeasyserver.dto.post.market.UpdateMktPostReq;
+import com.example.farmeasyserver.dto.post.market.*;
 import com.example.farmeasyserver.entity.board.market.MarketPost;
 import com.example.farmeasyserver.entity.user.User;
-import com.example.farmeasyserver.repository.post.market.MarketFilter;
-import com.example.farmeasyserver.repository.post.market.MarketJpaRepo;
-import com.example.farmeasyserver.repository.post.market.MarketRepo;
+import com.example.farmeasyserver.repository.post.market.*;
 import com.example.farmeasyserver.util.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +20,7 @@ public class MarketPostServiceImpl implements MarketPostService{
 
     private final MarketJpaRepo marketJpaRepo;
     private final MarketRepo marketRepo;
-    private final PostServiceImpl postService;
+    private final PostService postService;
 
     @Override
     public List<MarketListDto> getRecentMarketPostDtos() {
