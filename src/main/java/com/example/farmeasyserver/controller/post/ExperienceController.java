@@ -1,7 +1,7 @@
 package com.example.farmeasyserver.controller.post;
 
 import com.example.farmeasyserver.dto.post.experience.expapplication.ExpApplicationRequest;
-import com.example.farmeasyserver.dto.post.experience.ExperiencePostRequest;
+import com.example.farmeasyserver.dto.post.experience.CreateExpPostRequest;
 import com.example.farmeasyserver.dto.post.experience.UpdateExpPostReq;
 import com.example.farmeasyserver.dto.response.Response;
 import com.example.farmeasyserver.entity.user.User;
@@ -33,7 +33,7 @@ public class ExperienceController {
 
     @PostMapping
     @Operation(summary = "농촌체험 게시글 작성")
-    public Response createPost(@Valid @ModelAttribute ExperiencePostRequest req) {
+    public Response createPost(@Valid @ModelAttribute CreateExpPostRequest req) {
         User author = userService.getByUsername();
         return Response.success(postService.createExperiencePost(req, author));
     }

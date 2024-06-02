@@ -8,8 +8,8 @@ import com.example.farmeasyserver.dto.post.experience.expapplication.ExpApplicat
 import com.example.farmeasyserver.dto.post.market.MarketListDto;
 import com.example.farmeasyserver.dto.post.CreatePostResponse;
 import com.example.farmeasyserver.dto.post.market.MarketPostDto;
-import com.example.farmeasyserver.dto.post.market.MarketPostRequest;
-import com.example.farmeasyserver.dto.post.market.UpdateMarPostReq;
+import com.example.farmeasyserver.dto.post.market.CreateMktPostRequest;
+import com.example.farmeasyserver.dto.post.market.UpdateMktPostReq;
 import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.post.community.CommunityFilter;
 import com.example.farmeasyserver.repository.post.experience.ExpFilter;
@@ -24,9 +24,9 @@ public interface PostService {
     List<MarketListDto> getRecentMarketPostDtos();
     List<ExperienceListDto> getRecentExperiencePostDtos();
 
-    CreatePostResponse createCommunityPost(CommunityPostRequest req, User author);
-    CreatePostResponse createMarketPost(MarketPostRequest req,User user);
-    CreatePostResponse createExperiencePost(ExperiencePostRequest req, User user);
+    CreatePostResponse createCommunityPost(CreateCommPostRequest req, User author);
+    CreatePostResponse createMarketPost(CreateMktPostRequest req, User user);
+    CreatePostResponse createExperiencePost(CreateExpPostRequest req, User user);
 
     Long deleteCommunityPost(Long postId, User user);
     Long deleteMarketPost(Long postId, User user);
@@ -36,9 +36,9 @@ public interface PostService {
     MarketPostDto readMarketPost(Long postId);
     ExperiencePostDto readExperiencePost(Long postId);
 
-    CommunityPostDto updateCommunityPost(Long postId, UpdateComPostReq req, User user);
+    CommunityPostDto updateCommunityPost(Long postId, UpdateCommPostReq req, User user);
     ExperiencePostDto updateExperiencePost(Long postId, UpdateExpPostReq req, User user);
-    MarketPostDto updateMarketPost(Long postId, UpdateMarPostReq req, User user);
+    MarketPostDto updateMarketPost(Long postId, UpdateMktPostReq req, User user);
 
 
     Slice<CommunityListDto> getCommunityPostList(CommunityFilter filter, Pageable pageable);

@@ -3,7 +3,6 @@ package com.example.farmeasyserver.dto.post.market;
 import com.example.farmeasyserver.dto.post.CreatePostRequest;
 import com.example.farmeasyserver.entity.board.market.Item;
 import com.example.farmeasyserver.entity.board.market.MarketPost;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,7 +10,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 
 @Data
-public class MarketPostRequest extends CreatePostRequest {
+public class CreateMktPostRequest extends CreatePostRequest {
 
     @Schema(description = "상품 이름", example = "item")
     @NotBlank(message = "물건 이름을 입력해주세요.")
@@ -27,7 +26,7 @@ public class MarketPostRequest extends CreatePostRequest {
     @PositiveOrZero(message = "0 이상을 입력해주세요")
     private int gram;
 
-    private static Item reqToItem(MarketPostRequest req){
+    private static Item reqToItem(CreateMktPostRequest req){
         return new Item(
                 req.getItemName(),
                 req.getPrice(),
@@ -35,8 +34,8 @@ public class MarketPostRequest extends CreatePostRequest {
         );
     }
 
-    public static MarketPost toEntity(MarketPostRequest req){
-        return new MarketPost(req.getContent(),MarketPostRequest.reqToItem(req));
+    public static MarketPost toEntity(CreateMktPostRequest req){
+        return new MarketPost(req.getContent(), CreateMktPostRequest.reqToItem(req));
     }
 
 }

@@ -6,6 +6,6 @@ import lombok.Data;
 
 
 @Data
-public class UpdateComPostReq extends UpdatePostRequest {
+public class UpdateCommPostReq extends UpdatePostRequest {
     private CommunityType type;
 }

@@ -91,24 +91,24 @@ public class PostServiceImpl implements PostService{
     */
     @Override
     @Transactional
-    public CreatePostResponse createCommunityPost(CommunityPostRequest req, User author) {
-        CommunityPost communityPost = createPost(CommunityPostRequest.toEntity(req.getCommunityType()),req, author);
+    public CreatePostResponse createCommunityPost(CreateCommPostRequest req, User author) {
+        CommunityPost communityPost = createPost(CreateCommPostRequest.toEntity(req.getCommunityType()),req, author);
         communityJpaRepo.save(communityPost);
         return new CreatePostResponse(communityPost.getId(),communityPost.getPostType());
     }
 
     @Override
     @Transactional
-    public CreatePostResponse createMarketPost(MarketPostRequest req, User author) {
-        MarketPost marketPost = createPost(MarketPostRequest.toEntity(req), req, author);
+    public CreatePostResponse createMarketPost(CreateMktPostRequest req, User author) {
+        MarketPost marketPost = createPost(CreateMktPostRequest.toEntity(req), req, author);
         marketJpaRepo.save(marketPost);
         return new CreatePostResponse(marketPost.getId(),marketPost.getPostType());
     }
 
     @Override
     @Transactional
-    public CreatePostResponse createExperiencePost(ExperiencePostRequest req,User author) {
-        ExperiencePost experiencePost = createPost(ExperiencePostRequest.toEntity(req),req, author);
+    public CreatePostResponse createExperiencePost(CreateExpPostRequest req, User author) {
+        ExperiencePost experiencePost = createPost(CreateExpPostRequest.toEntity(req),req, author);
         expJpaRepo.save(experiencePost);
         return new CreatePostResponse(experiencePost.getId(),experiencePost.getPostType());
     }
@@ -168,7 +168,7 @@ public class PostServiceImpl implements PostService{
 
     */
     @Override
-    public CommunityPostDto updateCommunityPost(Long postId, UpdateComPostReq req, User author) {
+    public CommunityPostDto updateCommunityPost(Long postId, UpdateCommPostReq req, User author) {
         CommunityPost post = getCommunityPost(postId);
         updatePost(author, post, req);
         post.setCommunityType(req.getType());
@@ -186,10 +186,10 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public MarketPostDto updateMarketPost(Long postId, UpdateMarPostReq req, User author) {
+    public MarketPostDto updateMarketPost(Long postId, UpdateMktPostReq req, User author) {
         MarketPost post = getMarketPost(postId);
         updatePost(author, post, req);
-        post.setItem(UpdateMarPostReq.reqToItem(req));
+        post.setItem(UpdateMktPostReq.reqToItem(req));
         marketJpaRepo.save(post);
         return MarketPostDto.toDto(post);
     }
@@ -270,14 +270,14 @@ public class PostServiceImpl implements PostService{
     private void commentMapping(List<CommunityListDto> mainPageDto){
         List<Long> postIds = extractPostIds(mainPageDto);
         List<CommentDto> comments = fetchCommentDtoByPostIds(postIds);
-        mapCommentToPostList(mainPageDto, comments);
+        mapCommentCountToPostList(mainPageDto, comments);
     }
 
     private List<CommentDto> fetchCommentDtoByPostIds(List<Long> postIds){
         return commentJpaRepo.findCommentDtoListByPostIds(postIds);
     }
 
-    private void mapCommentToPostList(List<CommunityListDto> postListDto, List<CommentDto> postCommentList){
+    private void mapCommentCountToPostList(List<CommunityListDto> postListDto, List<CommentDto> postCommentList){
         Map<Long, List<CommentDto>> imagesByPostId = groupCommentByPostId(postCommentList);
         postListDto.forEach(p -> {
             List<CommentDto> CommentDtoList = imagesByPostId.get(p.getPostId());
@@ -297,12 +297,12 @@ public class PostServiceImpl implements PostService{
     리스트 이미지 매핑
 
     */
-    private <T extends PostListDto> void imageMapping(List<T> mainPageDto){
+    public <T extends PostListDto> void imageMapping(List<T> mainPageDto){
         List<Long> postIdList = extractPostIds(mainPageDto);
         List<ImageDto> postImages = fetchPostImages(postIdList);
         mapImageToPosts(mainPageDto,postImages);
     }
-    private <T extends PostListDto> List<Long> extractPostIds(List<T> pageDto){
+    public <T extends PostListDto> List<Long> extractPostIds(List<T> pageDto){
         return pageDto.stream()
                 .map(T::getPostId)
                 .toList();
@@ -310,7 +310,7 @@ public class PostServiceImpl implements PostService{
     private List<ImageDto> fetchPostImages(List<Long> postIdList){
         return postJpaRepo.findImagesDtoByPostIds(postIdList);
     }
-    private <T extends PostListDto> void mapImageToPosts(List<T> postListDto, List<ImageDto> postImageList){
+    private  <T extends PostListDto> void mapImageToPosts(List<T> postListDto, List<ImageDto> postImageList){
         Map<Long, List<ImageDto>> imagesByPostId = groupImagesByPostId(postImageList);
         postListDto.forEach(p -> {
             List<ImageDto> imageDtoList = imagesByPostId.get(p.getPostId());
@@ -325,26 +325,26 @@ public class PostServiceImpl implements PostService{
     }
 
 
-    private <T extends Post> T createPost(T p, CreatePostRequest req, User author) {
+    public <T extends Post> T createPost(T p, CreatePostRequest req, User author) {
         p.createPostFromReq(req, author);
-        uploadImageList(p.getImageList(),req.getImageList());
+        uploadImages(p.getImageList(),req.getImageList());
         return p;
     }
 
-    private void deletePost(Post post, User author){
+    public void deletePost(Post post, User author){
         checkUser(author,post.getAuthor().getId());
-        deleteImageList(post.getImageList());
+        deleteImages(post.getImageList());
         postJpaRepo.delete(post);
     }
 
-    private void updatePost(User author, Post post, UpdatePostRequest req){
+    public void updatePost(User author, Post post, UpdatePostRequest req){
         checkUser(author,post.getAuthor().getId());
         UpdateImageResult result = post.updatePostFromReq(req);
-        deleteImageList(result.getDeletedImageList());
-        uploadImageList(result.getAddedImageList(),result.getAddedImageFileList());
+        deleteImages(result.getDeletedImageList());
+        uploadImages(result.getAddedImageList(),result.getAddedImageFileList());
     }
 
-    private void uploadImageList(List<Image> images, List<MultipartFile> fileImages) {
+    private void uploadImages(List<Image> images, List<MultipartFile> fileImages) {
         IntStream.range(0, images.size()).forEach(i -> {
             try {
                 fileService.upload(fileImages.get(i), images.get(i).getUniqueName());
@@ -354,7 +354,7 @@ public class PostServiceImpl implements PostService{
         });
     }
 
-    private void deleteImageList(List<Image> images){
+    private void deleteImages(List<Image> images){
         images.stream().forEach(i -> fileService.delete(i.getUniqueName()));
     }
 

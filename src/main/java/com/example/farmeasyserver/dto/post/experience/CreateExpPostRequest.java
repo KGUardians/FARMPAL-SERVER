@@ -3,14 +3,13 @@ package com.example.farmeasyserver.dto.post.experience;
 import com.example.farmeasyserver.dto.post.CreatePostRequest;
 import com.example.farmeasyserver.entity.board.exprience.ExperiencePost;
 import com.example.farmeasyserver.entity.board.exprience.Recruitment;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Lob;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class ExperiencePostRequest extends CreatePostRequest {
+public class CreateExpPostRequest extends CreatePostRequest {
 
     @Schema(description = "시작 날짜", example = "2024-05-24")
     @NotNull
@@ -25,7 +24,7 @@ public class ExperiencePostRequest extends CreatePostRequest {
     @NotNull(message = "상세 모집 조건을 입력해주세요.")
     @Lob
     private String detailedRecruitmentCondition;
-    private static Recruitment reqToRecruitment(ExperiencePostRequest req){
+    private static Recruitment reqToRecruitment(CreateExpPostRequest req){
         return new Recruitment(
                 req.getStartDate(),
                 req.getStartTime(),
@@ -33,9 +32,9 @@ public class ExperiencePostRequest extends CreatePostRequest {
                 req.getDetailedRecruitmentCondition()
         );
     }
-    public static ExperiencePost toEntity(ExperiencePostRequest req){
+    public static ExperiencePost toEntity(CreateExpPostRequest req){
         return new ExperiencePost(
-            ExperiencePostRequest.reqToRecruitment(req)
+            CreateExpPostRequest.reqToRecruitment(req)
         );
     }
 

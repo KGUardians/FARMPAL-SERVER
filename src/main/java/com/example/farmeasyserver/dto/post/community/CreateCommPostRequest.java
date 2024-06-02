@@ -8,7 +8,7 @@ import lombok.Data;
 
 @ApiModel(value = "커뮤니티 게시글 생성 요청")
 @Data
-public class CommunityPostRequest extends CreatePostRequest {
+public class CreateCommPostRequest extends CreatePostRequest {
 
 
     private CommunityType communityType;

@@ -1,7 +1,7 @@
 package com.example.farmeasyserver.controller.post;
 
-import com.example.farmeasyserver.dto.post.market.MarketPostRequest;
-import com.example.farmeasyserver.dto.post.market.UpdateMarPostReq;
+import com.example.farmeasyserver.dto.post.market.CreateMktPostRequest;
+import com.example.farmeasyserver.dto.post.market.UpdateMktPostReq;
 import com.example.farmeasyserver.dto.response.Response;
 import com.example.farmeasyserver.entity.board.CropCategory;
 import com.example.farmeasyserver.entity.user.User;
@@ -34,7 +34,7 @@ public class MarketController {
 
     @PostMapping
     @Operation(summary = "마켓 게시글 작성")
-    public Response createPost(@Valid @ModelAttribute MarketPostRequest req) {
+    public Response createPost(@Valid @ModelAttribute CreateMktPostRequest req) {
         User author = userService.getByUsername();
         return Response.success(postService.createMarketPost(req, author));
     }
@@ -48,7 +48,7 @@ public class MarketController {
 
     @PatchMapping("/{postId}")
     @Operation(summary = "마켓 게시글 수정")
-    public Response updatePost(@PathVariable Long postId, @Valid @ModelAttribute UpdateMarPostReq req){
+    public Response updatePost(@PathVariable Long postId, @Valid @ModelAttribute UpdateMktPostReq req){
         User author = userService.getByUsername();
         return Response.success(postService.updateMarketPost(postId,req,author));
     }
