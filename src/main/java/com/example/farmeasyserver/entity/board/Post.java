@@ -1,7 +1,7 @@
 package com.example.farmeasyserver.entity.board;
 
 import com.example.farmeasyserver.dto.post.CreatePostRequest;
-import com.example.farmeasyserver.dto.post.ImageUpdateResult;
+import com.example.farmeasyserver.dto.post.UpdateImageResult;
 import com.example.farmeasyserver.dto.post.UpdatePostRequest;
 import com.example.farmeasyserver.entity.user.User;
 import jakarta.persistence.*;
@@ -70,11 +70,11 @@ public abstract class Post {
         this.addImageList(convertImageFileToImage(req.getImageList()));
     }
 
-    public ImageUpdateResult updatePostFromReq(UpdatePostRequest req) { // 1
+    public UpdateImageResult updatePostFromReq(UpdatePostRequest req) { // 1
         this.title = req.getTitle();
         this.content = req.getContent();
         this.cropCategory = req.getCropCategory();
-        ImageUpdateResult result = new ImageUpdateResult(req.getAddedImages(),
+        UpdateImageResult result = new UpdateImageResult(req.getAddedImages(),
                 convertImageFileToImage(req.getAddedImages()),
                 convertImageIdsToImages(req.getDeletedImages()));
         addImageList(result.getAddedImageList());

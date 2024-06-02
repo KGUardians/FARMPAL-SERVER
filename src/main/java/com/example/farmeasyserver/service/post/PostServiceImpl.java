@@ -339,7 +339,7 @@ public class PostServiceImpl implements PostService{
 
     private void updatePost(User author, Post post, UpdatePostRequest req){
         checkUser(author,post.getAuthor().getId());
-        ImageUpdateResult result = post.updatePostFromReq(req);
+        UpdateImageResult result = post.updatePostFromReq(req);
         deleteImageList(result.getDeletedImageList());
         uploadImageList(result.getAddedImageList(),result.getAddedImageFileList());
     }
