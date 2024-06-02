@@ -5,12 +5,11 @@ import com.example.farmeasyserver.dto.post.community.comment.CommentRequest;
 import com.example.farmeasyserver.dto.post.experience.*;
 import com.example.farmeasyserver.dto.post.experience.expapplication.ExpApplicationPageDto;
 import com.example.farmeasyserver.dto.post.experience.expapplication.ExpApplicationRequest;
-import com.example.farmeasyserver.dto.post.market.ListMarketDto;
+import com.example.farmeasyserver.dto.post.market.MarketListDto;
 import com.example.farmeasyserver.dto.post.CreatePostResponse;
 import com.example.farmeasyserver.dto.post.market.MarketPostDto;
 import com.example.farmeasyserver.dto.post.market.MarketPostRequest;
 import com.example.farmeasyserver.dto.post.market.UpdateMarPostReq;
-import com.example.farmeasyserver.entity.board.community.CommunityType;
 import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.post.community.CommunityFilter;
 import com.example.farmeasyserver.repository.post.experience.ExpFilter;
@@ -21,9 +20,9 @@ import org.springframework.data.domain.Slice;
 import java.util.List;
 
 public interface PostService {
-    List<ListCommunityDto> getMainCommunityPostList();
-    List<ListMarketDto> getMainMarketPostList();
-    List<ListExperienceDto> getMainExperiencePostList();
+    List<CommunityListDto> getMainCommunityPostList();
+    List<MarketListDto> getMainMarketPostList();
+    List<ExperienceListDto> getMainExperiencePostList();
 
     CreatePostResponse createCommunityPost(CommunityPostRequest req, User author);
     CreatePostResponse createMarketPost(MarketPostRequest req,User user);
@@ -42,9 +41,9 @@ public interface PostService {
     MarketPostDto updateMarketPost(Long postId, UpdateMarPostReq req, User user);
 
 
-    Slice<ListCommunityDto> getCommunityPostList(CommunityFilter filter, Pageable pageable);
-    Slice<ListMarketDto> getMarketPostList(MarketFilter filter, Pageable pageable);
-    Slice<ListExperienceDto> getExperiencePostList(ExpFilter filter, Pageable pageable);
+    Slice<CommunityListDto> getCommunityPostList(CommunityFilter filter, Pageable pageable);
+    Slice<MarketListDto> getMarketPostList(MarketFilter filter, Pageable pageable);
+    Slice<ExperienceListDto> getExperiencePostList(ExpFilter filter, Pageable pageable);
 
     ExpApplicationPageDto getExpAppPage(Long postId);
     ExpApplicationRequest requestExpApp(Long postId, ExpApplicationRequest req, User applicants) throws Exception;

@@ -1,7 +1,7 @@
 package com.example.farmeasyserver.dto.post.experience;
 
 import com.example.farmeasyserver.entity.board.CropCategory;
-import com.example.farmeasyserver.dto.mainpage.ListPostDto;
+import com.example.farmeasyserver.dto.mainpage.PostListDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -9,13 +9,13 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ListExperienceDto extends ListPostDto {
+public class ExperienceListDto extends PostListDto {
     private String title;
     private String sigungu;
     private String farmName;
     private String startTime;
 
-    public ListExperienceDto(Long postId, int postLike, String title, String sigungu, CropCategory cropCategory, String farmName, String startTime){
+    public ExperienceListDto(Long postId, int postLike, String title, String sigungu, CropCategory cropCategory, String farmName, String startTime){
         super(postId,postLike,cropCategory);
         this.title = title;
         this.sigungu = sigungu;

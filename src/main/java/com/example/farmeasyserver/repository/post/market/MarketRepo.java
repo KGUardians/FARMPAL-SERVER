@@ -1,6 +1,6 @@
 package com.example.farmeasyserver.repository.post.market;
 
-import com.example.farmeasyserver.dto.post.market.ListMarketDto;
+import com.example.farmeasyserver.dto.post.market.MarketListDto;
 import com.example.farmeasyserver.entity.board.CropCategory;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -25,22 +25,22 @@ public class MarketRepo {
         this.query = new JPAQueryFactory(em);
     }
 
-    public List<ListMarketDto> findTop4OrderByIdDesc(){
+    public List<MarketListDto> findTop4OrderByIdDesc(){
         return em.createQuery(
-                "SELECT new com.example.farmeasyserver.dto.post.market.ListMarketDto(mp.id, a.address.sigungu, a.farm.farmName, mp.cropCategory,mp.item.price,mp.item.gram,mp.postLike) " +
+                "SELECT new com.example.farmeasyserver.dto.post.market.MarketListDto(mp.id, a.address.sigungu, a.farm.farmName, mp.cropCategory,mp.item.price,mp.item.gram,mp.postLike) " +
                         "FROM MarketPost mp " +
                         "join mp.author a " +
-                        "ORDER BY mp.id DESC limit 4", ListMarketDto.class)
+                        "ORDER BY mp.id DESC limit 4", MarketListDto.class)
                 .getResultList();
     };
 
-    public Slice<ListMarketDto> findPostList(MarketFilter filter, Pageable pageable){
+    public Slice<MarketListDto> findPostList(MarketFilter filter, Pageable pageable){
 
         int pageSize = pageable.getPageSize();
-        List<ListMarketDto> postList;
+        List<MarketListDto> postList;
         postList = query
                 .select(Projections.constructor(
-                        ListMarketDto.class,
+                        MarketListDto.class,
                         marketPost.id,
                         marketPost.author.address.sigungu,
                         marketPost.author.farm.farmName,

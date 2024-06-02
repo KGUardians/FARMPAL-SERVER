@@ -2,24 +2,24 @@ package com.example.farmeasyserver.dto.post.community;
 
 import com.example.farmeasyserver.entity.board.CropCategory;
 import com.example.farmeasyserver.entity.board.community.CommunityPost;
-import com.example.farmeasyserver.dto.mainpage.ListPostDto;
+import com.example.farmeasyserver.dto.mainpage.PostListDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @AllArgsConstructor
 @Data
-public class ListCommunityDto extends ListPostDto {
+public class CommunityListDto extends PostListDto {
 
     private String title;
     private int commentCount;
 
-    public ListCommunityDto(Long id, String title, int postLike, CropCategory cropCategory) {
+    public CommunityListDto(Long id, String title, int postLike, CropCategory cropCategory) {
         super(id,postLike,cropCategory);
         this.title = title;
     }
 
-    public static ListCommunityDto toDto(CommunityPost communityPost){
-        return new ListCommunityDto(
+    public static CommunityListDto toDto(CommunityPost communityPost){
+        return new CommunityListDto(
                 communityPost.getId(),
                 communityPost.getTitle(),
                 communityPost.getPostLike(),

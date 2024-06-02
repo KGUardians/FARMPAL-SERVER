@@ -1,6 +1,6 @@
 package com.example.farmeasyserver.repository.post.experience;
 
-import com.example.farmeasyserver.dto.post.experience.ListExperienceDto;
+import com.example.farmeasyserver.dto.post.experience.ExperienceListDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -24,21 +24,21 @@ public class ExpRepo {
         this.em = em;
         this.query = new JPAQueryFactory(em);
     }
-    public List<ListExperienceDto> findTop4OrderByIdDesc(){
-        return em.createQuery("SELECT new com.example.farmeasyserver.dto.post.experience.ListExperienceDto(ep.id,ep.postLike,ep.title,a.address.sigungu,ep.cropCategory,a.farm.farmName,ep.recruitment.startTime) " +
+    public List<ExperienceListDto> findTop4OrderByIdDesc(){
+        return em.createQuery("SELECT new com.example.farmeasyserver.dto.post.experience.ExperienceListDto(ep.id,ep.postLike,ep.title,a.address.sigungu,ep.cropCategory,a.farm.farmName,ep.recruitment.startTime) " +
                 "FROM ExperiencePost ep " +
                 "join ep.author a " +
-                "ORDER BY ep.id DESC limit 4", ListExperienceDto.class)
+                "ORDER BY ep.id DESC limit 4", ExperienceListDto.class)
                 .getResultList();
     }
 
-    public Slice<ListExperienceDto> findPostList(ExpFilter filter, Pageable pageable){
+    public Slice<ExperienceListDto> findPostList(ExpFilter filter, Pageable pageable){
 
         int pageSize = pageable.getPageSize();
-        List<ListExperienceDto> postList;
+        List<ExperienceListDto> postList;
         postList = query
                 .select(Projections.constructor(
-                      ListExperienceDto.class,
+                      ExperienceListDto.class,
                         experiencePost.id,
                         experiencePost.postLike,
                         experiencePost.title,

@@ -1,6 +1,6 @@
 package com.example.farmeasyserver.repository.post.community;
 
-import com.example.farmeasyserver.dto.post.community.ListCommunityDto;
+import com.example.farmeasyserver.dto.post.community.CommunityListDto;
 import com.example.farmeasyserver.entity.board.CropCategory;
 import com.example.farmeasyserver.entity.board.community.CommunityType;
 import com.querydsl.core.types.Projections;
@@ -26,13 +26,13 @@ public class CommunityRepo {
         this.em = em;
         this.query = new JPAQueryFactory(em);
     }
-    public Slice<ListCommunityDto> findPostList(CommunityFilter filter, Pageable pageable){
+    public Slice<CommunityListDto> findPostList(CommunityFilter filter, Pageable pageable){
 
         int pageSize = pageable.getPageSize();
-        List<ListCommunityDto> postList;
+        List<CommunityListDto> postList;
         postList = query
                 .select(Projections.constructor(
-                        ListCommunityDto.class,
+                        CommunityListDto.class,
                         communityPost.id,
                         communityPost.title,
                         communityPost.postLike,
