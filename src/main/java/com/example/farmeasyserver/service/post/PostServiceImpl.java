@@ -121,7 +121,7 @@ public class PostServiceImpl implements PostService{
     @Override
     @Transactional
     public Long deleteCommunityPost(Long postId, User author) {
-        CommunityPost post = findCommunityPost(postId);
+        CommunityPost post = getCommunityPost(postId);
         deletePost(post,author);
         return postId;
     }
@@ -129,7 +129,7 @@ public class PostServiceImpl implements PostService{
     @Override
     @Transactional
     public Long deleteMarketPost(Long postId, User author) {
-        MarketPost post = findMarketPost(postId);
+        MarketPost post = getMarketPost(postId);
         deletePost(post,author);
         return postId;
     }
@@ -137,7 +137,7 @@ public class PostServiceImpl implements PostService{
     @Override
     @Transactional
     public Long deleteExperiencePost(Long postId, User author) {
-        ExperiencePost post = findExperiencePost(postId);
+        ExperiencePost post = getExperiencePost(postId);
         deletePost(post,author);
         return postId;
     }
@@ -149,17 +149,17 @@ public class PostServiceImpl implements PostService{
     */
     @Override
     public CommunityPostDto readCommunityPost(Long postId){
-        return CommunityPostDto.toDto(findCommunityPost(postId));
+        return CommunityPostDto.toDto(getCommunityPost(postId));
     }
 
     @Override
     public MarketPostDto readMarketPost(Long postId){
-        return MarketPostDto.toDto(findMarketPost(postId));
+        return MarketPostDto.toDto(getMarketPost(postId));
     }
 
     @Override
     public ExperiencePostDto readExperiencePost(Long postId){
-        return ExperiencePostDto.toDto(findExperiencePost(postId));
+        return ExperiencePostDto.toDto(getExperiencePost(postId));
     }
 
     /*
@@ -169,7 +169,7 @@ public class PostServiceImpl implements PostService{
     */
     @Override
     public CommunityPostDto updateCommunityPost(Long postId, UpdateComPostReq req, User author) {
-        CommunityPost post = findCommunityPost(postId);
+        CommunityPost post = getCommunityPost(postId);
         updatePost(author, post, req);
         post.setCommunityType(req.getType());
         communityJpaRepo.save(post);
@@ -178,7 +178,7 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public ExperiencePostDto updateExperiencePost(Long postId, UpdateExpPostReq req, User author) {
-        ExperiencePost post = findExperiencePost(postId);
+        ExperiencePost post = getExperiencePost(postId);
         updatePost(author, post, req);
         post.setRecruitment(UpdateExpPostReq.reqToRecruitment(req));
         expJpaRepo.save(post);
@@ -187,7 +187,7 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public MarketPostDto updateMarketPost(Long postId, UpdateMarPostReq req, User author) {
-        MarketPost post = findMarketPost(postId);
+        MarketPost post = getMarketPost(postId);
         updatePost(author, post, req);
         post.setItem(UpdateMarPostReq.reqToItem(req));
         marketJpaRepo.save(post);
@@ -226,15 +226,15 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public ExpApplicationPageDto getExpAppPage(Long postId) {
-        ExperiencePost post = findExperiencePost(postId);
+        ExperiencePost post = getExperiencePost(postId);
         return ExpApplicationPageDto.toDto(post);
     }
     @Override
     @Transactional
     public ExpApplicationRequest requestExpApp(Long postId, ExpApplicationRequest req, User user) throws Exception {
-        ExperiencePost experiencePost = findExperiencePost(postId);
+        ExperiencePost experiencePost = getExperiencePost(postId);
         validateParticipants(experiencePost, req.getParticipants());
-        User applicant = findUser(user.getId());
+        User applicant = getUser(user.getId());
         processApplication(experiencePost, applicant, req.getParticipants());
         return req;
     }
@@ -261,7 +261,7 @@ public class PostServiceImpl implements PostService{
     @Override
     @Transactional
     public CommentRequest requestComment(Long postId, CommentRequest req, User author) {
-        CommunityPost post = findCommunityPost(postId);
+        CommunityPost post = getCommunityPost(postId);
         Comment comment = new Comment(req.getComment(),post,author);
         commentJpaRepo.save(comment);
         return req;
@@ -366,16 +366,16 @@ public class PostServiceImpl implements PostService{
         if(!isAuthorized(user,authorId)) throw new UserException("해당 권한이 없습니다.", HttpStatus.BAD_REQUEST);
     }
 
-    private CommunityPost findCommunityPost(Long postId){
+    private CommunityPost getCommunityPost(Long postId){
         return communityJpaRepo.findByIdWithUser(postId).orElseThrow(()-> new ResourceNotFoundException("CommunityPost", "communityPost", null));
     }
-    private ExperiencePost findExperiencePost(Long postId){
+    private ExperiencePost getExperiencePost(Long postId){
         return expJpaRepo.findByIdWithUser(postId).orElseThrow(() -> new ResourceNotFoundException("ExperiencePost", "experiencePost", null));
     }
-    private MarketPost findMarketPost(Long postId){
+    private MarketPost getMarketPost(Long postId){
         return marketJpaRepo.findByIdWithUser(postId).orElseThrow(() -> new ResourceNotFoundException("MarketPost", "marketPost", null));
     }
-    private User findUser(Long userId){
+    private User getUser(Long userId){
         return userJpaRepo.findById(userId).orElseThrow();
     }
 
