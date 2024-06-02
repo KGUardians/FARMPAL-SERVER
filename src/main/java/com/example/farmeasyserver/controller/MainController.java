@@ -15,9 +15,9 @@ public class MainController {
     @GetMapping
     public Response mainPage(){
         MainPageDto mainPageDto = new MainPageDto(
-                postService.getMainCommunityPostList(),
-                postService.getMainMarketPostList(),
-                postService.getMainExperiencePostList());
+                postService.readMainCommunityPostList(),
+                postService.readMainMarketPostList(),
+                postService.readMainExperiencePostList());
 
         return Response.success(mainPageDto);
     }

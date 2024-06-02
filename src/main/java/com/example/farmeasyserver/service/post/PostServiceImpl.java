@@ -60,7 +60,7 @@ public class PostServiceImpl implements PostService{
 
     */
     @Override
-    public List<CommunityListDto> getMainCommunityPostList() {
+    public List<CommunityListDto> readMainCommunityPostList() {
         List<CommunityPost> communityPostList = communityJpaRepo.findTop5OrderByIdDesc();
         List<CommunityListDto> list = convertToCommunityDtoList(communityPostList);
         commentMapping(list);
@@ -73,13 +73,13 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<MarketListDto> getMainMarketPostList() {
+    public List<MarketListDto> readMainMarketPostList() {
         List<MarketListDto> mainMarketPosts = marketRepo.findTop4OrderByIdDesc();
         imageMapping(mainMarketPosts); return mainMarketPosts;
     }
 
     @Override
-    public List<ExperienceListDto> getMainExperiencePostList() {
+    public List<ExperienceListDto> readMainExperiencePostList() {
         List<ExperienceListDto> mainExperiencePosts = expRepo.findTop4OrderByIdDesc();
         imageMapping(mainExperiencePosts); return mainExperiencePosts;
     }

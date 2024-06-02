@@ -20,9 +20,9 @@ import org.springframework.data.domain.Slice;
 import java.util.List;
 
 public interface PostService {
-    List<CommunityListDto> getMainCommunityPostList();
-    List<MarketListDto> getMainMarketPostList();
-    List<ExperienceListDto> getMainExperiencePostList();
+    List<CommunityListDto> readMainCommunityPostList();
+    List<MarketListDto> readMainMarketPostList();
+    List<ExperienceListDto> readMainExperiencePostList();
 
     CreatePostResponse createCommunityPost(CommunityPostRequest req, User author);
     CreatePostResponse createMarketPost(MarketPostRequest req,User user);
