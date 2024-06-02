@@ -60,28 +60,28 @@ public class PostServiceImpl implements PostService{
 
     */
     @Override
-    public List<CommunityListDto> readMainCommunityPostList() {
-        List<CommunityPost> communityPostList = communityJpaRepo.findTop5OrderByIdDesc();
-        List<CommunityListDto> list = convertToCommunityDtoList(communityPostList);
+    public List<CommunityListDto> getRecentCommunityPostDtos() {
+        List<CommunityPost> recentCommunityPosts = communityJpaRepo.findTop5OrderByIdDesc();
+        List<CommunityListDto> list = convertCommunityPostsToDtos(recentCommunityPosts);
         commentMapping(list);
         return list;
     }
-    private List<CommunityListDto> convertToCommunityDtoList(List<CommunityPost> postList){
-        return postList.stream()
+    private List<CommunityListDto> convertCommunityPostsToDtos(List<CommunityPost> recentCommunityPosts){
+        return recentCommunityPosts.stream()
                 .map(CommunityListDto::toDto)
                 .toList();
     }
 
     @Override
-    public List<MarketListDto> readMainMarketPostList() {
-        List<MarketListDto> mainMarketPosts = marketRepo.findTop4OrderByIdDesc();
-        imageMapping(mainMarketPosts); return mainMarketPosts;
+    public List<MarketListDto> getRecentMarketPostDtos() {
+        List<MarketListDto> recentMarketPosts = marketRepo.findTop4OrderByIdDesc();
+        imageMapping(recentMarketPosts); return recentMarketPosts;
     }
 
     @Override
-    public List<ExperienceListDto> readMainExperiencePostList() {
-        List<ExperienceListDto> mainExperiencePosts = expRepo.findTop4OrderByIdDesc();
-        imageMapping(mainExperiencePosts); return mainExperiencePosts;
+    public List<ExperienceListDto> getRecentExperiencePostDtos() {
+        List<ExperienceListDto> recentExperiencePosts = expRepo.findTop4OrderByIdDesc();
+        imageMapping(recentExperiencePosts); return recentExperiencePosts;
     }
 
     /*
@@ -268,13 +268,13 @@ public class PostServiceImpl implements PostService{
     }
 
     private void commentMapping(List<CommunityListDto> mainPageDto){
-        List<Long> postIdList = extractPostIdList(mainPageDto);
-        List<CommentDto> commentList = fetchCommentDtoByPostIdList(postIdList);
-        mapCommentToPostList(mainPageDto, commentList);
+        List<Long> postIds = extractPostIds(mainPageDto);
+        List<CommentDto> comments = fetchCommentDtoByPostIds(postIds);
+        mapCommentToPostList(mainPageDto, comments);
     }
 
-    private List<CommentDto> fetchCommentDtoByPostIdList(List<Long> postIdList){
-        return commentJpaRepo.findCommentDtoListByPostIds(postIdList);
+    private List<CommentDto> fetchCommentDtoByPostIds(List<Long> postIds){
+        return commentJpaRepo.findCommentDtoListByPostIds(postIds);
     }
 
     private void mapCommentToPostList(List<CommunityListDto> postListDto, List<CommentDto> postCommentList){
@@ -298,19 +298,19 @@ public class PostServiceImpl implements PostService{
 
     */
     private <T extends PostListDto> void imageMapping(List<T> mainPageDto){
-        List<Long> postIdList = extractPostIdList(mainPageDto);
-        List<ImageDto> postImages = fetchPostImageList(postIdList);
-        mapImageToPostList(mainPageDto,postImages);
+        List<Long> postIdList = extractPostIds(mainPageDto);
+        List<ImageDto> postImages = fetchPostImages(postIdList);
+        mapImageToPosts(mainPageDto,postImages);
     }
-    private <T extends PostListDto> List<Long> extractPostIdList(List<T> pageDto){
+    private <T extends PostListDto> List<Long> extractPostIds(List<T> pageDto){
         return pageDto.stream()
                 .map(T::getPostId)
                 .toList();
     }
-    private List<ImageDto> fetchPostImageList(List<Long> postIdList){
+    private List<ImageDto> fetchPostImages(List<Long> postIdList){
         return postJpaRepo.findImagesDtoByPostIds(postIdList);
     }
-    private <T extends PostListDto> void mapImageToPostList(List<T> postListDto, List<ImageDto> postImageList){
+    private <T extends PostListDto> void mapImageToPosts(List<T> postListDto, List<ImageDto> postImageList){
         Map<Long, List<ImageDto>> imagesByPostId = groupImagesByPostId(postImageList);
         postListDto.forEach(p -> {
             List<ImageDto> imageDtoList = imagesByPostId.get(p.getPostId());
