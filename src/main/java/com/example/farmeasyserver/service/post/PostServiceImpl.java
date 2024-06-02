@@ -375,7 +375,7 @@ public class PostServiceImpl implements PostService{
     private MarketPost getMarketPost(Long postId){
         return marketJpaRepo.findByIdWithUser(postId).orElseThrow(() -> new ResourceNotFoundException("MarketPost", "marketPost", null));
     }
-    private User getUser(Long userId){
+    User getUser(Long userId){
         return userJpaRepo.findById(userId).orElseThrow();
     }
 
