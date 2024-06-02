@@ -22,7 +22,7 @@ public class ExperiencePostServiceImpl implements ExperiencePostService{
 
     private final ExpJpaRepo expJpaRepo;
     private final ExpRepo expRepo;
-    private final PostServiceImpl postService;
+    private final PostService postService;
     private final ExpAppJpaRepo expAppJpaRepo;
 
     @Override
@@ -75,10 +75,9 @@ public class ExperiencePostServiceImpl implements ExperiencePostService{
 
     @Override
     @Transactional
-    public ExpApplicationRequest requestExpApp(Long postId, ExpApplicationRequest req, User user) throws Exception {
+    public ExpApplicationRequest requestExpApp(Long postId, ExpApplicationRequest req, User applicant) throws Exception {
         ExperiencePost experiencePost = getExperiencePost(postId);
         validateParticipants(experiencePost, req.getParticipants());
-        User applicant = postService.getUser(user.getId());
         processApplication(experiencePost, applicant, req.getParticipants());
         return req;
     }
