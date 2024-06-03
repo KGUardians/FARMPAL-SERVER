@@ -1,4 +1,4 @@
-package com.example.farmeasyserver.service.post;
+package com.example.farmeasyserver.service.post.experience;
 
 import com.example.farmeasyserver.dto.post.CreatePostResponse;
 import com.example.farmeasyserver.dto.post.experience.*;
@@ -8,7 +8,7 @@ import com.example.farmeasyserver.entity.board.exprience.ExperiencePost;
 import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.post.experience.*;
 import com.example.farmeasyserver.service.file.FileService;
-import com.example.farmeasyserver.util.exception.ResourceNotFoundException;
+import com.example.farmeasyserver.service.post.PostService;
 import com.example.farmeasyserver.util.post.PostUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +20,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ExperiencePostServiceImpl implements ExperiencePostService{
+public class ExperiencePostServiceImpl implements ExperiencePostService {
 
     private final ExpJpaRepo expJpaRepo;
     private final ExpRepo expRepo;

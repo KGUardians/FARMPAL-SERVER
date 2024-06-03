@@ -1,4 +1,4 @@
-package com.example.farmeasyserver.service.post;
+package com.example.farmeasyserver.service.post.community;
 
 import com.example.farmeasyserver.dto.post.CreatePostResponse;
 import com.example.farmeasyserver.dto.post.community.*;
@@ -9,6 +9,7 @@ import com.example.farmeasyserver.entity.board.community.CommunityPost;
 import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.post.community.*;
 import com.example.farmeasyserver.service.file.FileService;
+import com.example.farmeasyserver.service.post.PostService;
 import com.example.farmeasyserver.util.post.PostUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
