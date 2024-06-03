@@ -16,4 +16,6 @@ public interface UserService {
 
     TokenDto refreshToken(String refreshToken);
 
+    void checkUser(User user, Long authorId);
+
 }

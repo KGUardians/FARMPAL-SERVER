@@ -1,16 +1,29 @@
 package com.example.farmeasyserver.service.file;
 
+import com.example.farmeasyserver.dto.ImageDto;
+import com.example.farmeasyserver.dto.mainpage.PostListDto;
+import com.example.farmeasyserver.repository.post.PostJpaRepo;
+import com.example.farmeasyserver.service.post.PostService;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class FileServiceImpl implements FileService {
+
+    private final PostJpaRepo postJpaRepo;
+    private final PostService postService;
 
     @Value(value = "${post.image.path}")
     String location;
@@ -35,5 +48,30 @@ public class FileServiceImpl implements FileService {
     @Override
     public void delete(String fileName) {
         new File(location + fileName).delete();
+    }
+
+    public <T extends PostListDto> void imageMapping(List<T> mainPageDto){
+        List<Long> postIdList = postService.extractPostIds(mainPageDto);
+        List<ImageDto> postImages = fetchPostImages(postIdList);
+        mapImageToPosts(mainPageDto,postImages);
+    }
+
+    private List<ImageDto> fetchPostImages(List<Long> postIdList){
+        return postJpaRepo.findImagesDtoByPostIds(postIdList);
+    }
+
+    private  <T extends PostListDto> void mapImageToPosts(List<T> postListDto, List<ImageDto> postImageList){
+        Map<Long, List<ImageDto>> imagesByPostId = groupImagesByPostId(postImageList);
+        postListDto.forEach(p -> {
+            List<ImageDto> imageDtoList = imagesByPostId.get(p.getPostId());
+            if (imageDtoList != null && !imageDtoList.isEmpty()) {
+                p.setImage(imageDtoList.get(0));
+            }
+        });
+    }
+
+    private Map<Long, List<ImageDto>> groupImagesByPostId(List<ImageDto> postImageList) {
+        return postImageList.stream()
+                .collect(Collectors.groupingBy(ImageDto::getPostId));
     }
 }

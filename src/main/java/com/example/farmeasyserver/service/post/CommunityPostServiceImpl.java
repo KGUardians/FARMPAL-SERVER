@@ -8,6 +8,7 @@ import com.example.farmeasyserver.entity.board.community.Comment;
 import com.example.farmeasyserver.entity.board.community.CommunityPost;
 import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.post.community.*;
+import com.example.farmeasyserver.service.file.FileService;
 import com.example.farmeasyserver.util.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,7 @@ public class CommunityPostServiceImpl implements CommunityPostService {
     private final CommunityRepo communityRepo;
     private final CommentJpaRepo commentJpaRepo;
     private final PostService postService;
+    private final FileService fileService;
 
     @Override
     public List<CommunityListDto> getRecentCommunityPostDtos() {
@@ -70,7 +72,7 @@ public class CommunityPostServiceImpl implements CommunityPostService {
     @Override
     public Slice<CommunityListDto> getCommunityPosts(CommunityFilter filter, Pageable pageable) {
         Slice<CommunityListDto> listResponse = communityRepo.findPostList(filter,pageable);
-        postService.imageMapping(listResponse.stream().toList()); return listResponse;
+        fileService.imageMapping(listResponse.stream().toList()); return listResponse;
     }
 
     private List<CommunityListDto> convertCommunityPostsToDtos(List<CommunityPost> recentCommunityPosts){

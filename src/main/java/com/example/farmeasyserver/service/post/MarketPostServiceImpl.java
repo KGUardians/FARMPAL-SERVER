@@ -5,6 +5,7 @@ import com.example.farmeasyserver.dto.post.market.*;
 import com.example.farmeasyserver.entity.board.market.MarketPost;
 import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.post.market.*;
+import com.example.farmeasyserver.service.file.FileService;
 import com.example.farmeasyserver.util.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -21,11 +22,12 @@ public class MarketPostServiceImpl implements MarketPostService{
     private final MarketJpaRepo marketJpaRepo;
     private final MarketRepo marketRepo;
     private final PostService postService;
+    private final FileService fileService;
 
     @Override
     public List<MarketListDto> getRecentMarketPostDtos() {
         List<MarketListDto> recentMarketPosts = marketRepo.findTop4OrderByIdDesc();
-        postService.imageMapping(recentMarketPosts); return recentMarketPosts;
+        fileService.imageMapping(recentMarketPosts); return recentMarketPosts;
     }
 
     @Override
@@ -63,7 +65,7 @@ public class MarketPostServiceImpl implements MarketPostService{
     @Override
     public Slice<MarketListDto> getMarketPosts(MarketFilter filter, Pageable pageable) {
         Slice<MarketListDto> listResponse = marketRepo.findPostList(filter, pageable);
-        postService.imageMapping(listResponse.stream().toList()); return listResponse;
+        fileService.imageMapping(listResponse.stream().toList()); return listResponse;
     }
 
     private MarketPost getMarketPost(Long postId){

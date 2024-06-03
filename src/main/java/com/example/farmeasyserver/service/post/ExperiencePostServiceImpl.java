@@ -7,10 +7,12 @@ import com.example.farmeasyserver.entity.board.exprience.ExpApplication;
 import com.example.farmeasyserver.entity.board.exprience.ExperiencePost;
 import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.post.experience.*;
+import com.example.farmeasyserver.service.file.FileService;
 import com.example.farmeasyserver.util.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,12 +25,13 @@ public class ExperiencePostServiceImpl implements ExperiencePostService{
     private final ExpJpaRepo expJpaRepo;
     private final ExpRepo expRepo;
     private final PostService postService;
+    private final FileService fileService;
     private final ExpAppJpaRepo expAppJpaRepo;
 
     @Override
     public List<ExperienceListDto> getRecentExperiencePostDtos() {
         List<ExperienceListDto> recentExperiencePosts = expRepo.findTop4OrderByIdDesc();
-        postService.imageMapping(recentExperiencePosts); return recentExperiencePosts;
+        fileService.imageMapping(recentExperiencePosts); return recentExperiencePosts;
     }
 
     @Override
@@ -64,7 +67,7 @@ public class ExperiencePostServiceImpl implements ExperiencePostService{
     @Override
     public Slice<ExperienceListDto> getExperiencePosts(ExpFilter filter, Pageable pageable) {
         Slice<ExperienceListDto> listResponse = expRepo.findPostList(filter,pageable);
-        postService.imageMapping(listResponse.stream().toList()); return listResponse;
+        fileService.imageMapping(listResponse.stream().toList()); return listResponse;
     }
 
     @Override

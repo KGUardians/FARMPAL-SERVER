@@ -4,6 +4,7 @@ import com.example.farmeasyserver.config.login.jwt.JwtProperties;
 import com.example.farmeasyserver.dto.TokenDto;
 import com.example.farmeasyserver.dto.user.*;
 import com.example.farmeasyserver.entity.user.Farm;
+import com.example.farmeasyserver.entity.user.Role;
 import com.example.farmeasyserver.repository.FarmJpaRepo;
 import com.example.farmeasyserver.repository.UserJpaRepo;
 import com.example.farmeasyserver.entity.user.User;
@@ -136,4 +137,14 @@ public class UserServiceImpl implements UserService {
     private User findByUsername(String username){
         return userJpaRepo.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("User","username",username));
     }
+
+    private boolean isAuthorized(User user, Long authorId){
+        return user.getRole().equals(Role.ADMIN) || user.getId().equals(authorId);
+    }
+
+    @Override
+    public void checkUser(User user, Long authorId){
+        if(!isAuthorized(user,authorId)) throw new UserException("해당 권한이 없습니다.", HttpStatus.BAD_REQUEST);
+    }
 }
+
