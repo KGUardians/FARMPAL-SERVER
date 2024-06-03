@@ -35,8 +35,8 @@ public class CommunityPostServiceImpl implements CommunityPostService {
     @Override
     public List<CommunityListDto> getRecentCommunityPostDtos() {
         List<CommunityPost> recentCommunityPosts = communityJpaRepo.findTop5OrderByIdDesc();
-        List<CommunityListDto> list = convertCommunityPostsToDtos(recentCommunityPosts);
-        commentMapping(list);
+        List<CommunityListDto> list = postUtil.convertCommunityPostsToDtos(recentCommunityPosts);
+        postUtil.commentMapping(list);
         return list;
     }
 
@@ -77,12 +77,6 @@ public class CommunityPostServiceImpl implements CommunityPostService {
         fileService.imageMapping(listResponse.stream().toList()); return listResponse;
     }
 
-    private List<CommunityListDto> convertCommunityPostsToDtos(List<CommunityPost> recentCommunityPosts){
-        return recentCommunityPosts.stream()
-                .map(CommunityListDto::toDto)
-                .toList();
-    }
-
     /*
 
     커뮤니티 게시글 댓글 작성
@@ -95,31 +89,6 @@ public class CommunityPostServiceImpl implements CommunityPostService {
         Comment comment = new Comment(req.getComment(),post,author);
         commentJpaRepo.save(comment);
         return req;
-    }
-
-    private void commentMapping(List<CommunityListDto> mainPageDto){
-        List<Long> postIds = postUtil.extractPostIds(mainPageDto);
-        List<CommentDto> comments = fetchCommentDtoByPostIds(postIds);
-        mapCommentCountToPostList(mainPageDto, comments);
-    }
-
-    private List<CommentDto> fetchCommentDtoByPostIds(List<Long> postIds){
-        return commentJpaRepo.findCommentDtoListByPostIds(postIds);
-    }
-
-    private void mapCommentCountToPostList(List<CommunityListDto> postListDto, List<CommentDto> postCommentList){
-        Map<Long, List<CommentDto>> imagesByPostId = groupCommentByPostId(postCommentList);
-        postListDto.forEach(p -> {
-            List<CommentDto> CommentDtoList = imagesByPostId.get(p.getPostId());
-            if (CommentDtoList != null && !CommentDtoList.isEmpty()) {
-                p.setCommentCount(CommentDtoList.size());
-            }
-        });
-    }
-
-    private Map<Long, List<CommentDto>> groupCommentByPostId(List<CommentDto> postCommentList) {
-        return postCommentList.stream()
-                .collect(Collectors.groupingBy(CommentDto::getPostId));
     }
 
 }

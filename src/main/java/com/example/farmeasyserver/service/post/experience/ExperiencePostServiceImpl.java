@@ -81,22 +81,10 @@ public class ExperiencePostServiceImpl implements ExperiencePostService {
     @Transactional
     public ExpApplicationRequest requestExpApp(Long postId, ExpApplicationRequest req, User applicant) throws Exception {
         ExperiencePost experiencePost = postUtil.getExperiencePost(postId);
-        validateParticipants(experiencePost, req.getParticipants());
-        processApplication(experiencePost, applicant, req.getParticipants());
+        postUtil.validateParticipants(experiencePost, req.getParticipants());
+        postUtil.processApplication(experiencePost, applicant, req.getParticipants());
         return req;
     }
 
-    private void validateParticipants(ExperiencePost post, int participants) throws Exception {
-        int availableNum = post.getRecruitment().getRecruitmentNum();
-        if(availableNum < participants){
-            throw new Exception("인원이 초과되었습니다.");
-        }
-    }
 
-    private void processApplication(ExperiencePost post, User applicant, int participants){
-        ExpApplication expApplication = new ExpApplication(participants,applicant,post);
-        int remainingNum = post.getRecruitment().getRecruitmentNum() - participants;
-        post.getRecruitment().setRecruitmentNum(remainingNum);
-        expAppJpaRepo.save(expApplication);
-    }
 }
