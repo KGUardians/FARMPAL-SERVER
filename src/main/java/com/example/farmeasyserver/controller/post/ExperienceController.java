@@ -6,7 +6,7 @@ import com.example.farmeasyserver.dto.post.experience.UpdateExpPostReq;
 import com.example.farmeasyserver.dto.response.Response;
 import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.post.experience.ExpFilter;
-import com.example.farmeasyserver.service.post.ExperiencePostService;
+import com.example.farmeasyserver.service.post.experience.ExperiencePostService;
 import com.example.farmeasyserver.service.user.UserService;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Operation;

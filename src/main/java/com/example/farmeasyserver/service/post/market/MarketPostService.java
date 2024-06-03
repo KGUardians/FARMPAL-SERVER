@@ -1,4 +1,4 @@
-package com.example.farmeasyserver.service.post;
+package com.example.farmeasyserver.service.post.market;
 
 import com.example.farmeasyserver.dto.post.CreatePostResponse;
 import com.example.farmeasyserver.dto.post.market.CreateMktPostRequest;

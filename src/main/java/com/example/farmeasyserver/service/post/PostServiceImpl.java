@@ -1,7 +1,6 @@
 package com.example.farmeasyserver.service.post;
 
 import com.example.farmeasyserver.dto.post.*;
-import com.example.farmeasyserver.dto.mainpage.PostListDto;
 import com.example.farmeasyserver.entity.board.Image;
 import com.example.farmeasyserver.entity.board.Post;
 import com.example.farmeasyserver.entity.user.User;

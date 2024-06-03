@@ -59,7 +59,7 @@ public class FileServiceImpl implements FileService {
         return postJpaRepo.findImagesDtoByPostIds(postIdList);
     }
 
-    private  <T extends PostListDto> void mapImageToPosts(List<T> postListDto, List<ImageDto> postImageList){
+    private <T extends PostListDto> void mapImageToPosts(List<T> postListDto, List<ImageDto> postImageList){
         Map<Long, List<ImageDto>> imagesByPostId = groupImagesByPostId(postImageList);
         postListDto.forEach(p -> {
             List<ImageDto> imageDtoList = imagesByPostId.get(p.getPostId());

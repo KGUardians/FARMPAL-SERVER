@@ -2,9 +2,9 @@ package com.example.farmeasyserver.controller;
 
 import com.example.farmeasyserver.dto.mainpage.MainPageDto;
 import com.example.farmeasyserver.dto.response.Response;
-import com.example.farmeasyserver.service.post.CommunityPostService;
-import com.example.farmeasyserver.service.post.ExperiencePostService;
-import com.example.farmeasyserver.service.post.MarketPostService;
+import com.example.farmeasyserver.service.post.community.CommunityPostService;
+import com.example.farmeasyserver.service.post.experience.ExperiencePostService;
+import com.example.farmeasyserver.service.post.market.MarketPostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

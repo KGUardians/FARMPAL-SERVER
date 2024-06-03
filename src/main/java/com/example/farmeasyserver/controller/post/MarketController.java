@@ -6,7 +6,7 @@ import com.example.farmeasyserver.dto.response.Response;
 import com.example.farmeasyserver.entity.board.CropCategory;
 import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.post.market.MarketFilter;
-import com.example.farmeasyserver.service.post.MarketPostService;
+import com.example.farmeasyserver.service.post.market.MarketPostService;
 import com.example.farmeasyserver.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

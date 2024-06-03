@@ -9,7 +9,6 @@ import com.example.farmeasyserver.repository.post.experience.ExpJpaRepo;
 import com.example.farmeasyserver.repository.post.market.MarketJpaRepo;
 import com.example.farmeasyserver.util.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
