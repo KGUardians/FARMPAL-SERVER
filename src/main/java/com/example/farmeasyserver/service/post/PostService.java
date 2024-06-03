@@ -1,67 +1,15 @@
 package com.example.farmeasyserver.service.post;
 
-import com.example.farmeasyserver.dto.post.*;
-import com.example.farmeasyserver.dto.mainpage.PostListDto;
-import com.example.farmeasyserver.entity.board.Image;
+import com.example.farmeasyserver.dto.post.CreatePostRequest;
+import com.example.farmeasyserver.dto.post.UpdatePostRequest;
 import com.example.farmeasyserver.entity.board.Post;
 import com.example.farmeasyserver.entity.user.User;
-import com.example.farmeasyserver.repository.post.PostJpaRepo;
-import com.example.farmeasyserver.service.file.FileService;
-import com.example.farmeasyserver.service.user.UserService;
-import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.stream.IntStream;
+public interface PostService {
 
+    <T extends Post> T createPost(T p, CreatePostRequest req, User author);
 
-@Service
-@RequiredArgsConstructor
-public class PostService {
-    private final PostJpaRepo postJpaRepo;
-    private final FileService fileService;
-    private final UserService userService;
+    void deletePost(Post post, User author);
 
-    public <T extends PostListDto> List<Long> extractPostIds(List<T> pageDto){
-        return pageDto.stream()
-                .map(T::getPostId)
-                .toList();
-    }
-
-    <T extends Post> T createPost(T p, CreatePostRequest req, User author) {
-        p.createPostFromReq(req, author);
-        uploadImages(p.getImageList(),req.getImageList());
-        return p;
-    }
-
-    void deletePost(Post post, User author){
-        userService.checkUser(author,post.getAuthor().getId());
-        deleteImages(post.getImageList());
-        postJpaRepo.delete(post);
-    }
-
-    void updatePost(User author, Post post, UpdatePostRequest req){
-        userService.checkUser(author,post.getAuthor().getId());
-        UpdateImageResult result = post.updatePostFromReq(req);
-        deleteImages(result.getDeletedImageList());
-        uploadImages(result.getAddedImageList(),result.getAddedImageFileList());
-    }
-
-    private void uploadImages(List<Image> images, List<MultipartFile> fileImages) {
-        IntStream.range(0, images.size()).forEach(i -> {
-            try {
-                fileService.upload(fileImages.get(i), images.get(i).getUniqueName());
-            } catch (FileUploadException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
-    private void deleteImages(List<Image> images){
-        images.stream().forEach(i -> fileService.delete(i.getUniqueName()));
-    }
-
-
+    void updatePost(User author, Post post, UpdatePostRequest req);
 }

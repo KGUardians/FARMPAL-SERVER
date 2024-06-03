@@ -7,6 +7,7 @@ import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.post.market.*;
 import com.example.farmeasyserver.service.file.FileService;
 import com.example.farmeasyserver.util.exception.ResourceNotFoundException;
+import com.example.farmeasyserver.util.post.PostUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -23,6 +24,7 @@ public class MarketPostServiceImpl implements MarketPostService{
     private final MarketRepo marketRepo;
     private final PostService postService;
     private final FileService fileService;
+    private final PostUtil postUtil;
 
     @Override
     public List<MarketListDto> getRecentMarketPostDtos() {
@@ -40,14 +42,14 @@ public class MarketPostServiceImpl implements MarketPostService{
 
     @Override
     public MarketPostDto readMarketPost(Long postId){
-        return MarketPostDto.toDto(getMarketPost(postId));
+        return MarketPostDto.toDto(postUtil.getMarketPost(postId));
     }
 
 
     @Override
     @Transactional
     public MarketPostDto updateMarketPost(Long postId, UpdateMktPostReq req, User author) {
-        MarketPost post = getMarketPost(postId);
+        MarketPost post = postUtil.getMarketPost(postId);
         postService.updatePost(author, post, req);
         post.setItem(UpdateMktPostReq.reqToItem(req));
         marketJpaRepo.save(post);
@@ -57,7 +59,7 @@ public class MarketPostServiceImpl implements MarketPostService{
     @Override
     @Transactional
     public Long deleteMarketPost(Long postId, User author) {
-        MarketPost post = getMarketPost(postId);
+        MarketPost post = postUtil.getMarketPost(postId);
         postService.deletePost(post,author);
         return postId;
     }
@@ -68,7 +70,4 @@ public class MarketPostServiceImpl implements MarketPostService{
         fileService.imageMapping(listResponse.stream().toList()); return listResponse;
     }
 
-    private MarketPost getMarketPost(Long postId){
-        return marketJpaRepo.findByIdWithUser(postId).orElseThrow(() -> new ResourceNotFoundException("MarketPost", "marketPost", null));
-    }
 }

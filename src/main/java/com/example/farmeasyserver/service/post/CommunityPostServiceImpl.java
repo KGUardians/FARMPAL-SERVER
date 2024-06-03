@@ -9,7 +9,7 @@ import com.example.farmeasyserver.entity.board.community.CommunityPost;
 import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.post.community.*;
 import com.example.farmeasyserver.service.file.FileService;
-import com.example.farmeasyserver.util.exception.ResourceNotFoundException;
+import com.example.farmeasyserver.util.post.PostUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -29,6 +29,7 @@ public class CommunityPostServiceImpl implements CommunityPostService {
     private final CommentJpaRepo commentJpaRepo;
     private final PostService postService;
     private final FileService fileService;
+    private final PostUtil postUtil;
 
     @Override
     public List<CommunityListDto> getRecentCommunityPostDtos() {
@@ -49,20 +50,20 @@ public class CommunityPostServiceImpl implements CommunityPostService {
     @Override
     @Transactional
     public Long deleteCommunityPost(Long postId, User author) {
-        CommunityPost post = getCommunityPost(postId);
+        CommunityPost post = postUtil.getCommunityPost(postId);
         postService.deletePost(post,author);
         return postId;
     }
 
     @Override
     public CommunityPostDto readCommunityPost(Long postId){
-        return CommunityPostDto.toDto(getCommunityPost(postId));
+        return CommunityPostDto.toDto(postUtil.getCommunityPost(postId));
     }
 
 
     @Override
     public CommunityPostDto updateCommunityPost(Long postId, UpdateCommPostReq req, User author) {
-        CommunityPost post = getCommunityPost(postId);
+        CommunityPost post = postUtil.getCommunityPost(postId);
         postService.updatePost(author, post, req);
         post.setCommunityType(req.getType());
         communityJpaRepo.save(post);
@@ -89,14 +90,14 @@ public class CommunityPostServiceImpl implements CommunityPostService {
     @Override
     @Transactional
     public CommentRequest requestComment(Long postId, CommentRequest req, User author) {
-        CommunityPost post = getCommunityPost(postId);
+        CommunityPost post = postUtil.getCommunityPost(postId);
         Comment comment = new Comment(req.getComment(),post,author);
         commentJpaRepo.save(comment);
         return req;
     }
 
     private void commentMapping(List<CommunityListDto> mainPageDto){
-        List<Long> postIds = postService.extractPostIds(mainPageDto);
+        List<Long> postIds = postUtil.extractPostIds(mainPageDto);
         List<CommentDto> comments = fetchCommentDtoByPostIds(postIds);
         mapCommentCountToPostList(mainPageDto, comments);
     }
@@ -120,7 +121,4 @@ public class CommunityPostServiceImpl implements CommunityPostService {
                 .collect(Collectors.groupingBy(CommentDto::getPostId));
     }
 
-    private CommunityPost getCommunityPost(Long postId){
-        return communityJpaRepo.findByIdWithUser(postId).orElseThrow(()-> new ResourceNotFoundException("CommunityPost", "communityPost", null));
-    }
 }

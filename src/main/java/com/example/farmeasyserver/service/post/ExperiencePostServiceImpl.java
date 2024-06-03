@@ -9,10 +9,10 @@ import com.example.farmeasyserver.entity.user.User;
 import com.example.farmeasyserver.repository.post.experience.*;
 import com.example.farmeasyserver.service.file.FileService;
 import com.example.farmeasyserver.util.exception.ResourceNotFoundException;
+import com.example.farmeasyserver.util.post.PostUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +27,7 @@ public class ExperiencePostServiceImpl implements ExperiencePostService{
     private final PostService postService;
     private final FileService fileService;
     private final ExpAppJpaRepo expAppJpaRepo;
+    private final PostUtil postUtil;
 
     @Override
     public List<ExperienceListDto> getRecentExperiencePostDtos() {
@@ -45,19 +46,19 @@ public class ExperiencePostServiceImpl implements ExperiencePostService{
     @Override
     @Transactional
     public Long deleteExperiencePost(Long postId, User author) {
-        ExperiencePost post = getExperiencePost(postId);
+        ExperiencePost post = postUtil.getExperiencePost(postId);
         postService.deletePost(post,author);
         return postId;
     }
 
     @Override
     public ExperiencePostDto readExperiencePost(Long postId){
-        return ExperiencePostDto.toDto(getExperiencePost(postId));
+        return ExperiencePostDto.toDto(postUtil.getExperiencePost(postId));
     }
 
     @Override
     public ExperiencePostDto updateExperiencePost(Long postId, UpdateExpPostReq req, User author) {
-        ExperiencePost post = getExperiencePost(postId);
+        ExperiencePost post = postUtil.getExperiencePost(postId);
         postService.updatePost(author, post, req);
         post.setRecruitment(UpdateExpPostReq.reqToRecruitment(req));
         expJpaRepo.save(post);
@@ -72,14 +73,14 @@ public class ExperiencePostServiceImpl implements ExperiencePostService{
 
     @Override
     public ExpApplicationPageDto getExpAppPage(Long postId) {
-        ExperiencePost post = getExperiencePost(postId);
+        ExperiencePost post = postUtil.getExperiencePost(postId);
         return ExpApplicationPageDto.toDto(post);
     }
 
     @Override
     @Transactional
     public ExpApplicationRequest requestExpApp(Long postId, ExpApplicationRequest req, User applicant) throws Exception {
-        ExperiencePost experiencePost = getExperiencePost(postId);
+        ExperiencePost experiencePost = postUtil.getExperiencePost(postId);
         validateParticipants(experiencePost, req.getParticipants());
         processApplication(experiencePost, applicant, req.getParticipants());
         return req;
@@ -97,9 +98,5 @@ public class ExperiencePostServiceImpl implements ExperiencePostService{
         int remainingNum = post.getRecruitment().getRecruitmentNum() - participants;
         post.getRecruitment().setRecruitmentNum(remainingNum);
         expAppJpaRepo.save(expApplication);
-    }
-
-    private ExperiencePost getExperiencePost(Long postId){
-        return expJpaRepo.findByIdWithUser(postId).orElseThrow(() -> new ResourceNotFoundException("ExperiencePost", "experiencePost", null));
     }
 }

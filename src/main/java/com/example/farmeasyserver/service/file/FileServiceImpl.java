@@ -3,12 +3,11 @@ package com.example.farmeasyserver.service.file;
 import com.example.farmeasyserver.dto.ImageDto;
 import com.example.farmeasyserver.dto.mainpage.PostListDto;
 import com.example.farmeasyserver.repository.post.PostJpaRepo;
-import com.example.farmeasyserver.service.post.PostService;
+import com.example.farmeasyserver.util.post.PostUtil;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
 public class FileServiceImpl implements FileService {
 
     private final PostJpaRepo postJpaRepo;
-    private final PostService postService;
+    private final PostUtil postUtil;
 
     @Value(value = "${post.image.path}")
     String location;
@@ -51,7 +50,7 @@ public class FileServiceImpl implements FileService {
     }
 
     public <T extends PostListDto> void imageMapping(List<T> mainPageDto){
-        List<Long> postIdList = postService.extractPostIds(mainPageDto);
+        List<Long> postIdList = postUtil.extractPostIds(mainPageDto);
         List<ImageDto> postImages = fetchPostImages(postIdList);
         mapImageToPosts(mainPageDto,postImages);
     }
@@ -74,4 +73,7 @@ public class FileServiceImpl implements FileService {
         return postImageList.stream()
                 .collect(Collectors.groupingBy(ImageDto::getPostId));
     }
+
+
+
 }
