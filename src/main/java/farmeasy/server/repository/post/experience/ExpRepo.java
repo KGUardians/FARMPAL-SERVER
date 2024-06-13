@@ -25,7 +25,7 @@ public class ExpRepo {
         this.query = new JPAQueryFactory(em);
     }
     public List<ExperienceListDto> findTop4OrderByIdDesc(){
-        return em.createQuery("SELECT new com.example.farmeasyserver.dto.post.experience.ExperienceListDto(ep.id,ep.postLike,ep.title,a.address.sigungu,ep.cropCategory,a.farm.farmName,ep.recruitment.startTime) " +
+        return em.createQuery("SELECT new farmeasy.server.dto.post.experience.ExperienceListDto(ep.id,ep.postLike,ep.title,a.address.sigungu,ep.cropCategory,a.farm.farmName,ep.recruitment.startTime) " +
                 "FROM ExperiencePost ep " +
                 "join ep.author a " +
                 "ORDER BY ep.id DESC limit 4", ExperienceListDto.class)
