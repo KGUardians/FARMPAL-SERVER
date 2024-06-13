@@ -6,9 +6,12 @@ import farmeasy.server.entity.board.exprience.Recruitment;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Lob;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+
+@Getter
+@Setter
 public class CreateExpPostRequest extends CreatePostRequest {
 
     @Schema(description = "시작 날짜", example = "2024-05-24")
@@ -24,13 +27,14 @@ public class CreateExpPostRequest extends CreatePostRequest {
     @NotNull(message = "상세 모집 조건을 입력해주세요.")
     @Lob
     private String detailedRecruitmentCondition;
+
     private static Recruitment reqToRecruitment(CreateExpPostRequest req){
-        return new Recruitment(
-                req.getStartDate(),
-                req.getStartTime(),
-                req.getRecruitmentNum(),
-                req.getDetailedRecruitmentCondition()
-        );
+        return Recruitment.builder()
+                .startDate(req.getStartDate())
+                .startTime(req.getStartTime())
+                .recruitmentNum(req.getRecruitmentNum())
+                .detailedRecruitmentCondition(req.getDetailedRecruitmentCondition())
+                .build();
     }
     public static ExperiencePost toEntity(CreateExpPostRequest req){
         return new ExperiencePost(

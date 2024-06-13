@@ -1,11 +1,11 @@
 package farmeasy.server.dto.post.experience.expapplication;
 
 import farmeasy.server.entity.board.exprience.ExperiencePost;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
+@Builder
 public class ExpApplicationPageDto {
     private String farmName;
     private String detailedRecruitmentCondition;
@@ -13,11 +13,12 @@ public class ExpApplicationPageDto {
     private String experienceTime;
 
     public static ExpApplicationPageDto toDto(ExperiencePost post){
-        return new ExpApplicationPageDto(
-                post.getAuthor().getFarm().getFarmName(),
-                post.getRecruitment().getDetailedRecruitmentCondition(),
-                post.getRecruitment().getStartTime(),
-                post.getRecruitment().getStartTime()
-        );
+        return ExpApplicationPageDto.builder()
+                .farmName(post.getAuthor().getFarm().getFarmName())
+                .detailedRecruitmentCondition(post.getRecruitment()
+                        .getDetailedRecruitmentCondition())
+                .experienceDate(post.getRecruitment().getStartDate())
+                .experienceTime(post.getRecruitment().getStartTime())
+                .build();
     }
 }

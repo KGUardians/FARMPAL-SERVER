@@ -1,6 +1,7 @@
 package farmeasy.server.entity.board.market;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +16,7 @@ public class Item {
     private int gram;
     private boolean isAvailable = true;
 
+    @Builder
     public Item(String itemName, int price, int gram){
         this.itemName = itemName;
         this.price = price;

@@ -3,10 +3,12 @@ package farmeasy.server.dto.post.market;
 import farmeasy.server.entity.board.CropCategory;
 import farmeasy.server.dto.mainpage.PostListDto;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 public class MarketListDto extends PostListDto {
 
     private String sigungu;

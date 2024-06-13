@@ -3,11 +3,12 @@ package farmeasy.server.dto.post.experience;
 import farmeasy.server.entity.board.CropCategory;
 import farmeasy.server.dto.mainpage.PostListDto;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 
-
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 public class ExperienceListDto extends PostListDto {
     private String title;

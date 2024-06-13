@@ -4,12 +4,13 @@ import farmeasy.server.dto.ImageDto;
 import farmeasy.server.entity.board.market.Item;
 import farmeasy.server.entity.board.market.MarketPost;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Data
+@Builder
 @AllArgsConstructor
 public class MarketPostDto {
     private Long postId;
@@ -20,13 +21,15 @@ public class MarketPostDto {
     private Item item;
 
     public static MarketPostDto toDto(MarketPost post){
-        return new MarketPostDto(
-                post.getId(),
-                post.getTitle(),
-                MarketAuthorDto.toDto(post.getAuthor()),
-                post.getPostLike(),
-                post.getImageList().stream().map(i->ImageDto.toDto(i,i.getId())).collect(Collectors.toList()),
-                post.getItem()
-        );
+        return MarketPostDto.builder()
+                .postId(post.getId())
+                .title(post.getTitle())
+                .author(MarketAuthorDto.toDto(post.getAuthor()))
+                .postLike(post.getPostLike())
+                .imageList(post.getImageList().stream()
+                        .map(i -> ImageDto.toDto(i, i.getId()))
+                        .collect(Collectors.toList()))
+                .item(post.getItem())
+                .build();
     }
 }

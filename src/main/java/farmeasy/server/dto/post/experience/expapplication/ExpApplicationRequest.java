@@ -1,8 +1,11 @@
 package farmeasy.server.dto.post.experience.expapplication;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+
+@Getter
+@Setter
 public class ExpApplicationRequest {
 
     private int participants;

@@ -4,10 +4,12 @@ import farmeasy.server.dto.post.UpdatePostRequest;
 import farmeasy.server.entity.board.exprience.Recruitment;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Lob;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-@Data
+@Getter
+@Setter
 public class UpdateExpPostReq extends UpdatePostRequest {
     @DateTimeFormat(pattern = "yyyy-mm-dd")
     @Schema(description = "체험 시작 일자", example = "2024-05-24")
@@ -21,11 +23,11 @@ public class UpdateExpPostReq extends UpdatePostRequest {
     private String detailedRecruitmentCondition;
 
     public static Recruitment reqToRecruitment(UpdateExpPostReq req){
-        return new Recruitment(
-                req.getStartDate(),
-                req.getStartTime(),
-                req.getRecruitmentNum(),
-                req.getDetailedRecruitmentCondition()
-        );
+        return Recruitment.builder()
+                .startDate(req.getStartDate())
+                .startTime(req.getStartTime())
+                .recruitmentNum(req.getRecruitmentNum())
+                .detailedRecruitmentCondition(req.getDetailedRecruitmentCondition())
+                .build();
     }
 }
