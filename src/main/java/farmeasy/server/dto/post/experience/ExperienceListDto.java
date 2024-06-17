@@ -1,7 +1,7 @@
 package farmeasy.server.dto.post.experience;
 
-import farmeasy.server.entity.board.CropCategory;
 import farmeasy.server.dto.mainpage.PostListDto;
+import farmeasy.server.entity.board.CropCategory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

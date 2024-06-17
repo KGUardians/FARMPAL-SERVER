@@ -1,7 +1,9 @@
 package farmeasy.server.dto.post.experience.expapplication;
 
 import farmeasy.server.entity.board.exprience.ExperiencePost;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter

@@ -1,10 +1,10 @@
 package farmeasy.server.repository.post.market;
 
-import farmeasy.server.dto.post.market.MarketListDto;
-import farmeasy.server.entity.board.CropCategory;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import farmeasy.server.dto.post.market.MarketListDto;
+import farmeasy.server.entity.board.CropCategory;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static farmeasy.server.entity.board.market.QMarketPost.*;
+import static farmeasy.server.entity.board.market.QMarketPost.marketPost;
 
 @Repository
 public class MarketRepo {
@@ -32,7 +32,7 @@ public class MarketRepo {
                         "join mp.author a " +
                         "ORDER BY mp.id DESC limit 4", MarketListDto.class)
                 .getResultList();
-    };
+    }
 
     public Slice<MarketListDto> findPostList(MarketFilter filter, Pageable pageable){
 

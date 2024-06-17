@@ -1,8 +1,8 @@
 package farmeasy.server.controller.post;
 
-import farmeasy.server.dto.post.community.comment.CommentRequest;
 import farmeasy.server.dto.post.community.CreateCommPostRequest;
 import farmeasy.server.dto.post.community.UpdateCommPostReq;
+import farmeasy.server.dto.post.community.comment.CommentRequest;
 import farmeasy.server.dto.response.Response;
 import farmeasy.server.entity.board.CropCategory;
 import farmeasy.server.entity.board.community.CommunityType;

@@ -5,7 +5,6 @@ import farmeasy.server.entity.board.market.Item;
 import farmeasy.server.entity.board.market.MarketPost;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 
 import java.util.List;
 import java.util.stream.Collectors;

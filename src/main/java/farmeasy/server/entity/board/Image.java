@@ -21,7 +21,7 @@ public class Image {
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
-    private final static String supportedExtension[] = {"jpg","jpeg","gif","bmp","png"};
+    private final static String[] supportedExtension = {"jpg","jpeg","gif","bmp","png"};
 
     public Image(String imageName){
         this.originName = imageName;
@@ -35,7 +35,7 @@ public class Image {
     }
 
     private String generatedUniqueName(String extension){
-        return UUID.randomUUID().toString()+"."+extension;
+        return UUID.randomUUID() +"."+extension;
     }
 
     private String extractExtension(String imageName){

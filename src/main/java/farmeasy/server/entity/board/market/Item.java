@@ -1,6 +1,7 @@
 package farmeasy.server.entity.board.market;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;

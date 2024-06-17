@@ -1,11 +1,11 @@
 package farmeasy.server.repository.post.community;
 
-import farmeasy.server.dto.post.community.CommunityListDto;
-import farmeasy.server.entity.board.CropCategory;
-import farmeasy.server.entity.board.community.CommunityType;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import farmeasy.server.dto.post.community.CommunityListDto;
+import farmeasy.server.entity.board.CropCategory;
+import farmeasy.server.entity.board.community.CommunityType;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static farmeasy.server.entity.board.community.QCommunityPost.*;
+import static farmeasy.server.entity.board.community.QCommunityPost.communityPost;
 
 @Repository
 public class CommunityRepo {

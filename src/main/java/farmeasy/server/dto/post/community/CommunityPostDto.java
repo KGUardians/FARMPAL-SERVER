@@ -4,7 +4,9 @@ import farmeasy.server.dto.ImageDto;
 import farmeasy.server.entity.board.CropCategory;
 import farmeasy.server.entity.board.community.CommunityPost;
 import farmeasy.server.entity.board.community.CommunityType;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.stream.Collectors;

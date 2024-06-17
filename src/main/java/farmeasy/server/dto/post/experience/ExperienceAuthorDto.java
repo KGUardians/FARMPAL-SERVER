@@ -3,7 +3,10 @@ package farmeasy.server.dto.post.experience;
 import farmeasy.server.dto.user.FarmDto;
 import farmeasy.server.entity.user.Role;
 import farmeasy.server.entity.user.User;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @AllArgsConstructor
 @Getter

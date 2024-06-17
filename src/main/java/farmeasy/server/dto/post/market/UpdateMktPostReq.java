@@ -1,7 +1,6 @@
 package farmeasy.server.dto.post.market;
 
 import farmeasy.server.dto.post.UpdatePostRequest;
-
 import farmeasy.server.entity.board.market.Item;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

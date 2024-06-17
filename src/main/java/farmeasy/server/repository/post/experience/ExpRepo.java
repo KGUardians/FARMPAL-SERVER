@@ -1,9 +1,9 @@
 package farmeasy.server.repository.post.experience;
 
-import farmeasy.server.dto.post.experience.ExperienceListDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import farmeasy.server.dto.post.experience.ExperienceListDto;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static farmeasy.server.entity.board.exprience.QExperiencePost.*;
+import static farmeasy.server.entity.board.exprience.QExperiencePost.experiencePost;
 
 @Repository
 public class ExpRepo {

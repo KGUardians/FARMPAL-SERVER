@@ -2,7 +2,9 @@ package farmeasy.server.entity.board.market;
 
 import farmeasy.server.entity.board.Post;
 import farmeasy.server.entity.board.PostType;
-import jakarta.persistence.*;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
 import lombok.Data;
 
 @Entity

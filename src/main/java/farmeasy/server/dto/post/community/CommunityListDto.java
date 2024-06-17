@@ -1,9 +1,12 @@
 package farmeasy.server.dto.post.community;
 
+import farmeasy.server.dto.mainpage.PostListDto;
 import farmeasy.server.entity.board.CropCategory;
 import farmeasy.server.entity.board.community.CommunityPost;
-import farmeasy.server.dto.mainpage.PostListDto;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @AllArgsConstructor
 @Getter
