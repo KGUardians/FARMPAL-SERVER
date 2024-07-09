@@ -28,6 +28,7 @@ public class PostServiceImpl implements PostService{
     public <T extends Post> T createPost(T p, CreatePostRequest req, User author) {
         p.createPostFromReq(req, author);
         uploadImages(p.getImageList(),req.getImageList());
+        System.out.println("hi");
         return p;
     }
 
