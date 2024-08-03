@@ -34,7 +34,7 @@ public class MarketController {
 
     @PostMapping
     @Operation(summary = "마켓 게시글 작성")
-    public Response createPost(@Valid @ModelAttribute CreateMktPostRequest req) {
+    public Response createPost(@Valid @RequestPart CreateMktPostRequest req) {
         User author = userService.getByUsername();
         return Response.success(marketPostService.createMarketPost(req, author));
     }

@@ -42,7 +42,7 @@ public class CommunityController {
     @PostMapping
     @Operation(summary = "커뮤니티 게시글 등록")
     public Response createPost(
-            @Valid @ModelAttribute CreateCommPostRequest req) {
+            @Valid @RequestPart CreateCommPostRequest req) {
         User author = userService.getByUsername();
         return Response.success(communityPostService.createCommunityPost(req, author));
     }

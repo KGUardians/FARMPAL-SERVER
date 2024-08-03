@@ -33,7 +33,7 @@ public class ExperienceController {
 
     @PostMapping
     @Operation(summary = "농촌체험 게시글 작성")
-    public Response createPost(@Valid @ModelAttribute CreateExpPostRequest req) {
+    public Response createPost(@Valid @RequestPart CreateExpPostRequest req) {
         User author = userService.getByUsername();
         return Response.success(experiencePostService.createExperiencePost(req, author));
     }
