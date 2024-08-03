@@ -60,6 +60,7 @@ public class CommunityPostServiceImpl implements CommunityPostService {
     }
 
     @Override
+    @Transactional
     public CommunityPostDto readCommunityPost(Long postId){
         return CommunityPostDto.toDto(postUtil.getCommunityPost(postId));
     }

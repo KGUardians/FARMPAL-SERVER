@@ -16,6 +16,7 @@ import farmeasy.server.repository.post.market.MarketJpaRepo;
 import farmeasy.server.util.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -44,7 +45,11 @@ public class PostUtil {
     */
 
     public CommunityPost getCommunityPost(Long postId){
-        return communityJpaRepo.findByIdWithUser(postId).orElseThrow(()-> new ResourceNotFoundException("CommunityPost", "communityPost", null));
+        CommunityPost communityPost = communityJpaRepo.findByIdWithUser(postId)
+                .orElseThrow(()-> new ResourceNotFoundException("CommunityPost", "communityPost", null));
+        int viewCount = communityPost.getViewCount();
+        communityPost.setViewCount(viewCount + 1);
+        return communityPost;
     }
 
     public List<CommunityListDto> convertCommunityPostsToDtos(List<CommunityPost> recentCommunityPosts){
@@ -86,7 +91,11 @@ public class PostUtil {
     */
 
     public MarketPost getMarketPost(Long postId){
-        return marketJpaRepo.findByIdWithUser(postId).orElseThrow(() -> new ResourceNotFoundException("ExperiencePost", "experiencePost", null));
+        MarketPost marketPost = marketJpaRepo.findByIdWithUser(postId)
+                .orElseThrow(() -> new ResourceNotFoundException("ExperiencePost", "experiencePost", null));
+        marketPost.viewCountUp();
+
+        return marketPost;
     }
 
 
@@ -97,7 +106,11 @@ public class PostUtil {
 
     */
     public ExperiencePost getExperiencePost(Long postId){
-        return expJpaRepo.findByIdWithUser(postId).orElseThrow(() -> new ResourceNotFoundException("ExperiencePost", "experiencePost", null));
+        ExperiencePost experiencePost = expJpaRepo.findByIdWithUser(postId)
+                .orElseThrow(() -> new ResourceNotFoundException("ExperiencePost", "experiencePost", null));
+        experiencePost.viewCountUp();
+
+        return experiencePost;
     }
 
     public void validateParticipants(ExperiencePost post, int participants) throws Exception {

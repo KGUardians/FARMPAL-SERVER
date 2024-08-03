@@ -57,7 +57,7 @@ public abstract class Post {
         return imageFileList.stream().map(i -> new Image(i.getOriginalFilename())).toList();
     }
     private void addImageList(List<Image> imageList) {
-        imageList.stream().forEach(i -> {
+        imageList.forEach(i -> {
             this.imageList.add(i);
             i.setPost(this);
         });
@@ -101,6 +101,10 @@ public abstract class Post {
     private void setAuthor(User author){
         this.author = author;
         author.getPostList().add(this);
+    }
+
+    public void viewCountUp(){
+        this.setViewCount(this.getViewCount() + 1);
     }
 
 }

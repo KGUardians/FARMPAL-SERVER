@@ -22,6 +22,7 @@ public class CommunityPostDto {
     private CommunityType communityType;
     private CropCategory cropCategory;
     private String content;
+    private int viewCount;
     private List<ImageDto> imageList;
 
     public static CommunityPostDto toDto(CommunityPost post){
@@ -33,6 +34,7 @@ public class CommunityPostDto {
                 .communityType(post.getCommunityType())
                 .cropCategory(post.getCropCategory())
                 .content(post.getContent())
+                .viewCount(post.getViewCount())
                 .imageList(post.getImageList().stream()
                         .map(i->ImageDto.toDto(i, i.getId()))
                         .collect(Collectors.toList()))

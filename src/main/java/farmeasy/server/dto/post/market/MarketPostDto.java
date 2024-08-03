@@ -17,6 +17,7 @@ public class MarketPostDto {
     private MarketAuthorDto author;
     private int postLike;
     private List<ImageDto> imageList;
+    private int viewCount;
     private Item item;
 
     public static MarketPostDto toDto(MarketPost post){
@@ -25,6 +26,7 @@ public class MarketPostDto {
                 .title(post.getTitle())
                 .author(MarketAuthorDto.toDto(post.getAuthor()))
                 .postLike(post.getPostLike())
+                .viewCount(post.getViewCount())
                 .imageList(post.getImageList().stream()
                         .map(i -> ImageDto.toDto(i, i.getId()))
                         .collect(Collectors.toList()))

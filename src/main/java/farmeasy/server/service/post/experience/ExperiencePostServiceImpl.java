@@ -58,6 +58,7 @@ public class ExperiencePostServiceImpl implements ExperiencePostService {
     }
 
     @Override
+    @Transactional
     public ExperiencePostDto readExperiencePost(Long postId){
         return ExperiencePostDto.toDto(postUtil.getExperiencePost(postId));
     }

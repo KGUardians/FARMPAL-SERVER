@@ -46,6 +46,7 @@ public class MarketPostServiceImpl implements MarketPostService {
     }
 
     @Override
+    @Transactional
     public MarketPostDto readMarketPost(Long postId){
         return MarketPostDto.toDto(postUtil.getMarketPost(postId));
     }

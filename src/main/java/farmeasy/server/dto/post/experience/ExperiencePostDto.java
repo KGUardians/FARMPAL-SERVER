@@ -22,6 +22,7 @@ public class ExperiencePostDto {
     private int postLike;
     private CropCategory cropCategory;
     private ExperienceAuthorDto author;
+    private int viewCount;
     private List<ImageDto> imageList;
     private Recruitment recruitment;
 
@@ -31,6 +32,7 @@ public class ExperiencePostDto {
                 .title(post.getTitle())
                 .postLike(post.getPostLike())
                 .cropCategory(post.getCropCategory())
+                .viewCount(post.getViewCount())
                 .author(ExperienceAuthorDto.toDto(post.getAuthor()))
                 .imageList(post.getImageList().stream()
                         .map(i->ImageDto.toDto(i, i.getId()))
