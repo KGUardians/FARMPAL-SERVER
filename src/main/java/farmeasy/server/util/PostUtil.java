@@ -3,11 +3,13 @@ package farmeasy.server.util;
 import farmeasy.server.dto.mainpage.PostListDto;
 import farmeasy.server.dto.post.community.CommunityListDto;
 import farmeasy.server.dto.post.community.comment.CommentDto;
+import farmeasy.server.entity.board.Post;
 import farmeasy.server.entity.board.community.CommunityPost;
 import farmeasy.server.entity.board.exprience.ExpApplication;
 import farmeasy.server.entity.board.exprience.ExperiencePost;
 import farmeasy.server.entity.board.market.MarketPost;
 import farmeasy.server.entity.user.User;
+import farmeasy.server.repository.post.PostJpaRepo;
 import farmeasy.server.repository.post.community.CommentJpaRepo;
 import farmeasy.server.repository.post.community.CommunityJpaRepo;
 import farmeasy.server.repository.post.experience.ExpAppJpaRepo;
@@ -16,7 +18,6 @@ import farmeasy.server.repository.post.market.MarketJpaRepo;
 import farmeasy.server.util.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -31,11 +32,16 @@ public class PostUtil {
     private final ExpAppJpaRepo expAppJpaRepo;
     private final MarketJpaRepo marketJpaRepo;
     private final CommentJpaRepo commentJpaRepo;
+    private final PostJpaRepo postJpaRepo;
 
     public <T extends PostListDto> List<Long> extractPostIds(List<T> pageDto) {
         return pageDto.stream()
                 .map(T::getPostId)
                 .toList();
+    }
+
+    public Post findPost(Long postId) {
+        return postJpaRepo.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post", "Post Id", postId + ""));
     }
 
     /*
@@ -47,8 +53,8 @@ public class PostUtil {
     public CommunityPost getCommunityPost(Long postId){
         CommunityPost communityPost = communityJpaRepo.findByIdWithUser(postId)
                 .orElseThrow(()-> new ResourceNotFoundException("CommunityPost", "communityPost", null));
-        int viewCount = communityPost.getViewCount();
-        communityPost.setViewCount(viewCount + 1);
+        communityPost.increaseViewCount();
+
         return communityPost;
     }
 
@@ -93,7 +99,7 @@ public class PostUtil {
     public MarketPost getMarketPost(Long postId){
         MarketPost marketPost = marketJpaRepo.findByIdWithUser(postId)
                 .orElseThrow(() -> new ResourceNotFoundException("ExperiencePost", "experiencePost", null));
-        marketPost.viewCountUp();
+        marketPost.increaseViewCount();
 
         return marketPost;
     }
@@ -108,7 +114,7 @@ public class PostUtil {
     public ExperiencePost getExperiencePost(Long postId){
         ExperiencePost experiencePost = expJpaRepo.findByIdWithUser(postId)
                 .orElseThrow(() -> new ResourceNotFoundException("ExperiencePost", "experiencePost", null));
-        experiencePost.viewCountUp();
+        experiencePost.increaseViewCount();
 
         return experiencePost;
     }
