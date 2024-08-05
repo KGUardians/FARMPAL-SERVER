@@ -10,8 +10,11 @@ import farmeasy.server.repository.FarmJpaRepo;
 import farmeasy.server.repository.UserJpaRepo;
 import farmeasy.server.util.exception.ResourceNotFoundException;
 import farmeasy.server.util.exception.user.UserException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -48,13 +51,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserTokenDto signIn(LoginReq req) {
+    @Transactional
+    public ResponseEntity<String> signIn(LoginReq req, HttpServletResponse response) {
         User user = authenticate(req.getUsername(), req.getPassword());
         checkEncodePassword(req.getPassword(),user.getPassword());
+
         TokenDto token = jwtProperties.generateToken(user);
+        String accessToken = token.getAccessToken();
+        String refreshToken = token.getRefreshToken();
+
         user.setRefreshToken(token.getRefreshToken());
-        userJpaRepo.save(user);
-        return UserTokenDto.toDto(user,token);
+        putRefreshTokenInCookie(response, refreshToken);
+        return ResponseEntity.ok(accessToken);
     }
 
     @Override
@@ -78,12 +86,34 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public TokenDto refreshToken(String refreshToken){
-        String username = jwtProperties.getUsernameFromToken(refreshToken);
-        User user = findByUsername(username);
-        validateRefreshToken(refreshToken, user.getRefreshToken());
-        jwtProperties.validateToken(refreshToken,user);
-        return jwtProperties.generateToken(user);
+    @Transactional
+    public ResponseEntity<String> refreshToken(Cookie[] cookies){
+        String refreshToken = getRefreshToken(cookies);
+
+        if (refreshToken != null){
+            String username = jwtProperties.getUsernameFromToken(refreshToken);
+            User user = findByUsername(username);
+            jwtProperties.validateToken(refreshToken, user);
+            validateRefreshToken(refreshToken, user.getRefreshToken());
+            return ResponseEntity.ok(jwtProperties.generateToken(user).getAccessToken());
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
+        }
+
+    }
+
+    private String getRefreshToken(Cookie[] cookies){
+        String refreshToken = null;
+
+        if(cookies != null){
+            for(Cookie cookie : cookies){
+                if(cookie.getName().equals("refreshToken")){
+                    refreshToken = cookie.getValue();
+                }
+            }
+        }
+
+        return refreshToken;
     }
 
     private User authenticate(String username, String pwd) {
@@ -129,13 +159,13 @@ public class UserServiceImpl implements UserService {
     }
 
     private void validateRefreshToken(String refreshToken, String userRefreshToken) {
-        if (!refreshToken.equals(" "+userRefreshToken)) {
-            throw new SecurityException("Refresh token이 일치하지 않습니다.");
+        if (!refreshToken.equals(userRefreshToken)) {
+            throw new SecurityException("Refresh token does not match");
         }
     }
 
     private User findByUsername(String username){
-        return userJpaRepo.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("User","username",username));
+        return userJpaRepo.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
     }
 
     private boolean isAuthorized(User user, Long authorId){
@@ -145,6 +175,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public void checkUser(User user, Long authorId){
         if(!isAuthorized(user,authorId)) throw new UserException("해당 권한이 없습니다.", HttpStatus.BAD_REQUEST);
+    }
+
+    private void putRefreshTokenInCookie(HttpServletResponse response, String refreshToken){
+        addJwtInCookie(response, refreshToken);
+    }
+
+    private void addJwtInCookie(HttpServletResponse response, String token){
+        Cookie cookie = new Cookie("refreshToken", token);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        response.addCookie(cookie);
     }
 }
 

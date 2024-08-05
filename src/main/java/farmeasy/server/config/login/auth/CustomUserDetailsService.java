@@ -15,6 +15,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserJpaRepo userJpaRepo;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userJpaRepo.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("UserDetails","userDetails",null));
+        return userJpaRepo.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("username", "username", username));
     }
 }
