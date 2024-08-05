@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;
-    private final JwtProperties jwtProperties;
 
     @PostMapping("/sign-up")
     @Operation(summary = "유저 회원가입 요청")
