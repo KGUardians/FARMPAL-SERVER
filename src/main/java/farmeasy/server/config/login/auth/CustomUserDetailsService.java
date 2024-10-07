@@ -1,6 +1,6 @@
 package farmeasy.server.config.login.auth;
 
-import farmeasy.server.repository.UserJpaRepo;
+import farmeasy.server.user.repository.UserJpaRepo;
 import farmeasy.server.util.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

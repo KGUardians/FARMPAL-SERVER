@@ -106,8 +106,9 @@ public class JwtProperties implements Serializable {
         String header = extractHeader(request);
         if (header != null && header.startsWith(TOKEN_PREFIX)) {
             return header.replace(TOKEN_PREFIX, " ");
+        }else {
+            throw new SecurityException("토큰 형식이 올바르지 않습니다.");
         }
-        return null;
     }
 
     private String extractHeader(HttpServletRequest request){
