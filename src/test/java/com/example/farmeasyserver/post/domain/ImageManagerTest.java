@@ -1,5 +1,6 @@
 package com.example.farmeasyserver.post.domain;
 
+import com.example.farmeasyserver.file.repository.FileFakeRepository;
 import farmeasy.server.file.domain.Image;
 import farmeasy.server.file.service.FileService;
 import farmeasy.server.file.service.ImageManager;
@@ -16,11 +17,11 @@ import static org.mockito.Mockito.*;
 class ImageManagerTest {
 
     private ImageManager imageManager;
-    private FileService fileService;  // Fake로 설정
+    private FileService fileService;
 
     @BeforeEach
     void setUp() {
-        fileService = mock(FileService.class);
+        fileService = mock(FileFakeRepository.class);
         imageManager = new ImageManager(fileService);
     }
 
