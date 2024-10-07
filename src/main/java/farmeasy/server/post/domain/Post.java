@@ -1,6 +1,7 @@
 package farmeasy.server.post.domain;
 
 import farmeasy.server.file.domain.Image;
+import farmeasy.server.file.service.ImageManager;
 import farmeasy.server.post.dto.CreatePostRequest;
 import farmeasy.server.post.dto.UpdateImageResult;
 import farmeasy.server.post.dto.UpdatePostRequest;
@@ -8,7 +9,6 @@ import farmeasy.server.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -66,7 +66,7 @@ public abstract class Post {
     protected void onUpdate(){
         updatedTime = LocalDateTime.now();
     }
-
+/*
     private List<Image> convertImageFileToImage(List<MultipartFile> imageFileList){
         return imageFileList.stream().map(i -> new Image(i.getOriginalFilename())).toList();
     }
@@ -75,27 +75,29 @@ public abstract class Post {
             this.imageList.add(i);
             i.setPost(this);
         });
-    }
-    public void createPostFromReq(CreatePostRequest req, User author){
+    }*/
+    public void createPostFromReq(CreatePostRequest req, User author, ImageManager imageManager){
         this.title = req.getTitle();
         this.content = req.getContent();
         this.cropCategory = req.getCropCategory();
         this.setAuthor(author);
-        this.addImageList(convertImageFileToImage(req.getImageList()));
+        imageManager.addImageList(this, imageManager.convertImageFileToImage(req.getImageList()));
     }
 
-    public UpdateImageResult updatePostFromReq(UpdatePostRequest req) { // 1
+    public UpdateImageResult updatePostFromReq(UpdatePostRequest req, ImageManager imageManager) { // 1
         this.title = req.getTitle();
         this.content = req.getContent();
         this.cropCategory = req.getCropCategory();
-        UpdateImageResult result = new UpdateImageResult(req.getAddedImages(),
-                convertImageFileToImage(req.getAddedImages()),
-                convertImageIdsToImages(req.getDeletedImages()));
-        addImageList(result.getAddedImageList());
-        deleteImageList(result.getDeletedImageList());
-        return result;
+
+        List<Image> addedImages = imageManager.convertImageFileToImage(req.getAddedImages());
+        List<Image> deletedImages = imageManager.convertImageIdsToImages(this, req.getDeletedImages());
+
+        imageManager.addImageList(this, addedImages);
+        imageManager.deleteImageList(this, deletedImages);
+        return new UpdateImageResult(req.getAddedImages(), addedImages, deletedImages);
     }
 
+/*
     private List<Image> convertImageIdsToImages(List<Long> imageIds) {
         return imageIds.stream()
                 .map(this::convertImageIdToImage)
@@ -111,6 +113,7 @@ public abstract class Post {
     private void deleteImageList(List<Image> deleted) {
         deleted.stream().forEach(di -> this.imageList.remove(di));
     }
+*/
 
     private void setAuthor(User author){
         this.author = author;

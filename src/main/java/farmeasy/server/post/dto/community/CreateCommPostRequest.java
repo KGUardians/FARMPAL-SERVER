@@ -1,4 +1,4 @@
-package farmeasy.server.dto.post.community;
+package farmeasy.server.post.dto.community;
 
 import farmeasy.server.post.domain.community.CommunityPost;
 import farmeasy.server.post.domain.community.CommunityType;

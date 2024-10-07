@@ -54,3 +54,8 @@ clean {	delete file('src/main/generated')}
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+test {
+	jvmArgs '-XX:+EnableDynamicAgentLoading'
+}
+

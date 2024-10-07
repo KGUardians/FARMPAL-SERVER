@@ -3,6 +3,7 @@ package farmeasy.server.post.controller;
 import farmeasy.server.dto.response.Response;
 import farmeasy.server.post.domain.CropCategory;
 import farmeasy.server.post.domain.community.CommunityType;
+import farmeasy.server.post.dto.community.CreateCommPostRequest;
 import farmeasy.server.post.dto.community.UpdateCommPostReq;
 import farmeasy.server.user.domain.User;
 import farmeasy.server.post.repository.community.CommunityFilter;
@@ -40,7 +41,7 @@ public class CommunityController {
     @PostMapping
     @Operation(summary = "커뮤니티 게시글 등록")
     public Response createPost(
-            @Valid @RequestPart farmeasy.server.dto.post.community.CreateCommPostRequest req) {
+            @Valid @RequestPart CreateCommPostRequest req) {
         User author = userService.getByUsername();
         return Response.success(communityPostService.createCommunityPost(req, author));
     }

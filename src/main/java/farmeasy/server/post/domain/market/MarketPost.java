@@ -6,7 +6,9 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Lob;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Data
 public class MarketPost extends Post {

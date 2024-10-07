@@ -1,7 +1,6 @@
 package farmeasy.server.post.service.experience;
 
-import farmeasy.server.dto.post.experience.expapplication.ExpApplicationPageDto;
-import farmeasy.server.dto.post.experience.expapplication.ExpApplicationRequest;
+import farmeasy.server.post.domain.exprience.ExperiencePost;
 import farmeasy.server.post.dto.CreatePostResponse;
 import farmeasy.server.post.dto.experience.CreateExpPostRequest;
 import farmeasy.server.post.dto.experience.ExperienceListDto;
@@ -28,8 +27,5 @@ public interface ExperiencePostService {
 
     Slice<ExperienceListDto> getExperiencePosts(ExpFilter filter, Pageable pageable);
 
-    ExpApplicationPageDto getExpAppPage(Long postId);
-
-    ExpApplicationRequest requestExpApp(Long postId, ExpApplicationRequest req, User applicants) throws Exception;
-
+    ExperiencePost getExperiencePost(Long postId);
 }

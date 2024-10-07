@@ -1,4 +1,4 @@
-package farmeasy.server.dto.post.experience.expapplication;
+package farmeasy.server.post.dto.experience.expapplication;
 
 import farmeasy.server.post.domain.exprience.ExperiencePost;
 import lombok.Builder;

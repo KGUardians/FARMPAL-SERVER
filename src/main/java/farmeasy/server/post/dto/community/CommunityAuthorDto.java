@@ -1,4 +1,4 @@
-package farmeasy.server.dto.post.community;
+package farmeasy.server.post.dto.community;
 
 import farmeasy.server.user.domain.Role;
 import farmeasy.server.user.domain.User;

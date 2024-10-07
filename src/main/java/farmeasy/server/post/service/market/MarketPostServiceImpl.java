@@ -6,13 +6,13 @@ import farmeasy.server.post.dto.market.CreateMktPostRequest;
 import farmeasy.server.post.dto.market.MarketListDto;
 import farmeasy.server.post.dto.market.MarketPostDto;
 import farmeasy.server.post.dto.market.UpdateMktPostReq;
+import farmeasy.server.post.service.ImageMappingService;
 import farmeasy.server.user.domain.User;
 import farmeasy.server.post.repository.market.MarketFilter;
 import farmeasy.server.post.repository.market.MarketJpaRepo;
 import farmeasy.server.post.repository.market.MarketRepo;
-import farmeasy.server.file.service.FileService;
 import farmeasy.server.post.service.PostService;
-import farmeasy.server.util.PostUtil;
+import farmeasy.server.util.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -28,13 +28,12 @@ public class MarketPostServiceImpl implements MarketPostService {
     private final MarketJpaRepo marketJpaRepo;
     private final MarketRepo marketRepo;
     private final PostService postService;
-    private final FileService fileService;
-    private final PostUtil postUtil;
+    private final ImageMappingService imageMappingService;
 
     @Override
     public List<MarketListDto> getRecentMarketPostDtos() {
         List<MarketListDto> recentMarketPosts = marketRepo.findTop4OrderByIdDesc();
-        fileService.imageMapping(recentMarketPosts); return recentMarketPosts;
+        imageMappingService.imageMapping(recentMarketPosts); return recentMarketPosts;
     }
 
     @Override
@@ -48,14 +47,14 @@ public class MarketPostServiceImpl implements MarketPostService {
     @Override
     @Transactional
     public MarketPostDto readMarketPost(Long postId){
-        return MarketPostDto.toDto(postUtil.getMarketPost(postId));
+        return MarketPostDto.toDto(getMarketPost(postId));
     }
 
 
     @Override
     @Transactional
     public MarketPostDto updateMarketPost(Long postId, UpdateMktPostReq req, User author) {
-        MarketPost post = postUtil.getMarketPost(postId);
+        MarketPost post = getMarketPost(postId);
         postService.updatePost(author, post, req);
         post.setItem(UpdateMktPostReq.reqToItem(req));
         marketJpaRepo.save(post);
@@ -65,7 +64,7 @@ public class MarketPostServiceImpl implements MarketPostService {
     @Override
     @Transactional
     public Long deleteMarketPost(Long postId, User author) {
-        MarketPost post = postUtil.getMarketPost(postId);
+        MarketPost post = getMarketPost(postId);
         postService.deletePost(post,author);
         return postId;
     }
@@ -73,7 +72,15 @@ public class MarketPostServiceImpl implements MarketPostService {
     @Override
     public Slice<MarketListDto> getMarketPosts(MarketFilter filter, Pageable pageable) {
         Slice<MarketListDto> listResponse = marketRepo.findPostList(filter, pageable);
-        fileService.imageMapping(listResponse.stream().toList()); return listResponse;
+        imageMappingService.imageMapping(listResponse.stream().toList());
+        return listResponse;
     }
 
+    private MarketPost getMarketPost(Long postId){
+        MarketPost marketPost = marketJpaRepo.findByIdWithUser(postId)
+                .orElseThrow(() -> new ResourceNotFoundException("ExperiencePost", "experiencePost", null));
+        marketPost.increaseViewCount();
+
+        return marketPost;
+    }
 }

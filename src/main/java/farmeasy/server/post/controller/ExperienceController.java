@@ -3,6 +3,8 @@ package farmeasy.server.post.controller;
 import farmeasy.server.dto.response.Response;
 import farmeasy.server.post.dto.experience.CreateExpPostRequest;
 import farmeasy.server.post.dto.experience.UpdateExpPostReq;
+import farmeasy.server.post.dto.experience.expapplication.ExpApplicationRequest;
+import farmeasy.server.post.service.experience.ExpApplicationService;
 import farmeasy.server.user.domain.User;
 import farmeasy.server.post.repository.experience.ExpFilter;
 import farmeasy.server.post.service.experience.ExperiencePostService;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ExperienceController {
     private final ExperiencePostService experiencePostService;
+    private final ExpApplicationService expApplicationService;
     private final UserService userService;
 
     @GetMapping
@@ -60,14 +63,14 @@ public class ExperienceController {
     @GetMapping("/{postId}/application")
     @Operation(summary = "해당 체험 게시글 신청 폼")
     public Response getExpAppPage(@PathVariable Long postId){
-        return Response.success(experiencePostService.getExpAppPage(postId));
+        return Response.success(expApplicationService.getExpAppPage(postId));
     }
 
     @PostMapping("/{postId}/application")
     @Operation(summary = "해당 체험 게시글 신청 요청")
-    public Response requestExpApp(@PathVariable Long postId, @RequestBody farmeasy.server.dto.post.experience.expapplication.ExpApplicationRequest req) throws Exception {
+    public Response requestExpApp(@PathVariable Long postId, @RequestBody ExpApplicationRequest req) throws Exception {
         User applicant = userService.getByUsername();
-        return Response.success(experiencePostService.requestExpApp(postId, req, applicant));
+        return Response.success(expApplicationService.requestExpApp(postId, req, applicant));
     }
 
 }

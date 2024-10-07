@@ -1,10 +1,10 @@
 package farmeasy.server.post.service.community;
 
-import farmeasy.server.dto.post.community.CommunityListDto;
-import farmeasy.server.dto.post.community.CommunityPostDto;
-import farmeasy.server.dto.post.community.CreateCommPostRequest;
 import farmeasy.server.dto.post.community.comment.CommentRequest;
 import farmeasy.server.post.dto.CreatePostResponse;
+import farmeasy.server.post.dto.community.CommunityListDto;
+import farmeasy.server.post.dto.community.CommunityPostDto;
+import farmeasy.server.post.dto.community.CreateCommPostRequest;
 import farmeasy.server.post.dto.community.UpdateCommPostReq;
 import farmeasy.server.user.domain.User;
 import farmeasy.server.post.repository.community.CommunityFilter;

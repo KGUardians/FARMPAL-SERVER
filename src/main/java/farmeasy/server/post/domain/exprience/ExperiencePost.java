@@ -4,10 +4,11 @@ import farmeasy.server.post.domain.Post;
 import farmeasy.server.post.domain.PostType;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
-
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Data
 public class ExperiencePost extends Post {
@@ -24,5 +25,9 @@ public class ExperiencePost extends Post {
     public ExperiencePost(Recruitment recruitment) {
         super(PostType.EXPERIENCE);
         this.recruitment = recruitment;
+    }
+
+    public boolean validateParticipants(int participants){
+        return this.recruitment.getRecruitmentNum() >= participants;
     }
 }
