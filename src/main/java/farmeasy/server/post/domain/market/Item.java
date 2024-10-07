@@ -23,8 +23,4 @@ public class Item {
         this.price = price;
         this.gram = gram;
     }
-
-
-
-
 }
