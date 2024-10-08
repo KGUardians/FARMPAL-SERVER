@@ -36,6 +36,9 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public void delete(String fileName) {
-        new File(location + fileName).delete();
+        File file = new File(location + fileName);
+        if (!file.delete()) {
+            throw new RuntimeException("파일을 삭제할 수 없습니다: " + fileName);
+        }
     }
 }
