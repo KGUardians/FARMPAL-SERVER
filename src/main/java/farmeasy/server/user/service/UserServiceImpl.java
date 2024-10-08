@@ -2,14 +2,11 @@ package farmeasy.server.user.service;
 
 import farmeasy.server.config.login.jwt.JwtProperties;
 import farmeasy.server.dto.TokenDto;
-import farmeasy.server.user.domain.Farm;
 import farmeasy.server.user.domain.Role;
 import farmeasy.server.user.domain.User;
-import farmeasy.server.user.repository.FarmJpaRepo;
 import farmeasy.server.user.repository.UserJpaRepo;
 import farmeasy.server.user.dto.JoinUserReq;
 import farmeasy.server.user.dto.LoginReq;
-import farmeasy.server.user.dto.RegisterFarmReq;
 import farmeasy.server.user.dto.UserDto;
 import farmeasy.server.util.exception.ResourceNotFoundException;
 import farmeasy.server.util.exception.user.UserException;
@@ -34,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
     private final AuthenticationManager authenticationManager;
     private final UserJpaRepo userJpaRepo;
-    private final FarmJpaRepo farmJpaRepo;
     private final PasswordEncoder passwordEncoder;
     private final JwtProperties jwtProperties;
 
@@ -68,15 +64,7 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.ok(accessToken);
     }
 
-    @Override
-    @Transactional
-    public RegisterFarmReq createFarm(RegisterFarmReq req, User user) {
-        Farm farm = RegisterFarmReq.toEntity(req);
-        farm.setUser(user);
-        farmJpaRepo.save(farm);
-        userJpaRepo.save(user);
-        return req;
-    }
+
 
     @Override
     public User getByUsername() {

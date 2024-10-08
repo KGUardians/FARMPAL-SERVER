@@ -36,13 +36,6 @@ public class UserController {
         return userService.signIn(req, response);
     }
 
-    @PostMapping("/farm")
-    @Operation(summary = "농장 등록 요청")
-    public Response registerFarm(@RequestBody RegisterFarmReq req){
-        User user = userService.getByUsername();
-        return Response.success(userService.createFarm(req, user));
-    }
-
     @PostMapping("/refresh")
     @Operation(summary = "refresh token 생성 요청")
     public ResponseEntity<String> requestRefreshToken(HttpServletRequest request){

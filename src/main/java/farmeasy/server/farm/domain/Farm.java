@@ -1,5 +1,8 @@
-package farmeasy.server.user.domain;
+package farmeasy.server.farm.domain;
 
+import farmeasy.server.user.domain.Address;
+import farmeasy.server.user.domain.Role;
+import farmeasy.server.user.domain.User;
 import farmeasy.server.user.dto.RegisterFarmReq;
 import jakarta.persistence.*;
 import lombok.Data;

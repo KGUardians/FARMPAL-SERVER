@@ -1,5 +1,6 @@
 package farmeasy.server.user.domain;
 
+import farmeasy.server.farm.domain.Farm;
 import farmeasy.server.post.domain.Post;
 import farmeasy.server.post.domain.community.Comment;
 import farmeasy.server.post.domain.exprience.ExpApplication;

@@ -1,6 +1,6 @@
 package farmeasy.server.user.dto;
 
-import farmeasy.server.user.domain.Farm;
+import farmeasy.server.farm.domain.Farm;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
