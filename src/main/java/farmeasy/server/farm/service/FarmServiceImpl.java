@@ -2,7 +2,7 @@ package farmeasy.server.farm.service;
 
 import farmeasy.server.farm.domain.Farm;
 import farmeasy.server.user.domain.User;
-import farmeasy.server.user.dto.RegisterFarmReq;
+import farmeasy.server.farm.dto.RegisterFarmReq;
 import farmeasy.server.user.repository.FarmJpaRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

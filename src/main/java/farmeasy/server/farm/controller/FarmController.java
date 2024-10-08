@@ -2,7 +2,7 @@ package farmeasy.server.farm.controller;
 
 import farmeasy.server.dto.response.Response;
 import farmeasy.server.user.domain.User;
-import farmeasy.server.user.dto.RegisterFarmReq;
+import farmeasy.server.farm.dto.RegisterFarmReq;
 import farmeasy.server.farm.service.FarmService;
 import farmeasy.server.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;

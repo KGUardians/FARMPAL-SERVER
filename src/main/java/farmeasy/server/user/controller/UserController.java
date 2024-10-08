@@ -3,8 +3,6 @@ package farmeasy.server.user.controller;
 import farmeasy.server.dto.response.Response;
 import farmeasy.server.user.dto.JoinUserReq;
 import farmeasy.server.user.dto.LoginReq;
-import farmeasy.server.user.dto.RegisterFarmReq;
-import farmeasy.server.user.domain.User;
 import farmeasy.server.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.Cookie;

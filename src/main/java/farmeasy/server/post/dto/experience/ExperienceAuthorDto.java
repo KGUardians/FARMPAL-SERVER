@@ -1,6 +1,6 @@
 package farmeasy.server.post.dto.experience;
 
-import farmeasy.server.user.dto.FarmDto;
+import farmeasy.server.farm.dto.FarmDto;
 import farmeasy.server.user.domain.Role;
 import farmeasy.server.user.domain.User;
 import lombok.AllArgsConstructor;

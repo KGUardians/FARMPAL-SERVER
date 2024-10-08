@@ -1,4 +1,4 @@
-package farmeasy.server.user.dto;
+package farmeasy.server.farm.dto;
 
 import farmeasy.server.farm.domain.Farm;
 import io.swagger.v3.oas.annotations.media.Schema;

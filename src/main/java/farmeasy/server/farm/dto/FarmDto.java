@@ -1,7 +1,7 @@
-package farmeasy.server.user.dto;
+package farmeasy.server.farm.dto;
 
 import farmeasy.server.user.domain.Address;
-import farmeasy.server.user.domain.Farm;
+import farmeasy.server.farm.domain.Farm;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
