@@ -1,5 +1,6 @@
 package farmeasy.server.user.service;
 
+import farmeasy.server.config.login.jwt.JwtManager;
 import farmeasy.server.config.login.jwt.JwtProperties;
 import farmeasy.server.dto.TokenDto;
 import farmeasy.server.user.domain.Role;
@@ -29,10 +30,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final AuthenticationManager authenticationManager;
     private final UserJpaRepo userJpaRepo;
     private final PasswordEncoder passwordEncoder;
-    private final JwtProperties jwtProperties;
+
+    private final AuthenticationManager authenticationManager;
+    private final JwtManager jwtManager;
 
     @Override
     @Transactional
@@ -55,7 +57,7 @@ public class UserServiceImpl implements UserService {
         User user = authenticate(req.getUsername(), req.getPassword());
         checkEncodePassword(req.getPassword(),user.getPassword());
 
-        TokenDto token = jwtProperties.generateToken(user);
+        TokenDto token = jwtManager.generateToken(user);
         String accessToken = token.getAccessToken();
         String refreshToken = token.getRefreshToken();
 
@@ -78,33 +80,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public ResponseEntity<String> refreshToken(Cookie[] cookies){
-        String refreshToken = getRefreshToken(cookies);
-
-        if (refreshToken != null){
-            String username = jwtProperties.getUsernameFromToken(refreshToken);
-            User user = findByUsername(username);
-            jwtProperties.validateToken(refreshToken, user);
-            validateRefreshToken(refreshToken, user.getRefreshToken());
-            return ResponseEntity.ok(jwtProperties.generateToken(user).getAccessToken());
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
-        }
-
-    }
-
-    private String getRefreshToken(Cookie[] cookies){
-        String refreshToken = null;
-
-        if(cookies != null){
-            for(Cookie cookie : cookies){
-                if(cookie.getName().equals("refreshToken")){
-                    refreshToken = cookie.getValue();
-                }
-            }
-        }
-
-        return refreshToken;
+    public ResponseEntity<String> refreshToken(Cookie[] cookies, User user){
+        return jwtManager.refreshToken(cookies, user);
     }
 
     private User authenticate(String username, String pwd) {
@@ -149,12 +126,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void validateRefreshToken(String refreshToken, String userRefreshToken) {
-        if (!refreshToken.equals(userRefreshToken)) {
-            throw new SecurityException("Refresh token does not match");
-        }
-    }
-
     private User findByUsername(String username){
         return userJpaRepo.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
     }
@@ -168,15 +139,6 @@ public class UserServiceImpl implements UserService {
         if(!isAuthorized(user,authorId)) throw new UserException("해당 권한이 없습니다.", HttpStatus.BAD_REQUEST);
     }
 
-    private void putRefreshTokenInCookie(HttpServletResponse response, String refreshToken){
-        addJwtInCookie(response, refreshToken);
-    }
 
-    private void addJwtInCookie(HttpServletResponse response, String token){
-        Cookie cookie = new Cookie("refreshToken", token);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        response.addCookie(cookie);
-    }
 }
 

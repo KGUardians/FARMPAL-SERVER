@@ -26,7 +26,7 @@ import java.util.Set;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final CustomUserDetailsService userDetailsService; // 사용자 정보를 제공하는 서비스
-    private final JwtProperties jwtProperties; // JWT 관련 속성 클래스
+    private final JwtManager jwtManager;
 
     private static final Set<String> FILTERED_PATHS = Set.of("/market","/experience");
 
@@ -45,7 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         // 토큰을 가져와 저장할 변수
-        String authToken = jwtProperties.extractTokenFromHeader(request);
+        String authToken = jwtManager.extractTokenFromHeader(request);
 
         // JWT 토큰을 가지고 있는 경우, 토큰을 추출.
         if (authToken != null) {
@@ -63,7 +63,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         private String getUsernameFromToken(String authToken){
             try {
-                return this.jwtProperties.getUsernameFromToken(authToken);
+                return this.jwtManager.getUsernameFromToken(authToken);
             } catch (IllegalArgumentException ex) {
                 log.info("사용자 정보를 가져올 수 없습니다.");
             } catch (ExpiredJwtException ex) {
@@ -78,7 +78,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         private void authenticateUser(HttpServletRequest req, String username, String authToken){
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-            this.jwtProperties.validateToken(authToken, userDetails);
+            this.jwtManager.validateToken(authToken, userDetails);
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());

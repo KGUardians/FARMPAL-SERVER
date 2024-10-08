@@ -1,6 +1,7 @@
 package farmeasy.server.user.controller;
 
 import farmeasy.server.dto.response.Response;
+import farmeasy.server.user.domain.User;
 import farmeasy.server.user.dto.JoinUserReq;
 import farmeasy.server.user.dto.LoginReq;
 import farmeasy.server.user.service.UserService;
@@ -11,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,9 +38,9 @@ public class UserController {
 
     @PostMapping("/refresh")
     @Operation(summary = "refresh token 생성 요청")
-    public ResponseEntity<String> requestRefreshToken(HttpServletRequest request){
+    public ResponseEntity<String> requestRefreshToken(HttpServletRequest request, @AuthenticationPrincipal User user){
         Cookie[] cookies = request.getCookies();
-        return userService.refreshToken(cookies);
+        return userService.refreshToken(cookies, user);
     }
 
 }

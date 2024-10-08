@@ -16,7 +16,7 @@ public interface UserService {
 
     User getByUsername();
 
-    ResponseEntity<String> refreshToken(Cookie[] cookies);
+    ResponseEntity<String> refreshToken(Cookie[] cookies, User user);
 
     void checkUser(User user, Long authorId);
 
