@@ -1,7 +1,7 @@
 package farmeasy.server.user.service;
 
+import farmeasy.server.config.cookie.CookieManager;
 import farmeasy.server.config.login.jwt.JwtManager;
-import farmeasy.server.config.login.jwt.JwtProperties;
 import farmeasy.server.dto.TokenDto;
 import farmeasy.server.user.domain.Role;
 import farmeasy.server.user.domain.User;
@@ -35,6 +35,7 @@ public class UserServiceImpl implements UserService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtManager jwtManager;
+    private final CookieManager cookieManager;
 
     @Override
     @Transactional
@@ -62,7 +63,7 @@ public class UserServiceImpl implements UserService {
         String refreshToken = token.getRefreshToken();
 
         user.setRefreshToken(token.getRefreshToken());
-        putRefreshTokenInCookie(response, refreshToken);
+        cookieManager.putRefreshTokenInCookie(response, refreshToken);
         return ResponseEntity.ok(accessToken);
     }
 
