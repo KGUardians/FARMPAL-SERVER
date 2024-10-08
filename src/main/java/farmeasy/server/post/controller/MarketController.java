@@ -3,16 +3,17 @@ package farmeasy.server.post.controller;
 import farmeasy.server.dto.response.Response;
 import farmeasy.server.post.domain.CropCategory;
 import farmeasy.server.post.dto.market.CreateMktPostRequest;
+import farmeasy.server.post.dto.market.UpdateMktPostReq;
 import farmeasy.server.user.domain.User;
 import farmeasy.server.post.repository.market.MarketFilter;
 import farmeasy.server.post.service.market.MarketPostService;
-import farmeasy.server.user.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,34 +22,41 @@ import org.springframework.web.bind.annotation.*;
 public class MarketController {
 
     private final MarketPostService marketPostService;
-    private final UserService userService;
 
     @GetMapping
     @Operation(summary = "마켓 리스트 목록 조회")
-    public Response getMarketPostList(@RequestParam(value = "crop",required = false) CropCategory crop,
-                                       Pageable pageable){
+    public Response getMarketPostList(
+            @RequestParam(value = "crop",required = false) CropCategory crop,
+            Pageable pageable
+    ){
         MarketFilter filter = new MarketFilter(crop);
         return Response.success(marketPostService.getMarketPosts(filter, pageable));
     }
 
     @PostMapping
     @Operation(summary = "마켓 게시글 작성")
-    public Response createPost(@Valid @RequestPart CreateMktPostRequest req) {
-        User author = userService.getByUsername();
+    public Response createPost(
+            @Valid @RequestPart CreateMktPostRequest req,
+            @AuthenticationPrincipal User author
+    ) {
         return Response.success(marketPostService.createMarketPost(req, author));
     }
 
     @DeleteMapping("/{postId}")
     @Operation(summary = "마켓 게시글 삭제")
-    public Response deletePost(@PathVariable Long postId){
-        User author = userService.getByUsername();
+    public Response deletePost(
+            @PathVariable Long postId,
+            @AuthenticationPrincipal User author
+    ){
         return Response.success(marketPostService.deleteMarketPost(postId, author));
     }
 
     @PatchMapping("/{postId}")
     @Operation(summary = "마켓 게시글 수정")
-    public Response updatePost(@PathVariable Long postId, @Valid @ModelAttribute farmeasy.server.post.dto.market.UpdateMktPostReq req){
-        User author = userService.getByUsername();
+    public Response updatePost(
+            @PathVariable Long postId,
+            @Valid @ModelAttribute UpdateMktPostReq req,
+            @AuthenticationPrincipal User author){
         return Response.success(marketPostService.updateMarketPost(postId,req,author));
     }
 

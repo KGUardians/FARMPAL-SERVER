@@ -67,18 +67,6 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.ok(accessToken);
     }
 
-
-
-    @Override
-    public User getByUsername() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new UserException("인증 된 정보가 없습니다.",HttpStatus.BAD_REQUEST);
-        }
-        String username = authentication.getName();
-        return findByUsername(username);
-    }
-
     @Override
     @Transactional
     public ResponseEntity<String> refreshToken(Cookie[] cookies, User user){

@@ -1,4 +1,4 @@
-package farmeasy.server.dto.post.community.comment;
+package farmeasy.server.post.dto.community.comment;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

@@ -1,20 +1,11 @@
 package farmeasy.server.util;
 
 import farmeasy.server.main.dto.PostListDto;
-import farmeasy.server.dto.post.community.comment.CommentDto;
 import farmeasy.server.post.domain.Post;
-import farmeasy.server.post.domain.community.CommunityPost;
-import farmeasy.server.post.domain.exprience.ExpApplication;
-import farmeasy.server.post.domain.exprience.ExperiencePost;
-import farmeasy.server.post.domain.market.MarketPost;
 import farmeasy.server.post.dto.community.CommunityListDto;
-import farmeasy.server.user.domain.User;
+import farmeasy.server.post.dto.community.comment.CommentDto;
 import farmeasy.server.post.repository.PostJpaRepo;
 import farmeasy.server.post.repository.community.CommentJpaRepo;
-import farmeasy.server.post.repository.community.CommunityJpaRepo;
-import farmeasy.server.post.repository.experience.ExpAppJpaRepo;
-import farmeasy.server.post.repository.experience.ExpJpaRepo;
-import farmeasy.server.post.repository.market.MarketJpaRepo;
 import farmeasy.server.util.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package farmeasy.server.dto.post.community.comment;
+package farmeasy.server.post.dto.community.comment;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -14,8 +14,6 @@ public interface UserService {
 
     ResponseEntity<String> signIn(LoginReq req, HttpServletResponse response);
 
-    User getByUsername();
-
     ResponseEntity<String> refreshToken(Cookie[] cookies, User user);
 
     void checkUser(User user, Long authorId);

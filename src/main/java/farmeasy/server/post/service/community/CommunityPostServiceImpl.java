@@ -1,6 +1,5 @@
 package farmeasy.server.post.service.community;
 
-import farmeasy.server.dto.post.community.comment.CommentRequest;
 import farmeasy.server.post.domain.community.Comment;
 import farmeasy.server.post.domain.community.CommunityPost;
 import farmeasy.server.post.dto.CreatePostResponse;
@@ -8,6 +7,7 @@ import farmeasy.server.post.dto.community.CommunityListDto;
 import farmeasy.server.post.dto.community.CommunityPostDto;
 import farmeasy.server.post.dto.community.CreateCommPostRequest;
 import farmeasy.server.post.dto.community.UpdateCommPostReq;
+import farmeasy.server.post.dto.community.comment.CommentRequest;
 import farmeasy.server.post.service.ImageMappingService;
 import farmeasy.server.user.domain.User;
 import farmeasy.server.post.repository.community.CommentJpaRepo;
