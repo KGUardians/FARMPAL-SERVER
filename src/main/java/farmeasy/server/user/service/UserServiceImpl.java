@@ -9,12 +9,13 @@ import farmeasy.server.user.repository.UserJpaRepo;
 import farmeasy.server.user.dto.JoinUserReq;
 import farmeasy.server.user.dto.LoginReq;
 import farmeasy.server.user.dto.UserDto;
-import farmeasy.server.util.exception.user.UserException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -83,9 +84,9 @@ public class UserServiceImpl implements UserService {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, pwd));
             return (User) authentication.getPrincipal();
         } catch (DisabledException e) {
-            throw new UserException("인증되지 않은 아이디입니다.", HttpStatus.BAD_REQUEST);
+            throw new DisabledException("인증되지 않은 아이디입니다.");
         } catch (BadCredentialsException e) {
-            throw new UserException("비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST);
+            throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
         }
     }
 
@@ -95,7 +96,7 @@ public class UserServiceImpl implements UserService {
      */
     private void isExistUsername(String username) {
         if (userJpaRepo.findByUsername(username).isPresent()) {
-            throw new UserException("이미 사용 중인 이메일입니다.", HttpStatus.BAD_REQUEST);
+            throw new DataIntegrityViolationException("이미 사용 중인 이메일입니다.");
         }
     }
 
@@ -105,7 +106,7 @@ public class UserServiceImpl implements UserService {
      */
     private void checkPassword(String password, String passwordCheck) {
         if (!password.equals(passwordCheck)) {
-            throw new UserException("비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST);
+            throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
         }
     }
 
@@ -116,7 +117,7 @@ public class UserServiceImpl implements UserService {
      */
     private void checkEncodePassword(String rawPassword, String encodedPassword) {
         if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
-            throw new UserException("비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST);
+            throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
         }
     }
 
@@ -126,7 +127,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void checkUser(User user, Long authorId){
-        if(!isAuthorized(user,authorId)) throw new UserException("해당 권한이 없습니다.", HttpStatus.BAD_REQUEST);
+        if(!isAuthorized(user,authorId)) throw new AccessDeniedException("해당 권한이 없습니다.");
     }
 
 
