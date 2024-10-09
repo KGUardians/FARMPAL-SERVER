@@ -16,8 +16,6 @@ import farmeasy.server.util.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,48 +39,45 @@ public class MarketPostServiceImpl implements MarketPostService {
 
     @Override
     @Transactional
-    public ResponseEntity<CreatePostResponse> createMarketPost(CreateMktPostRequest req, User author) {
+    public CreatePostResponse createMarketPost(CreateMktPostRequest req, User author) {
         MarketPost marketPost = postService.createPost(CreateMktPostRequest.toEntity(req), req, author);
         marketJpaRepo.save(marketPost);
 
-        CreatePostResponse createPostResponse = CreatePostResponse.builder()
+        return CreatePostResponse.builder()
                 .postId(marketPost.getId())
                 .postType(marketPost.getPostType())
                 .build();
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(createPostResponse);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<MarketPostDto> readMarketPost(Long postId){
-        return ResponseEntity.ok(MarketPostDto.toDto(getMarketPost(postId)));
+    public MarketPostDto readMarketPost(Long postId){
+        return MarketPostDto.toDto(getMarketPost(postId));
     }
 
     @Override
     @Transactional
-    public ResponseEntity<MarketPostDto> updateMarketPost(Long postId, UpdateMktPostReq req, User author) {
+    public MarketPostDto updateMarketPost(Long postId, UpdateMktPostReq req, User author) {
         MarketPost post = getMarketPost(postId);
         postService.updatePost(author, post, req);
         post.setItem(UpdateMktPostReq.reqToItem(req));
         marketJpaRepo.save(post);
 
-        return ResponseEntity.ok(MarketPostDto.toDto(post));
+        return MarketPostDto.toDto(post);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<Void> deleteMarketPost(Long postId, User author) {
+    public void deleteMarketPost(Long postId, User author) {
         MarketPost post = getMarketPost(postId);
         postService.deletePost(post,author);
-        return ResponseEntity.noContent().build();
     }
 
     @Override
-    public ResponseEntity<Slice<MarketListDto>> getMarketPosts(MarketFilter filter, Pageable pageable) {
+    public Slice<MarketListDto> getMarketPosts(MarketFilter filter, Pageable pageable) {
         Slice<MarketListDto> listResponse = marketRepo.findPostList(filter, pageable);
         imageMappingService.imageMapping(listResponse.stream().toList());
-        return ResponseEntity.ok(listResponse);
+        return listResponse;
     }
 
     private MarketPost getMarketPost(Long postId){
