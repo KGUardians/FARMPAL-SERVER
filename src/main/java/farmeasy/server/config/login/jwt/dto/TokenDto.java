@@ -1,4 +1,4 @@
-package farmeasy.server.dto;
+package farmeasy.server.config.login.jwt.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

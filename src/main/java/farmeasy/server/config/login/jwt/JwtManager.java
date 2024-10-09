@@ -1,6 +1,6 @@
 package farmeasy.server.config.login.jwt;
 
-import farmeasy.server.dto.TokenDto;
+import farmeasy.server.config.login.jwt.dto.TokenDto;
 import farmeasy.server.user.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

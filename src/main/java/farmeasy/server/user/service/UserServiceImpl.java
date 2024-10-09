@@ -2,14 +2,13 @@ package farmeasy.server.user.service;
 
 import farmeasy.server.config.cookie.CookieManager;
 import farmeasy.server.config.login.jwt.JwtManager;
-import farmeasy.server.dto.TokenDto;
+import farmeasy.server.config.login.jwt.dto.TokenDto;
 import farmeasy.server.user.domain.Role;
 import farmeasy.server.user.domain.User;
 import farmeasy.server.user.repository.UserJpaRepo;
 import farmeasy.server.user.dto.JoinUserReq;
 import farmeasy.server.user.dto.LoginReq;
 import farmeasy.server.user.dto.UserDto;
-import farmeasy.server.util.exception.ResourceNotFoundException;
 import farmeasy.server.util.exception.user.UserException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,7 +20,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -113,10 +111,6 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
             throw new UserException("비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
-    }
-
-    private User findByUsername(String username){
-        return userJpaRepo.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
     }
 
     private boolean isAuthorized(User user, Long authorId){
