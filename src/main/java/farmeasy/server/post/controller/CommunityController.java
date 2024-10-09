@@ -40,7 +40,9 @@ public class CommunityController {
             Pageable pageable
     ){
         CommunityFilter filter = new CommunityFilter(type,crop,search);
-        return communityPostService.getCommunityPosts(filter,pageable);
+
+        Slice<CommunityListDto> response = communityPostService.getCommunityPosts(filter, pageable);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
@@ -49,7 +51,9 @@ public class CommunityController {
             @Valid @RequestPart CreateCommPostRequest req,
             @AuthenticationPrincipal User author
     ) {
-        return communityPostService.createCommunityPost(req, author);
+        CreatePostResponse response = communityPostService.createCommunityPost(req, author);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(response);
     }
 
     @DeleteMapping("/{postId}")
@@ -58,14 +62,16 @@ public class CommunityController {
             @PathVariable Long postId,
             @AuthenticationPrincipal User author
     ){
-        return communityPostService.deleteCommunityPost(postId, author);
+        communityPostService.deleteCommunityPost(postId, author);
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "커뮤니티 게시글 조회")
     @GetMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<CommunityPostDto> readPost(@ApiParam(value = "게시글 id", required = true) @PathVariable Long postId) {
-        return communityPostService.readCommunityPost(postId);
+        CommunityPostDto response = communityPostService.readCommunityPost(postId);
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/{postId}")
@@ -75,7 +81,8 @@ public class CommunityController {
             @Valid @ModelAttribute UpdateCommPostReq req,
             @AuthenticationPrincipal User author
     ){
-        return communityPostService.updateCommunityPost(postId, req, author);
+        CommunityPostDto response = communityPostService.updateCommunityPost(postId, req, author);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/{postId}/comments")
@@ -84,7 +91,8 @@ public class CommunityController {
             @PathVariable Long postId,
             @RequestBody CommentRequest req,
             @AuthenticationPrincipal User author) throws ChangeSetPersister.NotFoundException {
-        return communityPostService.requestComment(postId, req, author);
+        communityPostService.requestComment(postId, req, author);
+        return ResponseEntity.ok(req);
     }
 
 }

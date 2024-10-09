@@ -10,7 +10,6 @@ import farmeasy.server.user.domain.User;
 import farmeasy.server.post.repository.community.CommunityFilter;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,15 +19,15 @@ public interface CommunityPostService {
 
     List<CommunityListDto> getRecentCommunityPostDtos();
 
-    ResponseEntity<CreatePostResponse> createCommunityPost(CreateCommPostRequest req, User author);
+    CreatePostResponse createCommunityPost(CreateCommPostRequest req, User author);
 
-    ResponseEntity<Void> deleteCommunityPost(Long postId, User user);
+    void deleteCommunityPost(Long postId, User user);
 
-    ResponseEntity<CommunityPostDto> readCommunityPost(Long postId);
+    CommunityPostDto readCommunityPost(Long postId);
 
-    ResponseEntity<CommunityPostDto> updateCommunityPost(Long postId, UpdateCommPostReq req, User user);
+    CommunityPostDto updateCommunityPost(Long postId, UpdateCommPostReq req, User user);
 
-    ResponseEntity<Slice<CommunityListDto>> getCommunityPosts(CommunityFilter filter, Pageable pageable);
+    Slice<CommunityListDto> getCommunityPosts(CommunityFilter filter, Pageable pageable);
 
-    ResponseEntity<CommentRequest> requestComment(Long postId, CommentRequest req, User user);
+    CommentRequest requestComment(Long postId, CommentRequest req, User user);
 }

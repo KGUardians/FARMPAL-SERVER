@@ -48,48 +48,44 @@ public class CommunityPostServiceImpl implements CommunityPostService {
 
     @Override
     @Transactional
-    public ResponseEntity<CreatePostResponse> createCommunityPost(CreateCommPostRequest req, User author) {
+    public CreatePostResponse createCommunityPost(CreateCommPostRequest req, User author) {
         CommunityPost communityPost = postService.createPost(CreateCommPostRequest.toEntity(req.getCommunityType()), req, author);
         communityJpaRepo.save(communityPost);
 
-        CreatePostResponse createPostResponse = CreatePostResponse.builder()
+        return CreatePostResponse.builder()
                 .postId(communityPost.getId())
                 .postType(communityPost.getPostType())
                 .build();
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(createPostResponse);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<Void> deleteCommunityPost(Long postId, User author) {
+    public void deleteCommunityPost(Long postId, User author) {
         CommunityPost post = getCommunityPost(postId);
         postService.deletePost(post,author);
-        return ResponseEntity.noContent().build();
     }
 
     @Override
     @Transactional
-    public ResponseEntity<CommunityPostDto> readCommunityPost(Long postId){
-        return ResponseEntity.ok(CommunityPostDto.toDto(getCommunityPost(postId)));
+    public CommunityPostDto readCommunityPost(Long postId){
+        return CommunityPostDto.toDto(getCommunityPost(postId));
     }
 
 
     @Override
-    public ResponseEntity<CommunityPostDto> updateCommunityPost(Long postId, UpdateCommPostReq req, User author) {
+    public CommunityPostDto updateCommunityPost(Long postId, UpdateCommPostReq req, User author) {
         CommunityPost post = getCommunityPost(postId);
         postService.updatePost(author, post, req);
         post.setCommunityType(req.getType());
         communityJpaRepo.save(post);
-        return ResponseEntity.ok(CommunityPostDto.toDto(post));
+        return CommunityPostDto.toDto(post);
     }
 
     @Override
-    public ResponseEntity<Slice<CommunityListDto>> getCommunityPosts(CommunityFilter filter, Pageable pageable) {
+    public Slice<CommunityListDto> getCommunityPosts(CommunityFilter filter, Pageable pageable) {
         Slice<CommunityListDto> listResponse = communityRepo.findPostList(filter,pageable);
         imageMappingService.imageMapping(listResponse.stream().toList());
-        return ResponseEntity.ok(listResponse);
+        return listResponse;
     }
 
     /*
@@ -99,11 +95,11 @@ public class CommunityPostServiceImpl implements CommunityPostService {
     */
     @Override
     @Transactional
-    public ResponseEntity<CommentRequest> requestComment(Long postId, CommentRequest req, User author) {
+    public CommentRequest requestComment(Long postId, CommentRequest req, User author) {
         CommunityPost post = getCommunityPost(postId);
         Comment comment = new Comment(req.getComment(),post,author);
         commentJpaRepo.save(comment);
-        return ResponseEntity.status(HttpStatus.CREATED).body(req);
+        return req;
     }
 
 
