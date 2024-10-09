@@ -7,6 +7,8 @@ import farmeasy.server.post.dto.experience.expapplication.ExpApplicationRequest;
 import farmeasy.server.post.repository.experience.ExpAppJpaRepo;
 import farmeasy.server.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,18 +20,18 @@ public class ExpApplicationServiceImpl implements ExpApplicationService {
     private final ExperiencePostService experiencePostService;
 
     @Override
-    public ExpApplicationPageDto getExpAppPage(Long postId) {
+    public ResponseEntity<ExpApplicationPageDto> getExpAppPage(Long postId) {
         ExperiencePost post = experiencePostService.getExperiencePost(postId);
-        return ExpApplicationPageDto.toDto(post);
+        return ResponseEntity.ok(ExpApplicationPageDto.toDto(post));
     }
 
     @Override
     @Transactional
-    public ExpApplicationRequest requestExpApp(Long postId, ExpApplicationRequest req, User applicant) throws Exception {
+    public ResponseEntity<ExpApplicationRequest> requestExpApp(Long postId, ExpApplicationRequest req, User applicant) throws Exception {
         ExperiencePost experiencePost = experiencePostService.getExperiencePost(postId);
         checkParticipantNum(experiencePost, req.getParticipants());
         processApplication(experiencePost, applicant, req.getParticipants());
-        return req;
+        return ResponseEntity.status(HttpStatus.CREATED).body(req);
     }
 
     private void checkParticipantNum(ExperiencePost post, int participants) throws Exception {

@@ -9,19 +9,20 @@ import farmeasy.server.user.domain.User;
 import farmeasy.server.post.repository.market.MarketFilter;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 public interface MarketPostService {
     List<MarketListDto> getRecentMarketPostDtos();
 
-    CreatePostResponse createMarketPost(CreateMktPostRequest req, User user);
+    ResponseEntity<CreatePostResponse> createMarketPost(CreateMktPostRequest req, User user);
 
-    MarketPostDto readMarketPost(Long postId);
+    ResponseEntity<MarketPostDto> readMarketPost(Long postId);
 
-    MarketPostDto updateMarketPost(Long postId, UpdateMktPostReq req, User user);
+    ResponseEntity<MarketPostDto> updateMarketPost(Long postId, UpdateMktPostReq req, User user);
 
-    Long deleteMarketPost(Long postId, User author);
+    ResponseEntity<Void> deleteMarketPost(Long postId, User author);
 
-    Slice<MarketListDto> getMarketPosts(MarketFilter filter, Pageable pageable);
+    ResponseEntity<Slice<MarketListDto>> getMarketPosts(MarketFilter filter, Pageable pageable);
 }

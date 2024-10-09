@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDto join(JoinUserReq form) {
+    public ResponseEntity<UserDto> join(JoinUserReq form) {
         isExistUsername(form.getUsername());
         checkPassword(form.getPassword(), form.getCheckPassword());
 
@@ -47,7 +47,14 @@ public class UserServiceImpl implements UserService {
         User user = JoinUserReq.toEntity(form);
         userJpaRepo.save(user);
 
-        return new UserDto(user.getId(), user.getName(), user.getAddress(),user.getBirthday());
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(UserDto.builder()
+                        .userId(user.getId())
+                        .name(user.getName())
+                        .address(user.getAddress())
+                        .birthday(user.getBirthday())
+                        .build()
+                );
     }
 
     @Override

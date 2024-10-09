@@ -16,6 +16,8 @@ import farmeasy.server.util.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,45 +35,51 @@ public class ExperiencePostServiceImpl implements ExperiencePostService {
     @Override
     public List<ExperienceListDto> getRecentExperiencePostDtos() {
         List<ExperienceListDto> recentExperiencePosts = expRepo.findTop4OrderByIdDesc();
-        imageMappingService.imageMapping(recentExperiencePosts); return recentExperiencePosts;
+        imageMappingService.imageMapping(recentExperiencePosts);
+        return recentExperiencePosts;
     }
 
     @Override
     @Transactional
-    public CreatePostResponse createExperiencePost(CreateExpPostRequest req, User author) {
+    public ResponseEntity<CreatePostResponse> createExperiencePost(CreateExpPostRequest req, User author) {
         ExperiencePost experiencePost = postService.createPost(CreateExpPostRequest.toEntity(req),req, author);
         expJpaRepo.save(experiencePost);
-        return new CreatePostResponse(experiencePost.getId(),experiencePost.getPostType());
+        CreatePostResponse createPostResponse = CreatePostResponse.builder()
+                .postId(experiencePost.getId())
+                .postType(experiencePost.getPostType())
+                .build();
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(createPostResponse);
     }
 
     @Override
     @Transactional
-    public Long deleteExperiencePost(Long postId, User author) {
+    public ResponseEntity<Void> deleteExperiencePost(Long postId, User author) {
         ExperiencePost post = getExperiencePost(postId);
         postService.deletePost(post,author);
-        return postId;
+        return ResponseEntity.noContent().build();
     }
 
     @Override
     @Transactional
-    public ExperiencePostDto readExperiencePost(Long postId){
-        return ExperiencePostDto.toDto(getExperiencePost(postId));
+    public ResponseEntity<ExperiencePostDto> readExperiencePost(Long postId){
+        return ResponseEntity.ok(ExperiencePostDto.toDto(getExperiencePost(postId)));
     }
 
     @Override
-    public ExperiencePostDto updateExperiencePost(Long postId, UpdateExpPostReq req, User author) {
+    public ResponseEntity<ExperiencePostDto> updateExperiencePost(Long postId, UpdateExpPostReq req, User author) {
         ExperiencePost post = getExperiencePost(postId);
         postService.updatePost(author, post, req);
         post.setRecruitment(UpdateExpPostReq.reqToRecruitment(req));
         expJpaRepo.save(post);
-        return ExperiencePostDto.toDto(post);
+        return ResponseEntity.ok(ExperiencePostDto.toDto(post));
     }
 
     @Override
-    public Slice<ExperienceListDto> getExperiencePosts(ExpFilter filter, Pageable pageable) {
+    public ResponseEntity<Slice<ExperienceListDto>> getExperiencePosts(ExpFilter filter, Pageable pageable) {
         Slice<ExperienceListDto> listResponse = expRepo.findPostList(filter, pageable);
         imageMappingService.imageMapping(listResponse.stream().toList());
-        return listResponse;
+        return ResponseEntity.ok(listResponse);
     }
 
     @Override

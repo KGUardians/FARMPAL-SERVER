@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 
 
 public interface UserService {
-    UserDto join (JoinUserReq user);
+    ResponseEntity<UserDto> join (JoinUserReq user);
 
     ResponseEntity<String> signIn(LoginReq req, HttpServletResponse response);
 

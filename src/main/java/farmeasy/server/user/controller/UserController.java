@@ -1,9 +1,9 @@
 package farmeasy.server.user.controller;
 
-import farmeasy.server.dto.response.Response;
 import farmeasy.server.user.domain.User;
 import farmeasy.server.user.dto.JoinUserReq;
 import farmeasy.server.user.dto.LoginReq;
+import farmeasy.server.user.dto.UserDto;
 import farmeasy.server.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.Cookie;
@@ -26,8 +26,8 @@ public class UserController {
 
     @PostMapping("/sign-up")
     @Operation(summary = "유저 회원가입 요청")
-    public Response joinUser(@RequestBody @Valid JoinUserReq form){
-        return Response.success(userService.join(form));
+    public ResponseEntity<UserDto> joinUser(@RequestBody @Valid JoinUserReq form){
+        return userService.join(form);
     }
 
     @PostMapping("/sign-in")

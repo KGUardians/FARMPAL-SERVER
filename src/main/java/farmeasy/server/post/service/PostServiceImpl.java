@@ -19,10 +19,10 @@ public class PostServiceImpl implements PostService{
     private final UserService userService;
     private final ImageManager imageManager;
 
-    public <T extends Post> T createPost(T p, CreatePostRequest req, User author) {
-        p.createPostFromReq(req, author, imageManager);
-        imageManager.uploadImages(p.getImageList(),req.getImageList());
-        return p;
+    public <T extends Post> T createPost(T post, CreatePostRequest req, User author) {
+        post.createPostFromReq(req, author, imageManager);
+        imageManager.uploadImages(post.getImageList(),req.getImageList());
+        return post;
     }
 
     public void deletePost(Post post, User author){

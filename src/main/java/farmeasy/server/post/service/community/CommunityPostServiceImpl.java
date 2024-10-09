@@ -20,6 +20,8 @@ import farmeasy.server.util.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,40 +48,48 @@ public class CommunityPostServiceImpl implements CommunityPostService {
 
     @Override
     @Transactional
-    public CreatePostResponse createCommunityPost(CreateCommPostRequest req, User author) {
+    public ResponseEntity<CreatePostResponse> createCommunityPost(CreateCommPostRequest req, User author) {
         CommunityPost communityPost = postService.createPost(CreateCommPostRequest.toEntity(req.getCommunityType()), req, author);
         communityJpaRepo.save(communityPost);
-        return new CreatePostResponse(communityPost.getId(),communityPost.getPostType());
+
+        CreatePostResponse createPostResponse = CreatePostResponse.builder()
+                .postId(communityPost.getId())
+                .postType(communityPost.getPostType())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(createPostResponse);
     }
 
     @Override
     @Transactional
-    public Long deleteCommunityPost(Long postId, User author) {
+    public ResponseEntity<Void> deleteCommunityPost(Long postId, User author) {
         CommunityPost post = getCommunityPost(postId);
         postService.deletePost(post,author);
-        return postId;
+        return ResponseEntity.noContent().build();
     }
 
     @Override
     @Transactional
-    public CommunityPostDto readCommunityPost(Long postId){
-        return CommunityPostDto.toDto(getCommunityPost(postId));
+    public ResponseEntity<CommunityPostDto> readCommunityPost(Long postId){
+        return ResponseEntity.ok(CommunityPostDto.toDto(getCommunityPost(postId)));
     }
 
 
     @Override
-    public CommunityPostDto updateCommunityPost(Long postId, UpdateCommPostReq req, User author) {
+    public ResponseEntity<CommunityPostDto> updateCommunityPost(Long postId, UpdateCommPostReq req, User author) {
         CommunityPost post = getCommunityPost(postId);
         postService.updatePost(author, post, req);
         post.setCommunityType(req.getType());
         communityJpaRepo.save(post);
-        return CommunityPostDto.toDto(post);
+        return ResponseEntity.ok(CommunityPostDto.toDto(post));
     }
 
     @Override
-    public Slice<CommunityListDto> getCommunityPosts(CommunityFilter filter, Pageable pageable) {
+    public ResponseEntity<Slice<CommunityListDto>> getCommunityPosts(CommunityFilter filter, Pageable pageable) {
         Slice<CommunityListDto> listResponse = communityRepo.findPostList(filter,pageable);
-        imageMappingService.imageMapping(listResponse.stream().toList()); return listResponse;
+        imageMappingService.imageMapping(listResponse.stream().toList());
+        return ResponseEntity.ok(listResponse);
     }
 
     /*
@@ -89,11 +99,11 @@ public class CommunityPostServiceImpl implements CommunityPostService {
     */
     @Override
     @Transactional
-    public CommentRequest requestComment(Long postId, CommentRequest req, User author) {
+    public ResponseEntity<CommentRequest> requestComment(Long postId, CommentRequest req, User author) {
         CommunityPost post = getCommunityPost(postId);
         Comment comment = new Comment(req.getComment(),post,author);
         commentJpaRepo.save(comment);
-        return req;
+        return ResponseEntity.status(HttpStatus.CREATED).body(req);
     }
 
 
