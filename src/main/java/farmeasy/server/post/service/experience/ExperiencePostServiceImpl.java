@@ -41,45 +41,44 @@ public class ExperiencePostServiceImpl implements ExperiencePostService {
 
     @Override
     @Transactional
-    public ResponseEntity<CreatePostResponse> createExperiencePost(CreateExpPostRequest req, User author) {
+    public CreatePostResponse createExperiencePost(CreateExpPostRequest req, User author) {
         ExperiencePost experiencePost = postService.createPost(CreateExpPostRequest.toEntity(req),req, author);
         expJpaRepo.save(experiencePost);
-        CreatePostResponse createPostResponse = CreatePostResponse.builder()
+
+        return CreatePostResponse.builder()
                 .postId(experiencePost.getId())
                 .postType(experiencePost.getPostType())
                 .build();
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(createPostResponse);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<Void> deleteExperiencePost(Long postId, User author) {
+    public void deleteExperiencePost(Long postId, User author) {
         ExperiencePost post = getExperiencePost(postId);
         postService.deletePost(post,author);
-        return ResponseEntity.noContent().build();
     }
 
     @Override
     @Transactional
-    public ResponseEntity<ExperiencePostDto> readExperiencePost(Long postId){
-        return ResponseEntity.ok(ExperiencePostDto.toDto(getExperiencePost(postId)));
+    public ExperiencePostDto readExperiencePost(Long postId){
+        return ExperiencePostDto.toDto(getExperiencePost(postId));
     }
 
     @Override
-    public ResponseEntity<ExperiencePostDto> updateExperiencePost(Long postId, UpdateExpPostReq req, User author) {
+    public ExperiencePostDto updateExperiencePost(Long postId, UpdateExpPostReq req, User author) {
         ExperiencePost post = getExperiencePost(postId);
         postService.updatePost(author, post, req);
         post.setRecruitment(UpdateExpPostReq.reqToRecruitment(req));
         expJpaRepo.save(post);
-        return ResponseEntity.ok(ExperiencePostDto.toDto(post));
+
+        return ExperiencePostDto.toDto(post);
     }
 
     @Override
-    public ResponseEntity<Slice<ExperienceListDto>> getExperiencePosts(ExpFilter filter, Pageable pageable) {
+    public Slice<ExperienceListDto> getExperiencePosts(ExpFilter filter, Pageable pageable) {
         Slice<ExperienceListDto> listResponse = expRepo.findPostList(filter, pageable);
         imageMappingService.imageMapping(listResponse.stream().toList());
-        return ResponseEntity.ok(listResponse);
+        return listResponse;
     }
 
     @Override

@@ -29,5 +29,5 @@ public interface CommunityPostService {
 
     Slice<CommunityListDto> getCommunityPosts(CommunityFilter filter, Pageable pageable);
 
-    CommentRequest requestComment(Long postId, CommentRequest req, User user);
+    void requestComment(Long postId, CommentRequest req, User user);
 }

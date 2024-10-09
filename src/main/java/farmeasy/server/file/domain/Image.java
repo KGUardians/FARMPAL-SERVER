@@ -43,7 +43,7 @@ public class Image {
         try {
             String ext = imageName.substring(imageName.lastIndexOf(".")+1);
             if(isSupportedFormat(ext)) return ext;
-        }catch (StringIndexOutOfBoundsException e){}
+        }catch (StringIndexOutOfBoundsException ignored){}
         throw new UnsupportedOperationException("잘못된 이미지 형식입니다.");
     }
 

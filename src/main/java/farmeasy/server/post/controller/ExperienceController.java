@@ -37,7 +37,10 @@ public class ExperienceController {
             Pageable pageable
     ){
         ExpFilter filter = new ExpFilter(sido,sigungu);
-        return experiencePostService.getExperiencePosts(filter, pageable);
+        Slice<ExperienceListDto> response = experiencePostService
+                .getExperiencePosts(filter, pageable);
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
@@ -46,7 +49,10 @@ public class ExperienceController {
             @Valid @RequestBody CreateExpPostRequest req,
             @AuthenticationPrincipal User author
     ) {
-        return experiencePostService.createExperiencePost(req, author);
+        CreatePostResponse response = experiencePostService
+                .createExperiencePost(req, author);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @DeleteMapping("/{postId}")
@@ -55,13 +61,15 @@ public class ExperienceController {
             @PathVariable Long postId,
             @AuthenticationPrincipal User author
     ) {
-        return experiencePostService.deleteExperiencePost(postId, author);
+        experiencePostService.deleteExperiencePost(postId, author);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{postId}")
     @Operation(summary = "농촌체험 게시글 조회")
     public ResponseEntity<ExperiencePostDto> readPost(@ApiParam(value = "게시글 id", required = true) @PathVariable Long postId) {
-        return experiencePostService.readExperiencePost(postId);
+        ExperiencePostDto response = experiencePostService.readExperiencePost(postId);
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/{postId}")
@@ -71,13 +79,15 @@ public class ExperienceController {
             @Valid @ModelAttribute UpdateExpPostReq req,
             @AuthenticationPrincipal User author
     ){
-        return experiencePostService.updateExperiencePost(postId, req, author);
+        ExperiencePostDto response = experiencePostService.updateExperiencePost(postId, req, author);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{postId}/application")
     @Operation(summary = "해당 체험 게시글 신청 폼")
     public ResponseEntity<ExpApplicationPageDto> getExpAppPage(@PathVariable Long postId){
-        return expApplicationService.getExpAppPage(postId);
+        ExpApplicationPageDto response = expApplicationService.getExpAppPage(postId);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/{postId}/application")
@@ -87,7 +97,8 @@ public class ExperienceController {
             @RequestBody ExpApplicationRequest req,
             @AuthenticationPrincipal User applicant
     ) throws Exception {
-        return expApplicationService.requestExpApp(postId, req, applicant);
+        ExpApplicationRequest response = expApplicationService.requestExpApp(postId, req, applicant);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
 }
