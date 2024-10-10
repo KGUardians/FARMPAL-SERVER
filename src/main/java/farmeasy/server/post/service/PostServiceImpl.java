@@ -8,6 +8,7 @@ import farmeasy.server.post.dto.UpdatePostRequest;
 import farmeasy.server.user.domain.User;
 import farmeasy.server.post.repository.PostJpaRepo;
 import farmeasy.server.user.service.UserService;
+import farmeasy.server.util.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -36,5 +37,10 @@ public class PostServiceImpl implements PostService{
         UpdateImageResult result = post.updatePostFromReq(req, imageManager);
         imageManager.deleteImages(result.getDeletedImageList());
         imageManager.uploadImages(result.getAddedImageList(),result.getAddedImageFileList());
+    }
+
+    @Override
+    public Post findPostById(Long id) {
+        return postJpaRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "Post Id", id + ""));
     }
 }

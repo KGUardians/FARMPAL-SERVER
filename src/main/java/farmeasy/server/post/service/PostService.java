@@ -13,4 +13,6 @@ public interface PostService {
     void deletePost(Post post, User author);
 
     void updatePost(User author, Post post, UpdatePostRequest req);
+
+    Post findPostById(Long id);
 }

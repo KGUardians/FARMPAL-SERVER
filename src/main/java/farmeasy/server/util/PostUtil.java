@@ -19,19 +19,12 @@ import java.util.stream.Collectors;
 public class PostUtil {
 
     private final CommentJpaRepo commentJpaRepo;
-    private final PostJpaRepo postJpaRepo;
 
     public List<Long> extractPostIds(List<? extends PostListDto> pageDto) {
         return pageDto.stream()
                 .map(PostListDto::getPostId)
                 .toList();
     }
-
-    //todo 게시글 좋아요 서비스 만들고 옮기기
-    public Post findPost(Long postId) {
-        return postJpaRepo.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post", "Post Id", postId + ""));
-    }
-
 
     //todo 게시글 댓글 서비스 만들고 옮기기
     public void commentMapping(List<CommunityListDto> mainPageDto){

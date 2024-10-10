@@ -1,5 +1,7 @@
 package farmeasy.server.post.controller;
 
+import farmeasy.server.post.domain.Post;
+import farmeasy.server.post.service.PostService;
 import farmeasy.server.user.domain.User;
 import farmeasy.server.post.service.community.PostLikeService;
 import lombok.RequiredArgsConstructor;
@@ -13,20 +15,23 @@ import org.springframework.web.bind.annotation.*;
 public class PostLikeController {
 
     private final PostLikeService postLikeService;
+    private final PostService postService;
 
-    @PutMapping("/{postId}")
+    @PutMapping("/{id}")
     public ResponseEntity<String> likePost(
-            @PathVariable Long postId,
+            @PathVariable Long id,
             @AuthenticationPrincipal User user
     ) {
-        return postLikeService.likePost(postId, user);
+        Post post = postService.findPostById(id);
+        return postLikeService.likePost(post, user);
     }
 
-    @DeleteMapping("/{postId}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> unlikePost(
-            @PathVariable Long postId,
+            @PathVariable Long id,
             @AuthenticationPrincipal User user
     ) {
-        return postLikeService.unlikePost(postId, user);
+        Post post = postService.findPostById(id);
+        return postLikeService.unlikePost(post, user);
     }
 }
