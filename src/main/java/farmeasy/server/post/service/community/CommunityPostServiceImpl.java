@@ -8,7 +8,6 @@ import farmeasy.server.post.dto.community.CreateCommPostRequest;
 import farmeasy.server.post.dto.community.UpdateCommPostReq;
 import farmeasy.server.post.service.ImageMappingService;
 import farmeasy.server.user.domain.User;
-import farmeasy.server.comment.repository.CommentJpaRepo;
 import farmeasy.server.post.repository.community.CommunityFilter;
 import farmeasy.server.post.repository.community.CommunityJpaRepo;
 import farmeasy.server.post.repository.community.CommunityRepo;
@@ -29,7 +28,6 @@ public class CommunityPostServiceImpl implements CommunityPostService {
 
     private final CommunityJpaRepo communityJpaRepo;
     private final CommunityRepo communityRepo;
-    private final CommentJpaRepo commentJpaRepo;
     private final PostService postService;
     private final ImageMappingService imageMappingService;
     private final PostUtil postUtil;
