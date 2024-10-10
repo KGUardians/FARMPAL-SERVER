@@ -1,10 +1,12 @@
 package farmeasy.server.comment.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Schema(description = "커뮤니티 게시판 댓글 작성 dto")
 @Data
+@AllArgsConstructor
 public class CommentRequest {
     @Schema(description = "댓글 내용")
     private String comment;

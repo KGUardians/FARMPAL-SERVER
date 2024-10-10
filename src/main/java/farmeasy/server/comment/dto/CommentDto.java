@@ -3,6 +3,7 @@ package farmeasy.server.comment.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -17,7 +18,7 @@ public class CommentDto {
     private LocalDateTime updatedTime;
 
     @Builder
-    public CommentDto(Long id, Long postId, String comment, String author, LocalDateTime postedTime, LocalDateTime updatedTime) {
+    public CommentDto(Long id, Long postId, String comment, String author, LocalDateTime updatedTime) {
         this.id = id;
         this.postId = postId;
         this.comment = comment;

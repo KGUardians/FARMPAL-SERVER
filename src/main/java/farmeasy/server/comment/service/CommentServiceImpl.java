@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
@@ -42,7 +44,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     @Override
-    public CommentDto updateComment(Long commentId, String updateComment, User author){
+    public void updateComment(Long commentId, String updateComment, User author){
         Comment comment = commentJpaRepo.findById(commentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Comment", "commentId", commentId+""));
         if (!comment.getAuthor().getId().equals(author.getId())) {
@@ -50,12 +52,5 @@ public class CommentServiceImpl implements CommentService {
         }
         comment.setComment(updateComment);
         commentJpaRepo.save(comment);
-
-        return CommentDto.builder()
-                .comment(comment.getComment())
-                .id(comment.getId())
-                .author(comment.getAuthor().getName())
-                .updatedTime(comment.getUpdatedTime())
-                .build();
     }
 }
