@@ -1,5 +1,6 @@
-package farmeasy.server.post.domain.community;
+package farmeasy.server.comment.domain;
 
+import farmeasy.server.post.domain.community.CommunityPost;
 import farmeasy.server.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Data;

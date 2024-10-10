@@ -5,7 +5,6 @@ import farmeasy.server.post.dto.community.CommunityListDto;
 import farmeasy.server.post.dto.community.CommunityPostDto;
 import farmeasy.server.post.dto.community.CreateCommPostRequest;
 import farmeasy.server.post.dto.community.UpdateCommPostReq;
-import farmeasy.server.post.dto.community.comment.CommentRequest;
 import farmeasy.server.user.domain.User;
 import farmeasy.server.post.repository.community.CommunityFilter;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +27,4 @@ public interface CommunityPostService {
     CommunityPostDto updateCommunityPost(Long postId, UpdateCommPostReq req, User user);
 
     Slice<CommunityListDto> getCommunityPosts(CommunityFilter filter, Pageable pageable);
-
-    void requestComment(Long postId, CommentRequest req, User user);
 }

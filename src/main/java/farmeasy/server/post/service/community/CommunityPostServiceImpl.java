@@ -1,16 +1,14 @@
 package farmeasy.server.post.service.community;
 
-import farmeasy.server.post.domain.community.Comment;
 import farmeasy.server.post.domain.community.CommunityPost;
 import farmeasy.server.post.dto.CreatePostResponse;
 import farmeasy.server.post.dto.community.CommunityListDto;
 import farmeasy.server.post.dto.community.CommunityPostDto;
 import farmeasy.server.post.dto.community.CreateCommPostRequest;
 import farmeasy.server.post.dto.community.UpdateCommPostReq;
-import farmeasy.server.post.dto.community.comment.CommentRequest;
 import farmeasy.server.post.service.ImageMappingService;
 import farmeasy.server.user.domain.User;
-import farmeasy.server.post.repository.community.CommentJpaRepo;
+import farmeasy.server.comment.repository.CommentJpaRepo;
 import farmeasy.server.post.repository.community.CommunityFilter;
 import farmeasy.server.post.repository.community.CommunityJpaRepo;
 import farmeasy.server.post.repository.community.CommunityRepo;
@@ -84,19 +82,6 @@ public class CommunityPostServiceImpl implements CommunityPostService {
         Slice<CommunityListDto> listResponse = communityRepo.findPostList(filter,pageable);
         imageMappingService.imageMapping(listResponse.stream().toList());
         return listResponse;
-    }
-
-    /*
-
-    커뮤니티 게시글 댓글 작성
-
-    */
-    @Override
-    @Transactional
-    public void requestComment(Long postId, CommentRequest req, User author) {
-        CommunityPost post = getCommunityPost(postId);
-        Comment comment = new Comment(req.getComment(),post,author);
-        commentJpaRepo.save(comment);
     }
 
 

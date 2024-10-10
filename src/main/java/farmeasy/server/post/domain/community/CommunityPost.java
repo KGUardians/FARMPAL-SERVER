@@ -1,5 +1,6 @@
 package farmeasy.server.post.domain.community;
 
+import farmeasy.server.comment.domain.Comment;
 import farmeasy.server.post.domain.Post;
 import farmeasy.server.post.domain.PostType;
 import jakarta.persistence.*;

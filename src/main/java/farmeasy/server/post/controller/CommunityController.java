@@ -7,7 +7,7 @@ import farmeasy.server.post.dto.community.CommunityListDto;
 import farmeasy.server.post.dto.community.CommunityPostDto;
 import farmeasy.server.post.dto.community.CreateCommPostRequest;
 import farmeasy.server.post.dto.community.UpdateCommPostReq;
-import farmeasy.server.post.dto.community.comment.CommentRequest;
+import farmeasy.server.comment.dto.CommentRequest;
 import farmeasy.server.user.domain.User;
 import farmeasy.server.post.repository.community.CommunityFilter;
 import farmeasy.server.post.service.community.CommunityPostService;
@@ -83,16 +83,6 @@ public class CommunityController {
     ){
         CommunityPostDto response = communityPostService.updateCommunityPost(postId, req, author);
         return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/{postId}/comments")
-    @Operation(summary = "커뮤니티 게시글 댓글 작성")
-    public ResponseEntity<CommentRequest> comment(
-            @PathVariable Long postId,
-            @RequestBody CommentRequest req,
-            @AuthenticationPrincipal User author) throws ChangeSetPersister.NotFoundException {
-        communityPostService.requestComment(postId, req, author);
-        return ResponseEntity.ok(req);
     }
 
 }

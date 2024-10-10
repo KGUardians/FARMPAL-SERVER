@@ -1,7 +1,7 @@
 package com.example.farmeasyserver.post.domain.community;
 
 import farmeasy.server.post.domain.PostType;
-import farmeasy.server.post.domain.community.Comment;
+import farmeasy.server.comment.domain.Comment;
 import farmeasy.server.post.domain.community.CommunityPost;
 import farmeasy.server.post.domain.community.CommunityType;
 import farmeasy.server.user.domain.User;
