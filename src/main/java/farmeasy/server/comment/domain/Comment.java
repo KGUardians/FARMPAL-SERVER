@@ -1,6 +1,6 @@
 package farmeasy.server.comment.domain;
 
-import farmeasy.server.post.domain.community.CommunityPost;
+import farmeasy.server.post.domain.Post;
 import farmeasy.server.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -17,18 +17,22 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Lob
     private String comment;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User author;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
-    private CommunityPost post;
+    private Post post;
+
     private LocalDateTime postedTime;
     private LocalDateTime updatedTime;
 
-    public Comment(String comment,CommunityPost post, User author){
+    public Comment(String comment, Post post, User author){
         this.comment = comment;
         setPost(post);
         setAuthor(author);
@@ -38,18 +42,19 @@ public class Comment {
     protected void onCreate(){
         postedTime = LocalDateTime.now();
     }
+
     @PreUpdate
     protected void onUpdate(){
         updatedTime = LocalDateTime.now();
     }
 
-    private void setPost(CommunityPost post){
+    private void setPost(Post post){
         this.post = post;
-        post.getCommentList().add(this);
+        post.addComment(this);
     }
 
     private void setAuthor(User author){
         this.author = author;
-        author.getComments().add(this);
+        author.addComment(this);
     }
 }
