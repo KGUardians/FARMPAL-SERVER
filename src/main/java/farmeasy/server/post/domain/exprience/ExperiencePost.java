@@ -28,6 +28,6 @@ public class ExperiencePost extends Post {
     }
 
     public boolean validateParticipants(int participants){
-        return this.recruitment.getRecruitmentNum() >= participants;
+        return this.recruitment.getRemainingCapacity() >= participants;
     }
 }

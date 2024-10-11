@@ -32,8 +32,9 @@ public class CreateExpPostRequest extends CreatePostRequest {
         return Recruitment.builder()
                 .startDate(req.getStartDate())
                 .startTime(req.getStartTime())
-                .recruitmentNum(req.getRecruitmentNum())
-                .detailedRecruitmentCondition(req.getDetailedRecruitmentCondition())
+                .totalCapacity(req.getRecruitmentNum())
+                .remainingCapacity(req.getRecruitmentNum())
+                .recruitmentConditions(req.getDetailedRecruitmentCondition())
                 .build();
     }
     public static ExperiencePost toEntity(CreateExpPostRequest req){

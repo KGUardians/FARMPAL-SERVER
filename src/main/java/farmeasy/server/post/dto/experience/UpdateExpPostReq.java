@@ -26,8 +26,9 @@ public class UpdateExpPostReq extends UpdatePostRequest {
         return Recruitment.builder()
                 .startDate(req.getStartDate())
                 .startTime(req.getStartTime())
-                .recruitmentNum(req.getRecruitmentNum())
-                .detailedRecruitmentCondition(req.getDetailedRecruitmentCondition())
+                .totalCapacity(req.getRecruitmentNum())
+                .remainingCapacity(req.getRecruitmentNum())
+                .recruitmentConditions(req.getDetailedRecruitmentCondition())
                 .build();
     }
 }

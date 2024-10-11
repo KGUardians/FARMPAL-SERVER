@@ -33,7 +33,7 @@ public class ExpApplicationServiceImpl implements ExpApplicationService {
         return req;
     }
 
-    private void checkParticipantNum(ExperiencePost post, int participants) throws Exception {
+    private void checkParticipantNum(ExperiencePost post, int participants) {
         if(post.validateParticipants(participants)){
             throw new MaxParticipantsExceededException("인원이 초과되었습니다.");
         }
@@ -41,8 +41,7 @@ public class ExpApplicationServiceImpl implements ExpApplicationService {
 
     private void processApplication(ExperiencePost post, User applicant, int participants){
         ExpApplication expApplication = new ExpApplication(participants,applicant,post);
-        int remainingNum = post.getRecruitment().getRecruitmentNum() - participants;
-        post.getRecruitment().setRecruitmentNum(remainingNum);
+        post.getRecruitment().reduceCapacity(participants);
         expAppJpaRepo.save(expApplication);
     }
 }

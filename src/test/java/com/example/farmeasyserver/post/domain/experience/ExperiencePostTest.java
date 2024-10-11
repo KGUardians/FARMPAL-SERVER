@@ -16,8 +16,7 @@ public class ExperiencePostTest {
     @BeforeEach
     void setUp() {
         // Recruitment 설정
-        recruitment = new Recruitment();
-        recruitment.setRecruitmentNum(10); // 모집 인원 설정
+        recruitment = new Recruitment(null, null, 10, 10, null);
 
         // ExperiencePost 객체 생성
         experiencePost = new ExperiencePost(recruitment);
@@ -28,7 +27,7 @@ public class ExperiencePostTest {
         // ExperiencePost가 정상적으로 생성되었는지 확인
         assertEquals(PostType.EXPERIENCE, experiencePost.getPostType());
         assertNotNull(experiencePost.getRecruitment());
-        assertEquals(10, experiencePost.getRecruitment().getRecruitmentNum());
+        assertEquals(10, experiencePost.getRecruitment().getTotalCapacity());
     }
 
     @Test

@@ -13,12 +13,14 @@ public class ExpApplicationPageDto {
     private String detailedRecruitmentCondition;
     private String experienceDate;
     private String experienceTime;
+    private int remainingCapacity;
 
     public static ExpApplicationPageDto toDto(ExperiencePost post){
         return ExpApplicationPageDto.builder()
                 .farmName(post.getAuthor().getFarm().getFarmName())
                 .detailedRecruitmentCondition(post.getRecruitment()
-                        .getDetailedRecruitmentCondition())
+                        .getRecruitmentConditions())
+                .remainingCapacity(post.getRecruitment().getRemainingCapacity())
                 .experienceDate(post.getRecruitment().getStartDate())
                 .experienceTime(post.getRecruitment().getStartTime())
                 .build();
