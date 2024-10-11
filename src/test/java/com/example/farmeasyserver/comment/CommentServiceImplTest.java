@@ -4,8 +4,9 @@ import farmeasy.server.comment.domain.Comment;
 import farmeasy.server.comment.dto.CommentRequest;
 import farmeasy.server.comment.repository.CommentJpaRepo;
 import farmeasy.server.comment.service.CommentServiceImpl;
-import farmeasy.server.post.domain.community.CommunityPost;
-import farmeasy.server.post.repository.community.CommunityJpaRepo;
+import farmeasy.server.post.domain.Post;
+import farmeasy.server.post.domain.market.MarketPost;
+import farmeasy.server.post.repository.PostJpaRepo;
 import farmeasy.server.user.domain.User;
 import farmeasy.server.util.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,12 +27,12 @@ public class CommentServiceImplTest {
     private CommentJpaRepo commentJpaRepo;
 
     @Mock
-    private CommunityJpaRepo communityJpaRepo;
+    private PostJpaRepo postJpaRepo;
 
     @InjectMocks
     private CommentServiceImpl commentService;
 
-    private CommunityPost post;
+    private Post post;
     private User author;
     private User anotherUser;
     private Comment comment;
@@ -41,7 +42,7 @@ public class CommentServiceImplTest {
         MockitoAnnotations.openMocks(this);  // Mockito 초기화
 
         // 기본 테스트 데이터 생성
-        post = new CommunityPost();
+        post = new MarketPost();
         post.setId(1L);
 
         author = new User();
@@ -59,7 +60,7 @@ public class CommentServiceImplTest {
         // Given
         CommentRequest commentRequest = new CommentRequest("New Comment");
 
-        when(communityJpaRepo.findByIdWithUser(post.getId())).thenReturn(Optional.of(post));
+        when(postJpaRepo.findById(post.getId())).thenReturn(Optional.of(post));
 
         // When
         commentService.requestComment(post.getId(), commentRequest, author);
@@ -73,7 +74,7 @@ public class CommentServiceImplTest {
         // Given
         CommentRequest commentRequest = new CommentRequest("New Comment");
 
-        when(communityJpaRepo.findByIdWithUser(post.getId())).thenReturn(Optional.empty());
+        when(postJpaRepo.findById(post.getId())).thenReturn(Optional.empty());
 
         // When / Then
         assertThrows(ResourceNotFoundException.class, () ->

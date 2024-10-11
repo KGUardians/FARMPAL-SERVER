@@ -1,5 +1,6 @@
 package farmeasy.server.post.domain;
 
+import farmeasy.server.comment.domain.Comment;
 import farmeasy.server.file.domain.Image;
 import farmeasy.server.file.service.ImageManager;
 import farmeasy.server.post.dto.CreatePostRequest;
@@ -53,6 +54,10 @@ public abstract class Post {
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Likes> likes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Comment> commentList = new ArrayList<>();
+
+
     public Post(PostType postType){
         this.postType = postType;
     }
@@ -85,6 +90,10 @@ public abstract class Post {
         imageManager.addImageList(this, addedImages);
         imageManager.deleteImageList(this, deletedImages);
         return new UpdateImageResult(req.getAddedImages(), addedImages, deletedImages);
+    }
+
+    public void addComment(Comment comment) {
+        commentList.add(comment);
     }
 
     private void setAuthor(User author){
