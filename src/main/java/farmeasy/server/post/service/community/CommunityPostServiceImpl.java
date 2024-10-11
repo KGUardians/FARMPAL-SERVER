@@ -35,7 +35,10 @@ public class CommunityPostServiceImpl implements CommunityPostService {
     @Override
     public List<CommunityListDto> getRecentCommunityPostDtos() {
         List<CommunityPost> recentCommunityPosts = communityJpaRepo.findTop5OrderByIdDesc();
-        List<CommunityListDto> list = convertCommunityPostsToDtos(recentCommunityPosts);
+        List<CommunityListDto> list = recentCommunityPosts.stream()
+                .map(CommunityListDto::toDto)
+                .toList();
+
         postUtil.commentMapping(list);
         return list;
     }
@@ -90,11 +93,4 @@ public class CommunityPostServiceImpl implements CommunityPostService {
 
         return communityPost;
     }
-
-    private List<CommunityListDto> convertCommunityPostsToDtos(List<CommunityPost> recentCommunityPosts){
-        return recentCommunityPosts.stream()
-                .map(CommunityListDto::toDto)
-                .toList();
-    }
-
 }
