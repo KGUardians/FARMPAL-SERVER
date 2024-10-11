@@ -24,18 +24,18 @@ public class ExpApplication {
 
     private int participants;
 
-    public ExpApplication(int participants, User applicants, ExperiencePost post){
+    public ExpApplication(int participants, User applicant, ExperiencePost post){
         this.participants = participants;
-        setApplicants(applicants);
+        setApplicants(applicant);
         setPost(post);
     }
     public void setApplicants(User applicants){
         this.applicants = applicants;
-        applicants.getExpApplications().add(this);
+        applicants.addExpApplication(this);
     }
 
     public void setPost(ExperiencePost experiencePost){
         this.experiencePost = experiencePost;
-        experiencePost.getApplication().add(this);
+        experiencePost.addApplication(this);
     }
 }

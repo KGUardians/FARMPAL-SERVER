@@ -9,4 +9,6 @@ import org.springframework.stereotype.Service;
 public interface ExpApplicationService {
     ExpApplicationRequest requestExpApp(Long postId, ExpApplicationRequest req, User applicant) throws Exception;
     ExpApplicationPageDto getExpAppPage(Long postId);
+    void deleteExpApp(Long appId, User applicant);
+    void updateExpApp(Long appId, ExpApplicationRequest expApplicationRequest, User applicant) throws IllegalAccessException;
 }

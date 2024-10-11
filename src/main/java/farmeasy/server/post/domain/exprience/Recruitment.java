@@ -34,5 +34,4 @@ public class Recruitment {
     public void increaseCapacity(int participants) {
         remainingCapacity += participants;
     }
-
 }

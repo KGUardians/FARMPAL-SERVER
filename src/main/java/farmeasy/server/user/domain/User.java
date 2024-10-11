@@ -6,6 +6,7 @@ import farmeasy.server.comment.domain.Comment;
 import farmeasy.server.post.domain.exprience.ExpApplication;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -40,12 +41,17 @@ public class User implements UserDetails {
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Farm farm;
+
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Post> postList = new ArrayList<>();
+
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
+
     @OneToMany(mappedBy = "applicants", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ExpApplication> expApplications = new ArrayList<>();
+
+    @Builder
     public User(String username,
                 String password,
                 String name,
@@ -64,6 +70,19 @@ public class User implements UserDetails {
         this.birthday = birthday;
         this.address = address;
         this.role = role;
+    }
+
+
+    public void addPost(Post post){
+        postList.add(post);
+    }
+
+    public void addComment(Comment comment){
+        comments.add(comment);
+    }
+
+    public void addExpApplication(ExpApplication expApplication){
+        expApplications.add(expApplication);
     }
 
     @Override
