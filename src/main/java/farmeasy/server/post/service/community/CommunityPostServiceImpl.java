@@ -70,12 +70,11 @@ public class CommunityPostServiceImpl implements CommunityPostService {
 
 
     @Override
-    public CommunityPostDto updateCommunityPost(Long postId, UpdateCommPostReq req, User author) {
+    public void updateCommunityPost(Long postId, UpdateCommPostReq req, User author) {
         CommunityPost post = getCommunityPost(postId);
         postService.updatePost(author, post, req);
         post.setCommunityType(req.getType());
         communityJpaRepo.save(post);
-        return CommunityPostDto.toDto(post);
     }
 
     @Override

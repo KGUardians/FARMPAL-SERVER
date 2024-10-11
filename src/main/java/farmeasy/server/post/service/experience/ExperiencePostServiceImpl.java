@@ -63,13 +63,11 @@ public class ExperiencePostServiceImpl implements ExperiencePostService {
     }
 
     @Override
-    public ExperiencePostDto updateExperiencePost(Long postId, UpdateExpPostReq req, User author) {
+    public void updateExperiencePost(Long postId, UpdateExpPostReq req, User author) {
         ExperiencePost post = getExperiencePost(postId);
         postService.updatePost(author, post, req);
         post.setRecruitment(UpdateExpPostReq.reqToRecruitment(req));
         expJpaRepo.save(post);
-
-        return ExperiencePostDto.toDto(post);
     }
 
     @Override

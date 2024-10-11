@@ -79,8 +79,8 @@ public class ExperienceController {
             @Valid @ModelAttribute UpdateExpPostReq req,
             @AuthenticationPrincipal User author
     ){
-        ExperiencePostDto response = experiencePostService.updateExperiencePost(postId, req, author);
-        return ResponseEntity.ok(response);
+        experiencePostService.updateExperiencePost(postId, req, author);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{postId}/application")

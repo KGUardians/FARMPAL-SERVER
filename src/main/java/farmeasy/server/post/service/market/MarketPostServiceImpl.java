@@ -57,13 +57,11 @@ public class MarketPostServiceImpl implements MarketPostService {
 
     @Override
     @Transactional
-    public MarketPostDto updateMarketPost(Long postId, UpdateMktPostReq req, User author) {
+    public void updateMarketPost(Long postId, UpdateMktPostReq req, User author) {
         MarketPost post = getMarketPost(postId);
         postService.updatePost(author, post, req);
         post.setItem(UpdateMktPostReq.reqToItem(req));
         marketJpaRepo.save(post);
-
-        return MarketPostDto.toDto(post);
     }
 
     @Override

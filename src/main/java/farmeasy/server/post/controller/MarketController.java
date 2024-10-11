@@ -66,8 +66,8 @@ public class MarketController {
             @PathVariable Long postId,
             @Valid @ModelAttribute UpdateMktPostReq req,
             @AuthenticationPrincipal User author){
-        MarketPostDto response = marketPostService.updateMarketPost(postId,req,author);
-        return ResponseEntity.ok(response);
+        marketPostService.updateMarketPost(postId,req,author);
+        return ResponseEntity.noContent().build();
     }
 
     @ApiOperation(value = "커뮤니티 게시글 조회", notes = "게시글을 조회한다.")

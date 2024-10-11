@@ -19,7 +19,7 @@ public interface MarketPostService {
 
     MarketPostDto readMarketPost(Long postId);
 
-    MarketPostDto updateMarketPost(Long postId, UpdateMktPostReq req, User user);
+    void updateMarketPost(Long postId, UpdateMktPostReq req, User user);
 
     void deleteMarketPost(Long postId, User author);
 

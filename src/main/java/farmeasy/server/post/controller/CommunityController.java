@@ -76,13 +76,13 @@ public class CommunityController {
 
     @PatchMapping("/{postId}")
     @Operation(summary = "커뮤니티 게시글 수정")
-    private ResponseEntity<CommunityPostDto> updatePost(
+    private ResponseEntity<Void> updatePost(
             @PathVariable Long postId,
             @Valid @ModelAttribute UpdateCommPostReq req,
             @AuthenticationPrincipal User author
     ){
-        CommunityPostDto response = communityPostService.updateCommunityPost(postId, req, author);
-        return ResponseEntity.ok(response);
+        communityPostService.updateCommunityPost(postId, req, author);
+        return ResponseEntity.noContent().build();
     }
 
 }

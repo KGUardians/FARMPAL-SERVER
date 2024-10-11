@@ -23,7 +23,7 @@ public interface ExperiencePostService {
 
     ExperiencePostDto readExperiencePost(Long postId);
 
-    ExperiencePostDto updateExperiencePost(Long postId, UpdateExpPostReq req, User user);
+    void updateExperiencePost(Long postId, UpdateExpPostReq req, User user);
 
     Slice<ExperienceListDto> getExperiencePosts(ExpFilter filter, Pageable pageable);
 

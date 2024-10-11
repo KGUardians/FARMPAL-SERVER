@@ -24,7 +24,7 @@ public interface CommunityPostService {
 
     CommunityPostDto readCommunityPost(Long postId);
 
-    CommunityPostDto updateCommunityPost(Long postId, UpdateCommPostReq req, User user);
+    void updateCommunityPost(Long postId, UpdateCommPostReq req, User user);
 
     Slice<CommunityListDto> getCommunityPosts(CommunityFilter filter, Pageable pageable);
 }
