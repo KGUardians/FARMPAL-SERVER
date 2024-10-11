@@ -6,6 +6,7 @@ import farmeasy.server.post.dto.experience.expapplication.ExpApplicationPageDto;
 import farmeasy.server.post.dto.experience.expapplication.ExpApplicationRequest;
 import farmeasy.server.post.repository.experience.ExpAppJpaRepo;
 import farmeasy.server.user.domain.User;
+import farmeasy.server.util.exception.post.experience.MaxParticipantsExceededException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +35,7 @@ public class ExpApplicationServiceImpl implements ExpApplicationService {
 
     private void checkParticipantNum(ExperiencePost post, int participants) throws Exception {
         if(post.validateParticipants(participants)){
-            throw new Exception("인원이 초과되었습니다.");
+            throw new MaxParticipantsExceededException("인원이 초과되었습니다.");
         }
     }
 

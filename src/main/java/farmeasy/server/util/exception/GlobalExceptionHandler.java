@@ -1,5 +1,6 @@
 package farmeasy.server.util.exception;
 
+import farmeasy.server.util.exception.post.experience.MaxParticipantsExceededException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -53,4 +54,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body("잘못된 요청 형식입니다. 요청 URI: " + uri + ", 에러 메시지: " + errorMessage);
     }
+
+
+    @ExceptionHandler(MaxParticipantsExceededException.class)
+    public ResponseEntity<String> handleMaxParticipantsExceededException(MaxParticipantsExceededException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
 }
