@@ -65,28 +65,19 @@ public abstract class Post {
     protected void onUpdate(){
         updatedTime = LocalDateTime.now();
     }
-/*
-    private List<Image> convertImageFileToImage(List<MultipartFile> imageFileList){
-        return imageFileList.stream().map(i -> new Image(i.getOriginalFilename())).toList();
-    }
-    private void addImageList(List<Image> imageList) {
-        imageList.forEach(i -> {
-            this.imageList.add(i);
-            i.setPost(this);
-        });
-    }*/
+
     public void createPostFromReq(CreatePostRequest req, User author, ImageManager imageManager){
-        this.title = req.getTitle();
-        this.content = req.getContent();
-        this.cropCategory = req.getCropCategory();
-        this.setAuthor(author);
+        title = req.getTitle();
+        content = req.getContent();
+        cropCategory = req.getCropCategory();
+        setAuthor(author);
         imageManager.addImageList(this, imageManager.convertImageFileToImage(req.getImageList()));
     }
 
     public UpdateImageResult updatePostFromReq(UpdatePostRequest req, ImageManager imageManager) { // 1
-        this.title = req.getTitle();
-        this.content = req.getContent();
-        this.cropCategory = req.getCropCategory();
+        title = req.getTitle();
+        content = req.getContent();
+        cropCategory = req.getCropCategory();
 
         List<Image> addedImages = imageManager.convertImageFileToImage(req.getAddedImages());
         List<Image> deletedImages = imageManager.convertImageIdsToImages(this, req.getDeletedImages());
@@ -96,27 +87,9 @@ public abstract class Post {
         return new UpdateImageResult(req.getAddedImages(), addedImages, deletedImages);
     }
 
-/*
-    private List<Image> convertImageIdsToImages(List<Long> imageIds) {
-        return imageIds.stream()
-                .map(this::convertImageIdToImage)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .toList();
-    }
-
-    private Optional<Image> convertImageIdToImage(Long id) {
-        return this.imageList.stream().filter(i -> i.getId().equals(id)).findAny();
-    }
-
-    private void deleteImageList(List<Image> deleted) {
-        deleted.stream().forEach(di -> this.imageList.remove(di));
-    }
-*/
-
     private void setAuthor(User author){
         this.author = author;
-        author.getPostList().add(this);
+        author.addPost(this);
     }
 
     public void increaseViewCount(){
